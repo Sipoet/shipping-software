@@ -18,12 +18,13 @@ default: &default
   # For details on connection pooling, see Rails configuration guide
   # https://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-
-
+  host: <%= ENV.fetch("DEVELOPMENT_DATABASE_HOST") { 'db' } %>
+  port: <%= ENV.fetch("DATABASE_PORT") { 5432 } %>
+  username: <%= ENV["DEVELOPMENT_DATABASE_USERNAME"] %>
 development:
   <<: *default
   database: shipping_software_development
-
+  password: <%= ENV["DEVELOPMENT_DATABASE_PASSWORD"] %>
   # The specified database role being used to connect to PostgreSQL.
   # To create additional roles in PostgreSQL see `$ createuser --help`.
   # When left blank, PostgreSQL will use the default role. This is
@@ -57,7 +58,7 @@ development:
 test:
   <<: *default
   database: shipping_software_test
-
+  password: <%= ENV["DEVELOPMENT_DATABASE_PASSWORD"] %>
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
 # ever seen by anyone, they now have access to your database.
@@ -80,6 +81,7 @@ test:
 #
 production:
   <<: *default
+  host: <%= ENV["PRODUCTION_DATABASE_HOST"] %>
   database: shipping_software_production
-  username: shipping_software
-  password: <%= ENV["SHIPPING_SOFTWARE_DATABASE_PASSWORD"] %>
+  username: <%= ENV["PRODUCTION_DATABASE_USERNAME"] %>
+  password: <%= ENV["PRODUCTION_DATABASE_PASSWORD"] %>

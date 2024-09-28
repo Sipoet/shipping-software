@@ -5,11 +5,11 @@ gem "rails", "~> 7.2.1"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
 # Use postgresql as the database for Active Record
-gem "pg", "~> 1.1"
+gem "pg", "~> 1.5"
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
-# Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
-gem "importmap-rails"
+# # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
+# gem "importmap-rails"
 # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
 gem "turbo-rails"
 # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
@@ -34,6 +34,11 @@ gem "bootsnap", require: false
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
 
+gem 'sidekiq-cron', '~>1.12.0'
+gem 'sidekiq', '~> 7.2'
+gem 'devise', '~>4.9.0'
+gem 'kaminari', '~> 1.2.2'
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
@@ -43,6 +48,9 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+  gem 'byebug'
+  # gem 'pry'
+  gem 'rspec-rails'
 end
 
 group :development do
@@ -50,3 +58,14 @@ group :development do
   gem "web-console"
 end
 
+group :test do
+  gem 'database_cleaner-active_record', '~>2.1.0'
+  gem 'database_cleaner-redis', '~>2.0.0'
+  gem 'factory_bot_rails','~>6.4.2'
+  gem 'ffaker', '~>2.23.0'
+  gem 'rspec-sidekiq', '~>4.1.0'
+end
+
+gem "jsbundling-rails", "~> 1.3"
+
+gem "cssbundling-rails", "~> 1.4"
