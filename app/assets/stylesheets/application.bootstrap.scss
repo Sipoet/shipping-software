@@ -1,4 +1,27 @@
 // @import 'bootstrap/scss/bootstrap';
-// @import 'bootstrap-icons/font/bootstrap-icons';
-@import '@coreui/coreui-free-bootstrap-admin-template/src/scss/style';
-@import '@coreui/coreui-free-bootstrap-admin-template/src/scss/example';
+@import 'simplebar/dist/simplebar';
+// Vendors
+@import "vendors/simplebar";
+
+// If you want to override variables do it here
+@import "variables";
+
+// Import styles
+@import "@coreui/coreui/scss/coreui";
+@import '@coreui/coreui/dist/css/themes/bootstrap/bootstrap.min';
+
+
+// Custom styles for this theme
+@import "theme";
+@import "examples";
+// @import '@coreui/icons/css/all.min';
+// @import "@phosphor-icons/web/src/light";
+@import "@phosphor-icons/web/src/bold/style";
+@import "@phosphor-icons/web/src/regular/style";
+@import '@coreui/coreui/dist/css/coreui-reboot.min';
+@import 'datatables.net-bs5/css/dataTables.bootstrap5.min';
+@import 'datatables.net-colreorder-dt/css/colReorder.dataTables.min';
+@import 'datatables.net-fixedcolumns-dt/css/fixedColumns.dataTables.min';
+@import 'datatables.net-fixedheader-dt/css/fixedHeader.dataTables.min';
+// custom style self
+@import "custom";

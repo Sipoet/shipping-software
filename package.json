@@ -13,18 +13,23 @@
   },
   "dependencies": {
     "@coreui/coreui": "^5.1.2",
-    "@coreui/coreui-free-bootstrap-admin-template": "github:coreui/coreui-free-bootstrap-admin-template",
+    "@coreui/utils": "^2.0.2",
     "@hotwired/stimulus": "^3.2.2",
     "@hotwired/turbo-rails": "^8.0.10",
+    "@phosphor-icons/web": "^2.1.1",
     "@popperjs/core": "^2.11.8",
     "autoprefixer": "^10.4.20",
     "bootstrap": "^5.3.3",
-    "bootstrap-icons": "^1.11.3",
-    "jquery": "^3.7.1",
+    "datatables.net-bs5": "^2.1.7",
+    "datatables.net-colreorder-dt": "^2.0.4",
+    "datatables.net-fixedcolumns-dt": "^5.0.2",
+    "datatables.net-fixedheader-dt": "^4.0.1",
     "nodemon": "^3.1.7",
     "postcss": "^8.4.47",
     "postcss-cli": "^11.0.0",
-    "sass": "^1.79.3"
+    "sass": "^1.79.4",
+    "simplebar": "^6.2.7",
+    "yaml": "^2.5.1"
   },
   "browserslist": [
     "defaults"
