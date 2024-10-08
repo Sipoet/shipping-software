@@ -4,6 +4,7 @@ class CreateContainers < ActiveRecord::Migration[7.2]
       t.integer :container_type_id, null: false
       t.string :container_number, null: false
       t.string :seal_number
+      t.integer :order_type, null: false
       t.integer :ship_id, null: false
       t.integer :ship_schedule_id, null: false
       t.integer :agent_id

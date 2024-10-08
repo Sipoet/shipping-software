@@ -1,0 +1,7 @@
+id:
+  activerecord:
+    models:
+      ship: 'Kapal'
+    attributes:
+      ship:
+        name: 'Nama'

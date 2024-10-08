@@ -5,10 +5,10 @@ class CreateShipSchedules < ActiveRecord::Migration[7.2]
       t.string :voyage, null: false
       t.datetime :estimated_arrived_sour_at, null: false
       t.datetime :estimated_departure_sour_at, null: false
+      t.datetime :estimated_arrived_dest_at, null: false
       t.datetime :actual_arrived_sour_at
       t.datetime :actual_departure_sour_at
-      t.datetime :estimated_departure_dest_at, null: false
-      t.datetime :actual_departure_dest_at
+      t.datetime :actual_arrived_dest_at
       t.string :booking_code, null: false
       t.integer :loading_port_id, null: false
       t.integer :destination_port_id, null: false

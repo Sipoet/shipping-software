@@ -41,6 +41,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_25_092427) do
     t.integer "container_type_id", null: false
     t.string "container_number", null: false
     t.string "seal_number"
+    t.integer "order_type", null: false
     t.integer "ship_id", null: false
     t.integer "ship_schedule_id", null: false
     t.integer "agent_id"
@@ -67,7 +68,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_25_092427) do
 
   create_table "ports", force: :cascade do |t|
     t.string "name", null: false
-    t.string "province", null: false
+    t.string "city", null: false
     t.string "country", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -146,10 +147,10 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_25_092427) do
     t.string "voyage", null: false
     t.datetime "estimated_arrived_sour_at", null: false
     t.datetime "estimated_departure_sour_at", null: false
+    t.datetime "estimated_arrived_dest_at", null: false
     t.datetime "actual_arrived_sour_at"
     t.datetime "actual_departure_sour_at"
-    t.datetime "estimated_departure_dest_at", null: false
-    t.datetime "actual_departure_dest_at"
+    t.datetime "actual_arrived_dest_at"
     t.string "booking_code", null: false
     t.integer "loading_port_id", null: false
     t.integer "destination_port_id", null: false

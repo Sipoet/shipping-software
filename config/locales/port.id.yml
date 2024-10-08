@@ -1,0 +1,9 @@
+id:
+  activerecord:
+    models:
+      port: 'Pelabuhan'
+    attributes:
+      port:
+        name: 'Nama'
+        city: 'Kota'
+        country: 'Negara'

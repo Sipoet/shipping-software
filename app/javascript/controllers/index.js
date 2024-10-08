@@ -4,5 +4,13 @@
 
 import { application } from "./application"
 
-import HelloController from "./hello_controller"
-application.register("hello", HelloController)
+import HeaderController from "./header_controller"
+application.register("header", HeaderController)
+import ShipController from "./ship_controller"
+application.register("ship", ShipController)
+import PortController from "./port_controller"
+application.register("port", PortController)
+import Select2Controller from "./select2_controller"
+application.register("select2", Select2Controller)
+import ShipScheduleController from "./ship_schedule_controller"
+application.register("ship_schedule", ShipScheduleController)

@@ -171,6 +171,18 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@orchidjs/sifter@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@orchidjs/sifter/-/sifter-1.0.3.tgz#43f42519472282eb632d0a1589184f044d64129b"
+  integrity sha512-zCZbwKegHytfsPm8Amcfh7v/4vHqTAaOu6xFswBYcn8nznBOuseu6COB2ON7ez0tFV0mKL0nRNnCiZZA+lU9/g==
+  dependencies:
+    "@orchidjs/unicode-variants" "^1.0.4"
+
+"@orchidjs/unicode-variants@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@orchidjs/unicode-variants/-/unicode-variants-1.0.4.tgz#6d2f812e3b19545bba2d81caffff1204de9a6a58"
+  integrity sha512-NvVBRnZNE+dugiXERFsET1JlKZfM5lJDEpSMilKW4bToYJ7pxf0Zne78xyXB2ny2c2aHfJ6WLnz1AaTNHAmQeQ==
+
 "@phosphor-icons/web@^2.1.1":
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/@phosphor-icons/web/-/web-2.1.1.tgz#a456457f8be17199cb03aa172ce352cc107ae707"
@@ -245,7 +257,7 @@ binary-extensions@^2.0.0:
   resolved "https://registry.npmjs.org/binary-extensions/-/binary-extensions-2.3.0.tgz"
   integrity sha512-Ceh+7ox5qe7LJuLHoY0feh3pHuUDHAcRUeyL2VYghZwfpkNIy/+8Ocg0a3UuSoYzavmylwuLWQOf3hl0jjMMIw==
 
-bootstrap@^5.3.3:
+bootstrap@^5.1.3, bootstrap@^5.3.3:
   version "5.3.3"
   resolved "https://registry.npmjs.org/bootstrap/-/bootstrap-5.3.3.tgz"
   integrity sha512-8HLCdWgyoMguSO9o+aH+iuZ+aht+mzW0u3HIMzVu7Srrpv7EBBxTnrFlSCskwdY1+EOFQSm7uMJhNQHkdPcmjg==
@@ -809,6 +821,18 @@ sass@^1.79.4:
     immutable "^4.0.0"
     source-map-js ">=0.6.2 <2.0.0"
 
+select2-bootstrap-5-theme@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/select2-bootstrap-5-theme/-/select2-bootstrap-5-theme-1.3.0.tgz#b7126b01c4e2cfb5ee683b219820d49da31b4810"
+  integrity sha512-uEJDruP4tmwyKcs3V0oP7CIsyC45PGF5ddo8unwTp8OucJ1PSuTOBr+xbWaHTQPGnvp7N96psVQ5UBMQvFCcHA==
+  dependencies:
+    bootstrap "^5.1.3"
+
+select2@^4.1.0-rc.0:
+  version "4.1.0-rc.0"
+  resolved "https://registry.yarnpkg.com/select2/-/select2-4.1.0-rc.0.tgz#ba3cd3901dda0155e1c0219ab41b74ba51ea22d8"
+  integrity sha512-Hr9TdhyHCZUtwznEH2CBf7967mEM0idtJ5nMtjvk3Up5tPukOLXbHUNmh10oRfeNIhj+3GD3niu+g6sVK+gK0A==
+
 semver@^7.5.3:
   version "7.6.3"
   resolved "https://registry.npmjs.org/semver/-/semver-7.6.3.tgz"
@@ -871,6 +895,11 @@ supports-color@^5.5.0:
   dependencies:
     has-flag "^3.0.0"
 
+tabulator-tables@^6.3.0:
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/tabulator-tables/-/tabulator-tables-6.3.0.tgz#9936a70073bd9c0025c7efa3cfd5baea93fcc716"
+  integrity sha512-gFiivoa03+NCDJ28Na3UU45nJT7sFXBsFCBtMqXz5OpsNTWrmL5ZJYA4oZtDFaVfarPqUHNgwm2PhL6DR7CQxg==
+
 thenby@^1.3.4:
   version "1.3.4"
   resolved "https://registry.npmjs.org/thenby/-/thenby-1.3.4.tgz"
@@ -882,6 +911,14 @@ to-regex-range@^5.0.1:
   integrity sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ==
   dependencies:
     is-number "^7.0.0"
+
+tom-select@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/tom-select/-/tom-select-2.3.1.tgz#df338d9082874cd0bceb3bee87ed0184447c47f1"
+  integrity sha512-QS4vnOcB6StNGqX4sGboGXL2fkhBF2gIBB+8Hwv30FZXYPn0CyYO8kkdATRvwfCTThxiR4WcXwKJZ3cOmtI9eg==
+  dependencies:
+    "@orchidjs/sifter" "^1.0.3"
+    "@orchidjs/unicode-variants" "^1.0.4"
 
 touch@^3.1.0:
   version "3.1.1"

@@ -1,3 +1,6 @@
+// custom style self
+@import "custom";
+
 // @import 'bootstrap/scss/bootstrap';
 @import 'simplebar/dist/simplebar';
 // Vendors
@@ -14,7 +17,6 @@
 // Custom styles for this theme
 @import "theme";
 @import "examples";
-// @import '@coreui/icons/css/all.min';
 // @import "@phosphor-icons/web/src/light";
 @import "@phosphor-icons/web/src/bold/style";
 @import "@phosphor-icons/web/src/regular/style";
@@ -23,5 +25,6 @@
 @import 'datatables.net-colreorder-dt/css/colReorder.dataTables.min';
 @import 'datatables.net-fixedcolumns-dt/css/fixedColumns.dataTables.min';
 @import 'datatables.net-fixedheader-dt/css/fixedHeader.dataTables.min';
-// custom style self
-@import "custom";
+
+// tom-select css
+@import 'tom-select/dist/css/tom-select.bootstrap5.min';
