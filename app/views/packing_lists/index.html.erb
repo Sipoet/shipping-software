@@ -1,0 +1,27 @@
+<h1><%=PackingList.model_name.human%></h1>
+<div class="text-end">
+  <a href="<%=new_packing_list_path%>" class="btn btn-primary">Tambah</a>
+</div>
+<br/>
+<div data-controller="table" data-path="<%=packing_lists_path(format: :json)%>">
+  <table class="table table-striped table-hover table-sm">
+    <thead>
+      <tr>
+        <th data-field="container_detail" data-field-type="link" data-filter-field="container_id" data-link="<%=containers_path(format: :json)%>" data-sort-key="containers.container_number" data-link-label="name" data-record-path="container_path"><%=PackingList.human_attribute_name(:container)%></th>
+        <th data-field="customer_detail" data-field-type="link" data-filter-field="customer_id" data-link="<%=customers_path(format: :json)%>" data-sort-key="customers.name" data-link-label="name" data-record-path="customer_path"><%=PackingList.human_attribute_name(:customer)%></th>
+        <th data-field="supplier_detail" data-field-type="link" data-filter-field="supplier_id" data-link="<%=suppliers_path(format: :json)%>" data-sort-key="suppliers.name" data-link-label="name" data-record-path="supplier_path"><%=PackingList.human_attribute_name(:supplier)%></th>
+        <th data-field="product_detail" data-field-type="link" data-filter-field="product_id" data-link="<%=products_path(format: :json)%>" data-sort-key="products.name" data-link-label="name" data-record-path="product_path"><%=PackingList.human_attribute_name(:product)%></th>
+        <th data-field="quantity"><%=PackingList.human_attribute_name(:quantity)%></th>
+        <th data-field="total_weight"><%=PackingList.human_attribute_name(:total_weight)%></th>
+        <th data-field="price"><%=PackingList.human_attribute_name(:price)%></th>
+        <th data-field="unit_of_measurement"><%=PackingList.human_attribute_name(:unit_of_measurement)%></th>
+        <th data-field="total_dimension_p"><%=PackingList.human_attribute_name(:total_dimension_p)%></th>
+        <th data-field="total_dimension_l"><%=PackingList.human_attribute_name(:total_dimension_l)%></th>
+        <th data-field="total_dimension_t"><%=PackingList.human_attribute_name(:total_dimension_t)%></th>
+        <th data-field="created_at" data-field-type="datetime"><%=ApplicationRecord.human_attribute_name(:created_at)%></th>
+        <th data-field="updated_at" data-field-type="datetime"><%=ApplicationRecord.human_attribute_name(:updated_at)%></th>
+        <th data-field-type="action" data-no-sort data-row-button="edit,view">Action</th>
+      </tr>
+    </thead>
+  </table>
+</div>

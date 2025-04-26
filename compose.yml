@@ -7,7 +7,20 @@ services:
     command: bash -c "rm -f tmp/pids/server.pid && bin/dev"
     container_name: shipping-app
     volumes:
-      - .:/shipping-software
+      - ./app:/shipping-software/app
+      - ./bin:/shipping-software/bin
+      - ./config:/shipping-software/config
+      - ./db:/shipping-software/db
+      - ./lib:/shipping-software/lib
+      - ./public:/shipping-software/public
+      - ./spec:/shipping-software/spec
+      - ./vendor:/shipping-software/vendor
+      - ./.env:/shipping-software/.env
+      - ./node_modules:/shipping-software/node_modules
+      - ./package.json:/shipping-software/package.json
+      - ./package-lock.json:/shipping-software/package-lock.json
+      - ./Gemfile:/shipping-software/Gemfile
+      - ./Gemfile.lock:/shipping-software/Gemfile.lock
     ports:
       - "${SERVER_PORT}:3000"
     stdin_open: true
@@ -28,7 +41,17 @@ services:
     container_name: shipping-background
     command: bundle exec sidekiq -C config/sidekiq.yml
     volumes:
-      - .:/shipping-software
+      - ./app:/shipping-software/app
+      - ./bin:/shipping-software/bin
+      - ./config:/shipping-software/config
+      - ./db:/shipping-software/db
+      - ./lib:/shipping-software/lib
+      - ./public:/shipping-software/public
+      - ./spec:/shipping-software/spec
+      - ./vendor:/shipping-software/vendor
+      - ./.env:/shipping-software/.env
+      - ./Gemfile:/shipping-software/Gemfile
+      - ./Gemfile.lock:/shipping-software/Gemfile.lock
     stdin_open: true
     tty: true
     depends_on:
@@ -46,7 +69,7 @@ services:
     image: postgres:16.4-alpine3.20
     restart: always
     volumes:
-      - D:\Documents\sql\shipping\data:/var/lib/postgresql/data
+      - D:\sql\shipping\data:/var/lib/postgresql/data
       - ./init-user-db.sh:/docker-entrypoint-initdb.d/init-user-db.sh
     ports:
       - "5432:5432"
@@ -60,7 +83,7 @@ services:
     image: redis:7.2.3
     restart: always
     volumes:
-      - D:\Documents\shipping_redis\:/data
+      - D:\shipping_redis\:/data
   # pgadmin:
   #   image: dpage/pgadmin4:latest
   #   container_name: pgadmin

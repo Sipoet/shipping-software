@@ -1,7 +1,7 @@
 class CreatePackingLists < ActiveRecord::Migration[7.2]
   def change
     create_table :packing_lists do |t|
-      t.integer :container_id, null: false
+      t.integer :container_id
       t.integer :product_id, null: false
       t.text :description
       t.decimal :quantity, null: false

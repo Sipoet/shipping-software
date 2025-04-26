@@ -1,5 +1,4 @@
-json.recordsTotal Port.all.count
-json.recordsFiltered @records_filtered
+json.total_pages @ports.total_pages
 json.data do
   json.array! @ports do |port|
     json.id port.id

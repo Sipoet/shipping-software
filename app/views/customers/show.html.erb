@@ -1,0 +1,65 @@
+<div class="card">
+  <h5 class="card-header">Detail <%=Customer.model_name.human%></h5>
+  <div class="card-body">
+    <div class="mb-3 row">
+      <label for="staticName" class="col-sm-2 fw-bold col-form-label"><%=Customer.human_attribute_name(:name)%></label>
+      <div class="col-sm-10">
+        <input type="text" readonly class="form-control-plaintext" value="<%=@customer.name%>">
+      </div>
+    </div>
+    <div class="mb-3 row">
+      <label for="staticDefaultPort" class="col-sm-2 fw-bold col-form-label"><%=Customer.human_attribute_name(:default_port)%></label>
+      <div class="col-sm-10">
+        <%if @customer.default_port.present?%>
+          <a href="<%=port_path(id: @customer.default_port_id)%>" class="btn btn-link"><%=@customer.default_port.name%> (<%=@customer.default_port.city%>)</a>
+        <%end%>
+      </div>
+    </div>
+    <div class="mb-3 row">
+      <label for="staticAddress" class="col-sm-2 fw-bold col-form-label"><%=Customer.human_attribute_name(:address)%></label>
+      <div class="col-sm-10">
+        <p><%=@customer.address%></p>
+      </div>
+    </div>
+    <div class="mb-3 row">
+      <label for="staticBank" class="col-sm-2 fw-bold col-form-label"><%=Customer.human_attribute_name(:bank)%></label>
+      <div class="col-sm-10">
+        <input type="text" readonly class="form-control-plaintext" value="<%=@customer.bank%>">
+      </div>
+    </div>
+    <div class="mb-3 row">
+      <label for="staticBankAccount" class="col-sm-2 fw-bold col-form-label"><%=Customer.human_attribute_name(:bank_account)%></label>
+      <div class="col-sm-10">
+        <input type="text" readonly class="form-control-plaintext" value="<%=@customer.bank_account%>">
+      </div>
+    </div>
+    <div class="mb-3 row">
+      <label for="staticBankAccount" class="col-sm-2 fw-bold col-form-label"><%=Customer.human_attribute_name(:bank_register_name)%></label>
+      <div class="col-sm-10">
+        <input type="text" readonly class="form-control-plaintext" value="<%=@customer.bank_register_name%>">
+      </div>
+    </div>
+    <div class="mb-3 row">
+      <label for="staticTaxAccount" class="col-sm-2 fw-bold col-form-label"><%=Customer.human_attribute_name(:tax_account)%></label>
+      <div class="col-sm-10">
+        <input type="text" readonly class="form-control-plaintext"  value="<%=@customer.tax_account%>">
+      </div>
+    </div>
+    <div class="mb-3 row">
+      <label for="staticContactNumber" class="col-sm-2 fw-bold col-form-label"><%=Customer.human_attribute_name(:contact_number)%></label>
+      <div class="col-sm-10">
+        <div class="input-group">
+          <input type="text" readonly class="form-control" value="<%=phone_format(@customer.contact_number)%>">
+          <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-coreui-toggle="dropdown" aria-expanded="false">Action</button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="tel:<%=@customer.contact_number%>" target="_blank"><i class="ph ph-phone" class="btn btn-info"></i>call</a></li>
+            <li><a class="dropdown-item" href="https://api.whatsapp.com/send?phone=<%=@customer.contact_number%>message=halo" target="_blank"><i class="ph ph-whatsapp-logo"></i>whatsapp</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-footer">
+    <a href="<%=edit_customer_path(id: @customer.id)%>" class="btn btn-primary" >Edit</a>
+  </div>
+</div>

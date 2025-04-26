@@ -1,5 +1,5 @@
 class ShipsController < ApplicationController
-  before_action :root_breadcrumb
+  before_action :root_breadcrumb, :authenticate_user!
 
   def index
     respond_to do |format|
@@ -73,8 +73,7 @@ class ShipsController < ApplicationController
     if result.search_text.present?
       @ships = @ships.where('name ilike ?',"%#{result.search_text}%")
     end
-    @records_filtered = @ships.count
-    @ships = @ships.offset(result.offset)
-                   .limit(result.limit)
+    @ships = @ships.page(result.page)
+                   .per(result.limit)
   end
 end

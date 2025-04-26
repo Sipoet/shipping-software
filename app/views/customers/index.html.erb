@@ -1,0 +1,24 @@
+<h1><%=Customer.model_name.human%></h1>
+<div class="text-end">
+  <a href="<%=new_customer_path%>" class="btn btn-primary">Tambah</a>
+</div>
+<br/>
+<div data-controller="table" data-path="<%=customers_path(format: :json)%>">
+  <table class="table table-striped table-hover table-sm">
+    <thead>
+      <tr>
+        <th data-field="name"><%=Customer.human_attribute_name(:name)%></th>
+        <th data-field="default_port_detail" data-field-type="link" data-filter-field="default_port_id" data-link="<%=ports_path(format: :json)%>" data-sort-key="default_ports.name" data-link-label="name" data-record-path="default_port_path" ><%=Customer.human_attribute_name(:default_port)%></th>
+        <th data-field="address"><%=Customer.human_attribute_name(:address)%></th>
+        <th data-field="bank"><%=Customer.human_attribute_name(:bank)%></th>
+        <th data-field="bank_account"><%=Customer.human_attribute_name(:bank_account)%></th>
+        <th data-field="bank_register_name"><%=Customer.human_attribute_name(:bank_register_name)%></th>
+        <th data-field="contact_number"><%=Customer.human_attribute_name(:contact_number)%></th>
+        <th data-field="tax_account"><%=Customer.human_attribute_name(:tax_account)%></th>
+        <th data-field="created_at" data-field-type="datetime"><%=ApplicationRecord.human_attribute_name(:created_at)%></th>
+        <th data-field="updated_at" data-field-type="datetime"><%=ApplicationRecord.human_attribute_name(:updated_at)%></th>
+        <th data-field-type="action" data-no-sort data-row-button="edit,view">Action</th>
+      </tr>
+    </thead>
+  </table>
+</div>

@@ -12,6 +12,7 @@ class ApplicationController < ActionController::Base
     add_breadcrumb(root_path, 'Dashboard')
   end
 
+
   def set_locale
     I18n.locale = :id
   end

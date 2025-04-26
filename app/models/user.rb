@@ -6,4 +6,5 @@ class User < ApplicationRecord
 
   validates :username, presence: true
 
+  belongs_to :role
 end

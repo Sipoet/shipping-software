@@ -1,0 +1,27 @@
+id:
+  activerecord:
+    models:
+      ship_schedule: 'Order Kapal'
+    attributes:
+      ship_schedule:
+        ship: 'Kapal'
+        voyage: 'voyage'
+        estimated_arrived_sour_at: 'Tgl. Estimasi Pelabuhan Mendarat Muatan'
+        estimated_departure_sour_at: 'Tgl. Estimasi berangkat'
+        estimated_arrived_dest_at: 'Tgl. Estimasi Pelabuhan Mendarat tujuan'
+        actual_arrived_sour_at: 'Tgl. Sampai pelabuhan Muatan'
+        actual_departure_sour_at: 'Tgl. Berangkat'
+        actual_arrived_dest_at: 'Tgl. Sampai pelabuhan tujuan'
+        booking_code: 'Kode Shipment Of Instruction'
+        loading_port: 'Pelabuhan Muatan'
+        destination_port: 'Pelabuhan Tujuan'
+        status: 'Status'
+        status_enum:
+          draft: 'Draft'
+          cancelled: 'DiBatalkan'
+          port_processed: 'Diproses Pelabuhan'
+          si_released: 'Shipment of Instruction keluar'
+          ship_aboard: 'Kapal Berangkat'
+          arrived_to_destination: 'Kapal Sampai Tujuan'
+          completed: 'Selesai'
+        dorry_container_opened_at: 'Tanggal Bongkar Kontainer di Tujuan'

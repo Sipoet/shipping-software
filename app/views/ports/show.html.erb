@@ -8,19 +8,19 @@
       </div>
     </div>
     <div class="mb-3 row">
-      <label for="staticName" class="col-sm-2 fw-bold col-form-label"><%=Port.human_attribute_name(:city)%></label>
+      <label for="staticCity" class="col-sm-2 fw-bold col-form-label"><%=Port.human_attribute_name(:city)%></label>
       <div class="col-sm-10">
-        <input type="text" readonly class="form-control-plaintext" id="staticName" value="<%=@port.city%>">
+        <input type="text" readonly class="form-control-plaintext" id="staticCity" value="<%=@port.city%>">
       </div>
     </div>
     <div class="mb-3 row">
-      <label for="staticName" class="col-sm-2 fw-bold col-form-label"><%=Port.human_attribute_name(:country)%></label>
+      <label for="staticCountry" class="col-sm-2 fw-bold col-form-label"><%=Port.human_attribute_name(:country)%></label>
       <div class="col-sm-10">
-        <input type="text" readonly class="form-control-plaintext" id="staticName" value="<%=@port.country%>">
+        <input type="text" readonly class="form-control-plaintext" id="staticCountry" value="<%=@port.country%>">
       </div>
     </div>
   </div>
-  <div class="card-footer ">
+  <div class="card-footer">
     <a href="<%=edit_port_path(id: @port.id)%>" class="btn btn-primary" >Edit</a>
   </div>
 </div>

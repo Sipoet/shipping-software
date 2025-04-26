@@ -210,3 +210,9 @@ id:
       long: "%d %B %Y %H.%M"
       short: "%d %b %H.%M"
     pm: pm
+  activerecord:
+    attributes:
+      application_record:
+        created_at: "Tanggal Dibuat"
+        updated_at: "Tanggal Diubah"
+        id: "ID"

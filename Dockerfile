@@ -20,7 +20,7 @@ RUN bundle install && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git
 # Precompile bootsnap code for faster boot times
 RUN bundle exec bootsnap precompile --gemfile
-RUN npm install -g yarn
+RUN npm install
 
 # Precompiling assets for production without requiring secret RAILS_MASTER_KEY
 # RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile

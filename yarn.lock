@@ -345,80 +345,6 @@ concat-map@0.0.1:
   resolved "https://registry.npmjs.org/concat-map/-/concat-map-0.0.1.tgz"
   integrity sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==
 
-datatables.net-bs5@^2.1.7:
-  version "2.1.7"
-  resolved "https://registry.npmjs.org/datatables.net-bs5/-/datatables.net-bs5-2.1.7.tgz"
-  integrity sha512-fGCZMpF9tz04fJ5SMKLNN/o5UWFzw9wXIH9bHxcFoe10MMQDAoo7KPMT7wsivdxj4/o3nDmsccssAGAmcLwAjw==
-  dependencies:
-    datatables.net "2.1.7"
-    jquery ">=1.7"
-
-datatables.net-colreorder-dt@^2.0.4:
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/datatables.net-colreorder-dt/-/datatables.net-colreorder-dt-2.0.4.tgz#ed1e016603a54fe0764a776af3492b53995f4609"
-  integrity sha512-vsGn1GETv9tJO1fUZMA96mQ/baXPdoF3qB/tADPD83+1VMGFQijuBtUOxBx3wd/Bm6SmL03GV0Ug1lB7MazKkQ==
-  dependencies:
-    datatables.net-colreorder "2.0.4"
-    datatables.net-dt "^2"
-    jquery ">=1.7"
-
-datatables.net-colreorder@2.0.4:
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/datatables.net-colreorder/-/datatables.net-colreorder-2.0.4.tgz#fe33bf342cfedd92791d858f387a04f043d6d1b0"
-  integrity sha512-j2d2uObivMaMLX+VTsIu9XEfucMPuS+OYurezQtPNHo0LgdXdgKvouEAUghVtlkTxW+jX7tjiSbagH2YWIS5Jg==
-  dependencies:
-    datatables.net "^2"
-    jquery ">=1.7"
-
-datatables.net-dt@^2:
-  version "2.1.7"
-  resolved "https://registry.yarnpkg.com/datatables.net-dt/-/datatables.net-dt-2.1.7.tgz#0c059df3fd58b01ae57d8807661a1e107f2a19f8"
-  integrity sha512-+JLzOH+atnWsZNc+w1gsi/WV7WprJUznVb/vxVN1+2li1vVocvljjLAWxrTJBGOs0n6hfIomkK9rX/H2M5tSkw==
-  dependencies:
-    datatables.net "2.1.7"
-    jquery ">=1.7"
-
-datatables.net-fixedcolumns-dt@^5.0.2:
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/datatables.net-fixedcolumns-dt/-/datatables.net-fixedcolumns-dt-5.0.2.tgz#e93d377d608c29da0ef1fef1d731d40ac5381fa1"
-  integrity sha512-sgu6OxK/7aVnK31QoOm1fZ08ROJ9F1bRr2CkQplFZ6usKWLCcJeskH9hsDwdnXmweYOxE0g4oivJhQQv5eRuHA==
-  dependencies:
-    datatables.net-dt "^2"
-    datatables.net-fixedcolumns "5.0.2"
-    jquery ">=1.7"
-
-datatables.net-fixedcolumns@5.0.2:
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/datatables.net-fixedcolumns/-/datatables.net-fixedcolumns-5.0.2.tgz#f50901010ea1eadc6fa139e31f7dbc46e7760a4f"
-  integrity sha512-YNEtZ/NS6Jiuqzhr7LuEziDPqyqMFg//C/eaaT6QwtaRHIkft3r4NMWWs7mscMMwaDlHnqTLCjTdZdPxUd2VBQ==
-  dependencies:
-    datatables.net "^2"
-    jquery ">=1.7"
-
-datatables.net-fixedheader-dt@^4.0.1:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/datatables.net-fixedheader-dt/-/datatables.net-fixedheader-dt-4.0.1.tgz#89f3a0adaee408b4ec65d3381bd0d68a0412c943"
-  integrity sha512-9Fzmue2d4ld1xQL5t8GDqoOOTWkEhyLa15TevS9na57qC60e1B+K3U+mxLUSyBJ08eJ2kaOXskOptwQ2GzSvfw==
-  dependencies:
-    datatables.net-dt "^2"
-    datatables.net-fixedheader "4.0.1"
-    jquery ">=1.7"
-
-datatables.net-fixedheader@4.0.1:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/datatables.net-fixedheader/-/datatables.net-fixedheader-4.0.1.tgz#d3c4866fa96fc468002f72b9e8efa3276aa4807b"
-  integrity sha512-jdwvGvI/WBKjNDJ5JwcTqmh7ehLkzXmTqvVCWJ6ig3+P9EHasoTq6Ys08WfICXpCHZgDKwDYLiW2rqVLK5TWOg==
-  dependencies:
-    datatables.net "^2"
-    jquery ">=1.7"
-
-datatables.net@2.1.7, datatables.net@^2:
-  version "2.1.7"
-  resolved "https://registry.npmjs.org/datatables.net/-/datatables.net-2.1.7.tgz"
-  integrity sha512-ZSsBmYN9m++WHm+nfJm2cPfC0I25CBRx358qebzEW9WWXYjPZFJs8iRs9+nzv8P7HgvqQu8kKBmQzW1+ByhuUA==
-  dependencies:
-    jquery ">=1.7"
-
 debug@^4:
   version "4.3.7"
   resolved "https://registry.npmjs.org/debug/-/debug-4.3.7.tgz"
@@ -603,11 +529,6 @@ is-number@^7.0.0:
   resolved "https://registry.npmjs.org/is-number/-/is-number-7.0.0.tgz"
   integrity sha512-41Cifkg6e8TylSpdtTpeLVMqvSBEVzTttHvERD741+pnZ8ANv0004MRL43QKPDlK9cGvNp6NZWZUBlbGXYxxng==
 
-jquery@>=1.7:
-  version "3.7.1"
-  resolved "https://registry.npmjs.org/jquery/-/jquery-3.7.1.tgz"
-  integrity sha512-m4avr8yL8kmFN8psrbFFFmB/If14iN5o9nw/NgnnM+kybDJpRsAynV2BsfpTYrTRysYUdADVD7CkUUizgkpLfg==
-
 jsonfile@^6.0.1:
   version "6.1.0"
   resolved "https://registry.npmjs.org/jsonfile/-/jsonfile-6.1.0.tgz"
@@ -631,6 +552,11 @@ lodash@^4.17.21:
   version "4.17.21"
   resolved "https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
+
+luxon@^3.5.0:
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/luxon/-/luxon-3.5.0.tgz#6b6f65c5cd1d61d1fd19dbf07ee87a50bf4b8e20"
+  integrity sha512-rh+Zjr6DNfUYR3bPwJEnuwDdqMbxZW7LOQfUN4B54+Cl+0o5zaU9RJ6bcidfDtC1cWCZXQ+nvX8bf6bAji37QQ==
 
 merge2@^1.3.0:
   version "1.4.1"

@@ -1,0 +1,51 @@
+
+<div class="card mb-4">
+<%=show_alert_if_exists%>
+
+<%= form_with model: supplier do |form| %>
+  <div class="card-body">
+    <div class="mb-3">
+      <label class="form-label" for="supplier_name"><%=Supplier.human_attribute_name(:name)%></label>
+      <input class="form-control" aria-describedby="supplier.name" type="text" value="<%=supplier.name%>" name="supplier[name]" id="supplier_name" />
+      <div id="supplier.name" class="form-text">Nama Supplier.</div>
+    </div>
+    <div class="mb-3">
+      <%= form.label :default_port, class:'form-label' %>
+      <select name="supplier[default_port_id]" class="form-select" id="supplier_default_port" data-controller= 'select2' data-select-label="name" data-path="<%=ports_path(format: :json)%>" aria-describedby='supplier.default_port'>
+        <%if supplier.default_port.present?%>
+          <option selected value="<%=supplier.default_port_id%>">
+            <%="#{supplier.default_port.name} (#{supplier.default_port.city})"%>
+          </option>
+        <%end%>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label class="form-label" for="supplier_address"><%=Supplier.human_attribute_name(:address)%></label>
+      <textarea id="supplier_address" class="form-control" name="supplier[address]" rows="5" value="<%=supplier.address%>" placeholder="Alamat" aria-describedby='supplier.address'></textarea>
+    </div>
+    <div class="mb-3">
+      <label class="form-label" for="supplier_contact_number"><%=Supplier.human_attribute_name(:contact_number)%></label>
+      <%=render partial: 'shared/phone_input',locals:{value: supplier.contact_number, model_name: :supplier, column_key: :contact_number}%>
+    </div>
+    <div class="mb-3">
+      <label class="form-label" for="supplier_bank"><%=Supplier.human_attribute_name(:bank)%></label>
+      <input class="form-control" aria-describedby="supplier.bank" type="text" value="<%=supplier.bank%>" name="supplier[bank]" id="supplier_bank" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label" for="supplier_bank_account"><%=Supplier.human_attribute_name(:bank_account)%></label>
+      <input class="form-control" aria-describedby="supplier.bank_account" type="text" value="<%=supplier.bank_account%>" name="supplier[bank_account]" id="supplier_bank_account" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label" for="supplier_bank_register_name"><%=Supplier.human_attribute_name(:bank_register_name)%></label>
+      <input class="form-control" aria-describedby="supplier.bank_register_name" type="text" value="<%=supplier.bank_register_name%>" name="supplier[bank_register_name]" id="supplier_bank_register_name" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label" for="supplier_tax_account"><%=Supplier.human_attribute_name(:tax_account)%></label>
+      <input class="form-control" aria-describedby="supplier.tax_account" type="text" value="<%=supplier.tax_account%>" name="supplier[tax_account]" id="supplier_tax_account" />
+    </div>
+  </div>
+  <div class="card-footer">
+    <%= form.submit "Simpan", class: 'btn btn-primary'%>
+  </div>
+<%end%>
+</div>

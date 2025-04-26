@@ -1,17 +1,22 @@
 module TableSearchParamsExtractor
 
   def extract_search_query(params, klass)
+    if params[:params].present?
+      params = JSON.parse(params[:params], symbolize_names: true)
+    end
     result = Result.new
     result.limit = extract_search_limit(params, klass)
-    result.offset = extract_search_offset(params)
+    result.page = extract_search_page(params)
     result.filter = extract_search_filter(params)
-    result.order = extract_search_order(params, klass)
+    result.order = extract_search_sort(params, klass)
+    Rails.logger.debug "==order: #{result.order}"
     result.search_text = extract_search_text(params)
     result
   end
 
   class Result
-    attr_accessor :offset,:limit,:filter,:order, :search_text
+    attr_accessor :offset, :limit, :page,
+                  :filter, :order, :search_text
   end
 
   private
@@ -19,17 +24,18 @@ module TableSearchParamsExtractor
   def extract_search_filter(params)
     query_filter = []
     values = []
-    columns = params[:columns] || []
-    columns.each do |key, value|
-      search = value[:search]
-      next if search.blank?
-      next if search[:value].blank?
-      if search[:regex] == 'true'
-        query_filter << "#{value[:data]} ilike ?"
-        values << "%#{search[:value].strip}%"
+    return nil if params[:filter].blank?
+    params[:filter].each do |filter|
+      next if filter[:value].blank?
+      if filter[:type] == 'like'
+        query_filter << "#{filter[:field]} ilike ?"
+        values << "%#{filter[:value].strip}%"
+      elsif filter[:value].is_a?(Array)
+        query_filter << "#{filter[:field]} IN (?)"
+        values << filter[:value]
       else
-        query_filter << "#{value[:data]} = ?"
-        values << search[:value].strip
+        query_filter << "#{filter[:field]} = ?"
+        values << filter[:value].strip
       end
     end
     return [] if values.blank?
@@ -39,8 +45,8 @@ module TableSearchParamsExtractor
     ApplicationRecord.sanitize_sql_array(values)
   end
 
-  def extract_search_offset(params)
-    params[:start] || 0
+  def extract_search_page(params)
+    params[:page] || 1
   end
 
   def extract_search_limit(params, klass)
@@ -48,8 +54,7 @@ module TableSearchParamsExtractor
   end
 
   def extract_search_text(params)
-    permitted_params = params.required(:search).permit(:value,:regex)
-    permitted_params[:value].try(:strip)
+    params[:term].try(:strip)
   end
 
   def extract_search_order(params, klass)
@@ -61,6 +66,18 @@ module TableSearchParamsExtractor
       column = params[:columns][column_index]
       column_name = column.try(:[],:name).presence || column.try(:[],:data)
       order[column_name] = value['dir'].try(:downcase) == 'asc' ? :asc : :desc
+    end
+    order
+  end
+
+  def extract_search_sort(params, klass)
+    order_params = params[:sort]
+    order = {}
+    return order if order_params.blank?
+    order_params.each do|sort|
+      field_name = sort[:field]
+      next if field_name.nil?
+      order[field_name] = sort['dir'].try(:downcase) == 'asc' ? :asc : :desc
     end
     order
   end

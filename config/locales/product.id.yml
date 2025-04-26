@@ -1,0 +1,20 @@
+id:
+  activerecord:
+    models:
+      product: 'Produk'
+    attributes:
+      product:
+        name: 'Nama'
+        product_type: 'Tipe Produk'
+        product_type_enum:
+          other: 'Other'
+          foods: 'Foods'
+          electronic_appliance: 'Electronic Appliance'
+          chemical: 'Chemical'
+          cosmetics: 'Cosmetics'
+          building_tools: 'Building Tools'
+          furniture: 'Furniture'
+        weight: 'Berat'
+        dimension_p: 'Panjang'
+        dimension_l: 'Lebar'
+        dimension_t: 'Tinggi'

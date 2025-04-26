@@ -1,5 +1,4 @@
-json.recordsTotal Ship.all.count
-json.recordsFiltered @records_filtered
+json.total_pages @ships.total_pages
 json.data do
   json.array! @ships do |ship|
     json.id ship.id

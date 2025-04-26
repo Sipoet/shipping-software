@@ -1,5 +1,5 @@
 class PortsController < ApplicationController
-  before_action :root_breadcrumb
+  before_action :root_breadcrumb, :authenticate_user!
   def index
     respond_to do |format|
       format.html {
@@ -71,10 +71,11 @@ class PortsController < ApplicationController
       @ports = @ports.where(result.filter)
     end
     if result.search_text.present?
-      @ports = @ports.where('name ilike ? OR city ilike ?',*Array.new(2){"%#{result.search_text}%"})
+      columns = ['name', 'city']
+      query = columns.map{|column|"#{column} ilike ?"}.join(' OR ')
+      @ports = @ports.where(query,*Array.new(columns.length){"%#{result.search_text}%"})
     end
-    @records_filtered = @ports.count
-    @ports = @ports.offset(result.offset)
-                   .limit(result.limit)
+    @ports = @ports.page(result.page)
+                   .per(result.limit)
   end
 end

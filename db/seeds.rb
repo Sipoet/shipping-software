@@ -131,3 +131,16 @@ ports = [
 ports.each do |(name,city)|
   Port.find_or_create_by(name: name,city: city, country: 'indonesia')
 end
+['superadmin','accounting','manager','sales','driver'].each do |name|
+  Role.find_or_create_by(name: name)
+end
+I18n.locale = :id
+admin_password = ENV['ADMIN_PASSWORD']
+if admin_password.present?
+  user = User.find_or_initialize_by(username: 'superadmin')
+  user.password = admin_password
+  user.password_confirmation = admin_password
+  user.email = 'ciptakarya@gmail.com'
+  user.role = Role.find_by(name:'superadmin')
+  user.save!
+end

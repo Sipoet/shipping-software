@@ -16,6 +16,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_25_092427) do
 
   create_table "clients", force: :cascade do |t|
     t.string "name", null: false
+    t.string "type"
     t.text "address"
     t.string "bank"
     t.string "bank_account"
@@ -50,7 +51,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_25_092427) do
   end
 
   create_table "packing_lists", force: :cascade do |t|
-    t.integer "container_id", null: false
+    t.integer "container_id"
     t.integer "product_id", null: false
     t.text "description"
     t.decimal "quantity", null: false
@@ -197,4 +198,5 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_25_092427) do
   add_foreign_key "ship_schedules", "ports", column: "destination_port_id"
   add_foreign_key "ship_schedules", "ports", column: "loading_port_id"
   add_foreign_key "ship_schedules", "ships"
+  add_foreign_key "users", "roles"
 end

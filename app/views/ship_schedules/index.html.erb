@@ -1,0 +1,31 @@
+<h1><%=ShipSchedule.model_name.human%></h1>
+<div class="row mb-3">
+  <div class="text-end">
+    <a href="<%=new_ship_schedule_path%>" class="btn btn-primary">Tambah</a>
+  </div>
+</div>
+<br/>
+<div data-controller="table" class="table table-hover table-striped" data-path="ship_schedules.json">
+  <table class="hide">
+    <thead>
+      <tr>
+        <th data-field="ship_name" data-field-type="link" data-filter-field="ship_id" data-link="<%=ships_path(format: :json)%>" data-sort-key="ships.name" data-link-label="name" data-record-path="ship_path"><%=ShipSchedule.human_attribute_name(:ship)%></th>
+        <th data-field="status" data-field-type="enum" data-enum="<%=enum_list(ShipSchedule, :status).to_json%>"><%=ShipSchedule.human_attribute_name(:status)%></th>
+        <th data-field="voyage"><%=ShipSchedule.human_attribute_name(:voyage)%></th>
+        <th data-field="loading_port_detail" data-field-type="link" data-filter-field="loading_port_id" data-link="<%=ports_path(format: :json)%>" data-sort-key="loading_ports.name" data-link-label="name" data-record-path="loading_port_path"><%=ShipSchedule.human_attribute_name(:loading_port)%></th>
+        <th data-field="destination_port_detail" data-field-type="link" data-filter-field="destination_port_id" data-link="<%=ports_path(format: :json)%>" data-sort-key="destination_ports.name" data-link-label="name" data-record-path="destination_port_path"><%=ShipSchedule.human_attribute_name(:destination_port)%></th>
+        <th data-field="estimated_arrived_sour_at" data-field-type="datetime"><%=ShipSchedule.human_attribute_name(:estimated_arrived_sour_at)%></th>
+        <th data-field="estimated_departure_sour_at" data-field-type="datetime"><%=ShipSchedule.human_attribute_name(:estimated_departure_sour_at)%></th>
+        <th data-field="estimated_arrived_dest_at" data-field-type="datetime"><%=ShipSchedule.human_attribute_name(:estimated_arrived_dest_at)%></th>
+        <th data-field="actual_arrived_sour_at" data-field-type="datetime"><%=ShipSchedule.human_attribute_name(:actual_arrived_sour_at)%></th>
+        <th data-field="actual_departure_sour_at" data-field-type="datetime"><%=ShipSchedule.human_attribute_name(:actual_departure_sour_at)%></th>
+        <th data-field="actual_arrived_dest_at" data-field-type="datetime"><%=ShipSchedule.human_attribute_name(:actual_arrived_dest_at)%></th>
+        <th data-field="dorry_container_opened_at" data-field-type="datetime"><%=ShipSchedule.human_attribute_name(:dorry_container_opened_at)%></th>
+        <th data-field="booking_code"><%=ShipSchedule.human_attribute_name(:booking_code)%></th>
+        <th data-field="created_at" data-field-type="datetime"><%=ApplicationRecord.human_attribute_name(:created_at)%></th>
+        <th data-field="updated_at" data-field-type="datetime"><%=ApplicationRecord.human_attribute_name(:updated_at)%></th>
+        <th data-field-type="action" data-no-sort data-row-button="edit,view">Action</th>
+      </tr>
+    </thead>
+  </table>
+</div>

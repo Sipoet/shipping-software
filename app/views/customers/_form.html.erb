@@ -1,0 +1,51 @@
+
+<div class="card mb-4">
+<%=show_alert_if_exists%>
+
+<%= form_with model: customer do |form| %>
+  <div class="card-body">
+    <div class="mb-3">
+      <label class="form-label" for="customer_name"><%=Customer.human_attribute_name(:name)%></label>
+      <input class="form-control" aria-describedby="customer.name" type="text" value="<%=customer.name%>" name="customer[name]" id="customer_name" />
+      <div id="customer.name" class="form-text">Nama Customer.</div>
+    </div>
+    <div class="mb-3">
+      <%= form.label :default_port, class:'form-label' %>
+      <select name="customer[default_port_id]" class="form-select" id="customer_default_port" data-controller= 'select2' data-select-label="name" data-path="<%=ports_path(format: :json)%>" aria-describedby='customer.default_port'>
+        <%if customer.default_port.present?%>
+          <option selected value="<%=customer.default_port_id%>">
+            <%="#{customer.default_port.name} (#{customer.default_port.city})"%>
+          </option>
+        <%end%>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label class="form-label" for="customer_address"><%=Customer.human_attribute_name(:address)%></label>
+      <textarea id="customer_address" class="form-control" name="customer[address]" rows="5" value="<%=customer.address%>" placeholder="Alamat" aria-describedby='customer.address'></textarea>
+    </div>
+    <div class="mb-3">
+      <label class="form-label" for="customer_contact_number"><%=Customer.human_attribute_name(:contact_number)%></label>
+      <%=render partial: 'shared/phone_input',locals:{value: customer.contact_number, model_name: :customer, column_key: :contact_number}%>
+    </div>
+    <div class="mb-3">
+      <label class="form-label" for="customer_bank"><%=Customer.human_attribute_name(:bank)%></label>
+      <input class="form-control" aria-describedby="customer.bank" type="text" value="<%=customer.bank%>" name="customer[bank]" id="customer_bank" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label" for="customer_bank_account"><%=Customer.human_attribute_name(:bank_account)%></label>
+      <input class="form-control" aria-describedby="customer.bank_account" type="text" value="<%=customer.bank_account%>" name="customer[bank_account]" id="customer_bank_account" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label" for="customer_bank_register_name"><%=Customer.human_attribute_name(:bank_register_name)%></label>
+      <input class="form-control" aria-describedby="customer.bank_register_name" type="text" value="<%=customer.bank_register_name%>" name="customer[bank_register_name]" id="customer_bank_register_name" />
+    </div>
+    <div class="mb-3">
+      <label class="form-label" for="customer_tax_account"><%=Customer.human_attribute_name(:tax_account)%></label>
+      <input class="form-control" aria-describedby="customer.tax_account" type="text" value="<%=customer.tax_account%>" name="customer[tax_account]" id="customer_tax_account" />
+    </div>
+  </div>
+  <div class="card-footer">
+    <%= form.submit "Simpan", class: 'btn btn-primary'%>
+  </div>
+<%end%>
+</div>
