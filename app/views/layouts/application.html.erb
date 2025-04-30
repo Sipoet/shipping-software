@@ -18,18 +18,22 @@
   </head>
 
   <body>
-    <%= render partial:'layouts/sidebar'%>
-    <div class="wrapper d-flex flex-column min-vh-100">
-      <%= render partial: 'layouts/header'%>
+    <noscript>
+      You need to enable JavaScript to run this app
+    </noscript>
+    <div id="root"></div>
+    <%#=  render partial:'layouts/sidebar'%>
+   <!-- <div class="wrapper d-flex flex-column min-vh-100">
+      <%#= render partial: 'layouts/header'%>
       <div class="body flex-grow-1">
         <div class="container-lg px-4" data-controller="body">
-          <%= yield %>
+          <%#= yield %>
         </div>
       </div>
     </div>
     <footer class="footer px-4">
       <div> © <%=Date.today.year%> Cipta Karya Agung Sejahtera.</div>
-    </footer>
+    </footer> -->
     <%= javascript_include_tag "application", type: "module" %>
   </body>
 </html>

@@ -5,15 +5,15 @@
     "esbuild": "^0.25.3"
   },
   "scripts": {
-    "build": "esbuild app/javascript/*.* --bundle --sourcemap --format=esm --outdir=app/assets/builds --public-path=/assets",
+    "build:js": "node app/javascript/esbuild.config.mjs",
+    "watch:js": "nodemon --watch ./app/javascript/ --ext scss,js,jsx,css --exec \"yarn build:js\"",
     "build:css:compile": "sass ./app/assets/stylesheets/application.bootstrap.scss:./app/assets/builds/application.css --no-source-map --load-path=node_modules",
     "build:css:prefix": "postcss ./app/assets/builds/application.css --use=autoprefixer --output=./app/assets/builds/application.css",
     "build:css": "yarn build:css:compile && yarn build:css:prefix",
     "watch:css": "nodemon --watch ./app/assets/stylesheets/ --ext scss --exec \"yarn build:css\""
   },
   "dependencies": {
-    "@coreui/coreui": "^5.1.2",
-    "@coreui/utils": "^2.0.2",
+    "@coreui/coreui-free-react-admin-template": "github:coreui/coreui-free-react-admin-template",
     "@hotwired/stimulus": "^3.2.2",
     "@hotwired/turbo-rails": "^8.0.10",
     "@phosphor-icons/web": "^2.1.1",

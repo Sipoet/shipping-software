@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
-FROM ruby:3.2.4-slim-bullseye
-RUN apt-get update -qq && apt-get install -y nodejs postgresql-client build-essential apt-utils libpq-dev git curl
+FROM ruby:3.4.3-slim-bullseye
+RUN apt-get update -qq && apt-get install -y nodejs postgresql-client build-essential apt-utils libpq-dev git curl libyaml-dev
 RUN git config --global core.symlinks false
 RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash -
 RUN apt-get install -y nodejs
@@ -20,7 +20,8 @@ RUN bundle install && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git
 # Precompile bootsnap code for faster boot times
 RUN bundle exec bootsnap precompile --gemfile
-RUN npm install
+RUN npm install -g yarn
+RUN yarn install
 
 # Precompiling assets for production without requiring secret RAILS_MASTER_KEY
 # RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile

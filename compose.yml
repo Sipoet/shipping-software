@@ -7,6 +7,7 @@ services:
     command: bash -c "rm -f tmp/pids/server.pid && bin/dev"
     container_name: shipping-app
     volumes:
+      # - .:/shipping-software
       - ./app:/shipping-software/app
       - ./bin:/shipping-software/bin
       - ./config:/shipping-software/config
@@ -21,6 +22,7 @@ services:
       - ./package-lock.json:/shipping-software/package-lock.json
       - ./Gemfile:/shipping-software/Gemfile
       - ./Gemfile.lock:/shipping-software/Gemfile.lock
+      - ./Procfile.dev:/shipping-software/Procfile.dev
     ports:
       - "${SERVER_PORT}:3000"
     stdin_open: true
@@ -36,6 +38,7 @@ services:
         - PRODUCTION_DATABASE_PASSWORD=${PRODUCTION_DATABASE_PASSWORD}
         - RAILS_ENV=${RAILS_ENV}
         - PRODUCTION_DATABASE_HOST=${PRODUCTION_DATABASE_HOST}
+        - NODE_ENV = development
   background:
     image: shipping-app
     container_name: shipping-background
