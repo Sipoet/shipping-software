@@ -3,8 +3,8 @@ import {sassPlugin} from 'esbuild-sass-plugin'
 let ctx = await esbuild.context({
   entryPoints: [
     'app/javascript/application.js',
-    'app/javascript/components/*.*',
-    'app/javascript/views/**/*.*',
+    'app/javascript/components/**',
+    'app/javascript/views/**',
     'app/javascript/App.js',
     'app/javascript/routes.js',
     'app/javascript/nav.js',
