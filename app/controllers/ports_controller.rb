@@ -1,5 +1,6 @@
 class PortsController < ApplicationController
   before_action :root_breadcrumb, :authenticate_user!
+  skip_before_action :verify_authenticity_token, only: [:create,:update]
   def index
     respond_to do |format|
       format.html {
@@ -13,19 +14,37 @@ class PortsController < ApplicationController
 
   def show
     find_port!
-    add_breadcrumb('', @port.name)
+    respond_to do |format|
+      format.html do
+        add_breadcrumb('', @port.name)
+      end
+      format.json do
+        render json: @port
+      end
+    end
   end
 
   def create
     permitted_params = params.required(:port)
                              .permit(:name, :city, :country)
     @port = Port.new(permitted_params)
-    if @port.save
-      redirect_to port_path(id: @port.id)
-    else
-      add_breadcrumb('', 'Tambah Baru')
-      flash[:alert] = @port.errors.full_messages
-      render :new
+    respond_to do |format|
+      format.html do
+        if @port.save
+          redirect_to port_path(id: @port.id)
+        else
+          add_breadcrumb('', 'Tambah Baru')
+          flash[:alert] = @port.errors.full_messages
+          render :new
+        end
+      end
+      format.json  do
+        if @port.save
+          render json: {message: 'sukses simpan',data: @port}, status: :created
+        else
+          render_json_error(@port)
+        end
+      end
     end
   end
 
@@ -33,13 +52,24 @@ class PortsController < ApplicationController
     find_port!
     permitted_params = params.required(:port)
                              .permit(:name, :city, :country)
-    if @port.update(permitted_params)
-      redirect_to port_path(id: @port.id)
-    else
-      add_breadcrumb(port_path(id: @port.id), @port.name)
-      add_breadcrumb('', 'Edit')
-      flash[:alert] = @port.errors.full_messages
-      render :edit
+    respond_to do |format|
+      format.html {
+        if @port.update(permitted_params)
+          redirect_to port_path(id: @port.id)
+        else
+          add_breadcrumb(port_path(id: @port.id), @port.name)
+          add_breadcrumb('', 'Edit')
+          flash[:alert] = @port.errors.full_messages
+          render :edit
+        end
+      }
+      format.json {
+        if @port.update(permitted_params)
+          render json: {message: 'sukses simpan',data: @port}, status: :ok
+        else
+          render_json_error(@port)
+        end
+      }
     end
   end
 

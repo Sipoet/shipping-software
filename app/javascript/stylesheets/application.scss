@@ -1,0 +1,30 @@
+// If you want to override variables do it here
+@use "variables";
+
+// @use 'bootstrap/scss/bootstrap';
+@use 'simplebar/dist/simplebar';
+// Vendors
+@use "vendors/simplebar" as vendor_simplebar;
+
+// Import styles
+@use "@coreui/coreui/scss/coreui";
+@use '@coreui/coreui/dist/css/themes/bootstrap/bootstrap.min';
+
+
+// Custom styles for this theme
+// @use "theme";
+// @use "examples";
+@use "@phosphor-icons/web/src/light/style";
+@use "@phosphor-icons/web/src/bold/style";
+@use "@phosphor-icons/web/src/regular/style";
+
+// @use '@coreui/coreui/dist/css/coreui-reboot.min';
+
+// datatable css
+// @use 'tabulator-tables/dist/css/tabulator_bootstrap5.min';
+
+// tom-select css
+// @use 'tom-select/dist/css/tom-select.bootstrap5.min';
+
+// custom style self
+@use "custom";

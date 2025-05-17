@@ -3,4 +3,8 @@ class HomeController < ApplicationController
 
   def dashboard
   end
+
+  def dashboard2
+    render :dashboard, layout: 'application_react'
+  end
 end

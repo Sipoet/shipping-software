@@ -1,5 +1,5 @@
 
-import TomSelect from 'tom-select/dist/esm/tom-select.complete'
+import TomSelect from 'tom-select'
 import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
 

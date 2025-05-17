@@ -1,0 +1,19 @@
+// .dataTable.fixedHeader-floating{
+//   background-color: white !important;
+// }
+
+
+.tabulator-cell .btn ~ .btn, .btn-action-container .btn ~ .btn{
+  margin-left: 1.2em;
+}
+.btn-action-container .btn{
+  margin-bottom: 1em;
+}
+
+.tabulator-col ~ .tabulator-col{
+  border-left: 1px solid rgb(222, 226, 230);
+}
+.ts-wrapper-custom{
+  position: absolute;
+  z-index: 1000;
+}

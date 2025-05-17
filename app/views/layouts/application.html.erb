@@ -15,25 +15,34 @@
 
     <%= stylesheet_link_tag "application" %>
 
+    <%= vite_client_tag %>
+    <%= vite_javascript_tag 'application' %>
+    <!--
+      If using a TypeScript entrypoint file:
+        vite_typescript_tag 'application'
+
+      If using a .jsx or .tsx entrypoint, add the extension:
+        vite_javascript_tag 'application.jsx'
+
+      Visit the guide for more information: https://vite-ruby.netlify.app/guide/rails
+    -->
+
   </head>
 
   <body>
-    <noscript>
-      You need to enable JavaScript to run this app
-    </noscript>
-    <div id="root"></div>
-    <%#=  render partial:'layouts/sidebar'%>
-   <!-- <div class="wrapper d-flex flex-column min-vh-100">
-      <%#= render partial: 'layouts/header'%>
+
+    <%= render partial:'layouts/sidebar'%>
+    <div class="wrapper d-flex flex-column min-vh-100">
+      <%= render partial: 'layouts/header'%>
       <div class="body flex-grow-1">
         <div class="container-lg px-4" data-controller="body">
-          <%#= yield %>
+          <%= yield %>
         </div>
       </div>
     </div>
     <footer class="footer px-4">
       <div> © <%=Date.today.year%> Cipta Karya Agung Sejahtera.</div>
-    </footer> -->
+    </footer>
     <%= javascript_include_tag "application", type: "module" %>
   </body>
 </html>

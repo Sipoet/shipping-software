@@ -33,7 +33,7 @@ Rails.application.routes.draw do
   # Render dynamic PWA files from app/views/pwa/*
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-
+  get 'dashboard-react' => 'home#dashboard2'
   # Defines the root path route ("/")
   root "home#dashboard"
 end

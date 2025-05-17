@@ -17,7 +17,7 @@ import { AppSidebarNav } from '@coreui/coreui-free-react-admin-template/src/comp
 // import { sygnet } from 'src/assets/brand/sygnet'
 
 // sidebar nav config
-import navigation from '../nav'
+import navigation from '../entrypoints/nav'
 const AppSidebar = () => {
   const dispatch = useDispatch()
   const unfoldable = useSelector((state) => state.sidebarUnfoldable)

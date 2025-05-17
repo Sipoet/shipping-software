@@ -57,19 +57,6 @@ module TableSearchParamsExtractor
     params[:term].try(:strip)
   end
 
-  def extract_search_order(params, klass)
-    order_params = params[:order]
-    order = {}
-    return order if order_params.blank?
-    order_params.each do|key,value|
-      column_index = value['column']
-      column = params[:columns][column_index]
-      column_name = column.try(:[],:name).presence || column.try(:[],:data)
-      order[column_name] = value['dir'].try(:downcase) == 'asc' ? :asc : :desc
-    end
-    order
-  end
-
   def extract_search_sort(params, klass)
     order_params = params[:sort]
     order = {}
@@ -77,7 +64,7 @@ module TableSearchParamsExtractor
     order_params.each do|sort|
       field_name = sort[:field]
       next if field_name.nil?
-      order[field_name] = sort['dir'].try(:downcase) == 'asc' ? :asc : :desc
+      order[field_name] = sort[:dir].try(:downcase) == 'asc' ? :asc : :desc
     end
     order
   end

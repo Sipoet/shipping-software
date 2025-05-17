@@ -1,6 +1,6 @@
 class ShipsController < ApplicationController
   before_action :root_breadcrumb, :authenticate_user!
-
+  skip_before_action :verify_authenticity_token, only: [:create,:update]
   def index
     respond_to do |format|
       format.html {
@@ -15,32 +15,63 @@ class ShipsController < ApplicationController
 
   def show
     find_ship!
-    add_breadcrumb('', @ship.name)
+    respond_to do |format|
+      format.html {
+        add_breadcrumb('', @ship.name)
+      }
+      format.json {
+        render json: @ship
+      }
+    end
   end
 
   def create
     permitted_params = params.required(:ship).permit(:name)
     @ship = Ship.new(permitted_params)
-    if @ship.save
-      redirect_to ship_path(id: @ship.id)
-    else
-      add_breadcrumb('', 'Tambah Baru')
-      flash[:alert] = @ship.errors.full_messages
-      render :new
+    respond_to do |format|
+      format.html {
+        if @ship.save
+          redirect_to ship_path(id: @ship.id)
+        else
+          add_breadcrumb('', 'Tambah Baru')
+          flash[:alert] = @ship.errors.full_messages
+          render :new
+        end
+      }
+      format.json {
+        if @ship.save
+          render json: {message: 'sukses simpan',data: @ship}, status: :created
+        else
+          render_json_error(@ship)
+        end
+      }
     end
+
   end
 
   def update
     find_ship!
     permitted_params = params.required(:ship).permit(:name)
-    if @ship.update(permitted_params)
-      redirect_to ship_path(id: @ship.id)
-    else
-      add_breadcrumb(ship_path(id: @ship.id), @ship.name)
-      add_breadcrumb('', 'Edit')
-      flash[:alert] = @ship.errors.full_messages
-      render :edit
+    respond_to do |format|
+      format.html {
+        if @ship.update(permitted_params)
+          redirect_to ship_path(id: @ship.id)
+        else
+          add_breadcrumb(ship_path(id: @ship.id), @ship.name)
+          add_breadcrumb('', 'Edit')
+          flash[:alert] = @ship.errors.full_messages
+          render :edit
+        end
+      }
+      format.json {
+        if @ship.update(permitted_params)
+          render json: {message: 'sukses simpan',data: @ship}, status: :ok
+        else
+          render_json_error(@ship)
+        end
+      }
     end
+
   end
 
   def new

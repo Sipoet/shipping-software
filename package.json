@@ -3,7 +3,9 @@
   "private": true,
   "devDependencies": {
     "esbuild": "^0.25.3",
-    "esbuild-sass-plugin": "^3.3.1"
+    "esbuild-sass-plugin": "^3.3.1",
+    "vite": "^5.4.19",
+    "vite-plugin-ruby": "^5.1.1"
   },
   "scripts": {
     "build:js": "node app/javascript/esbuild.config.mjs",
@@ -15,23 +17,29 @@
   },
   "dependencies": {
     "@coreui/coreui-free-react-admin-template": "github:coreui/coreui-free-react-admin-template",
+    "@coreui/react": "^5.5.0",
     "@hotwired/stimulus": "^3.2.2",
     "@hotwired/turbo-rails": "^8.0.10",
     "@phosphor-icons/react": "^2.1.7",
-    "@phosphor-icons/web": "^2.1.1",
+    "@phosphor-icons/web": "^2.1.2",
     "@popperjs/core": "^2.11.8",
+    "@vitejs/plugin-react": "^4.4.1",
     "autoprefixer": "^10.4.20",
     "bootstrap": "^5.3.3",
-    "luxon": "^3.5.0",
+    "luxon": "^3.6.1",
     "nodemon": "^3.1.7",
+    "pluralize": "^8.0.0",
     "postcss": "^8.4.47",
     "postcss-cli": "^11.0.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-router": "^7.5.3",
+    "react-select": "^5.10.1",
+    "react-tabulator": "^0.21.0",
     "sass": "^1.79.4",
-    "select2": "^4.1.0-rc.0",
-    "select2-bootstrap-5-theme": "^1.3.0",
     "simplebar": "^6.2.7",
-    "tabulator-tables": "^6.3.0",
-    "tom-select": "^2.3.1",
+    "tabulator-tables": "^6.3.1",
+    "tom-select": "^2.4.3",
     "yaml": "^2.5.1"
   },
   "browserslist": [
