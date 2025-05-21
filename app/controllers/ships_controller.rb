@@ -14,35 +14,35 @@ class ShipsController < ApplicationController
   end
 
   def show
-    find_ship!
+    find_record!
     respond_to do |format|
       format.html {
-        add_breadcrumb('', @ship.name)
+        add_breadcrumb('', @record.name)
       }
       format.json {
-        render json: @ship
+        @record
       }
     end
   end
 
   def create
-    permitted_params = params.required(:ship).permit(:name)
-    @ship = Ship.new(permitted_params)
+    permitted_params = permit_params
+    @record = Ship.new(permitted_params)
     respond_to do |format|
       format.html {
-        if @ship.save
-          redirect_to ship_path(id: @ship.id)
+        if @record.save
+          redirect_to ship_path(id: @record.id)
         else
           add_breadcrumb('', 'Tambah Baru')
-          flash[:alert] = @ship.errors.full_messages
+          flash[:alert] = @record.errors.full_messages
           render :new
         end
       }
       format.json {
-        if @ship.save
-          render json: {message: 'sukses simpan',data: @ship}, status: :created
+        if @record.save
+          render json: {message: 'sukses simpan',data: @record}, status: :created
         else
-          render_json_error(@ship)
+          render_json_error(@record)
         end
       }
     end
@@ -50,24 +50,24 @@ class ShipsController < ApplicationController
   end
 
   def update
-    find_ship!
-    permitted_params = params.required(:ship).permit(:name)
+    find_record!
+    permitted_params = permit_params
     respond_to do |format|
       format.html {
-        if @ship.update(permitted_params)
-          redirect_to ship_path(id: @ship.id)
+        if @record.update(permitted_params)
+          redirect_to ship_path(id: @record.id)
         else
-          add_breadcrumb(ship_path(id: @ship.id), @ship.name)
+          add_breadcrumb(ship_path(id: @record.id), @record.name)
           add_breadcrumb('', 'Edit')
-          flash[:alert] = @ship.errors.full_messages
+          flash[:alert] = @record.errors.full_messages
           render :edit
         end
       }
       format.json {
-        if @ship.update(permitted_params)
-          render json: {message: 'sukses simpan',data: @ship}, status: :ok
+        if @record.update(permitted_params)
+          render json: {message: 'sukses simpan',data: @record}, status: :ok
         else
-          render_json_error(@ship)
+          render_json_error(@record)
         end
       }
     end
@@ -76,19 +76,23 @@ class ShipsController < ApplicationController
 
   def new
     add_breadcrumb('', 'Tambah Baru')
-    @ship = Ship.new
+    @record = Ship.new
   end
 
   def edit
-    find_ship!
-    add_breadcrumb(ship_path(id: @ship.id), @ship.name)
+    find_record!
+    add_breadcrumb(ship_path(id: @record.id), @record.name)
     add_breadcrumb('', 'Edit')
   end
 
   private
 
-  def find_ship!
-    @ship = Ship.find(params[:id])
+  def permit_params
+    params.required(:ship).permit(:name)
+  end
+
+  def find_record!
+    @record = Ship.find(params[:id])
   end
 
   def root_breadcrumb
@@ -97,14 +101,14 @@ class ShipsController < ApplicationController
 
   def search_json
     result = extract_search_query(params, Ship)
-    @ships = Ship.all.order(result.order)
-    if result.filter.present?
-      @ships = @ships.where(result.filter)
+    @records = Ship.all.order(result.order)
+    result.filter.each do|query_filter|
+      @records = @records.where(query_filter)
     end
     if result.search_text.present?
-      @ships = @ships.where('name ilike ?',"%#{result.search_text}%")
+      @records = @records.where('name ilike ?',"%#{result.search_text}%")
     end
-    @ships = @ships.page(result.page)
+    @records = @records.page(result.page)
                    .per(result.limit)
   end
 end

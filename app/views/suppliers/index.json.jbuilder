@@ -1,6 +1,6 @@
-json.total_pages @suppliers.total_pages
+json.total_pages @records.total_pages
 json.data do
-  json.array! @suppliers do |record|
+  json.array! @records do |record|
     json.id record.id
     default_port = record.default_port
     if default_port.present?

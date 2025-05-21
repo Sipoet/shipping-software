@@ -21,6 +21,7 @@ class ShipSchedule < ApplicationRecord
   validates :loading_port, presence: true, if: :port_processed?
   validates :destination_port, presence: true, if: :port_processed?
   validates :dorry_container_opened_at, presence: true, if: :completed?
+  validates :booking_code, presence: true
 
   has_many :containers, inverse_of: :ship_schedule, dependent: :destroy
 

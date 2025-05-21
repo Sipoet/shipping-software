@@ -1,6 +1,6 @@
 class ProductsController < ApplicationController
   before_action :authenticate_user!
-
+  skip_before_action :verify_authenticity_token, only: [:create,:update,:destroy]
   def index
     respond_to do |format|
       format.html {
@@ -14,51 +14,92 @@ class ProductsController < ApplicationController
 
   def show
     find_product!
-    add_breadcrumb('', @product.name)
+    respond_to do |format|
+      format.html {
+        add_breadcrumb('', @record.name)
+      }
+      format.json {
+        @record
+      }
+    end
   end
 
   def create
-    permitted_params = params.required(:product)
-                             .permit(:name, :product_type,:dimension_p,:dimension_l,:dimension_t,:weight)
-    @product = Product.new(permitted_params)
-    if @product.save
-      redirect_to product_path(id: @product.id)
-    else
-      add_breadcrumb('', 'Tambah Baru')
-      flash[:alert] = @product.errors.full_messages
-      render :new
+    permitted_params = permit_params
+    @record = Product.new(permitted_params)
+    respond_to do |format|
+      format.html {
+        if @record.save
+          redirect_to product_path(id: @record.id)
+        else
+          add_breadcrumb('', 'Tambah Baru')
+          flash[:alert] = @record.errors.full_messages
+          render :new
+        end
+      }
+      format.json {
+        if @record.save
+          render json: {message: 'sukses simpan',data: @record}, status: :created
+        else
+          render_json_error(@record)
+        end
+      }
     end
   end
 
   def update
     find_product!
-    permitted_params = params.required(:product)
-                             .permit(:name, :product_type,:dimension_p,:dimension_l,:dimension_t,:weight)
-    if @product.update(permitted_params)
-      redirect_to product_path(id: @product.id)
+    permitted_params = permit_params
+    respond_to do |format|
+      format.html {
+        if @record.update(permitted_params)
+          redirect_to product_path(id: @record.id)
+        else
+          add_breadcrumb(product_path(id: @record.id), @record.name)
+          add_breadcrumb('', 'Edit')
+          flash[:alert] = @record.errors.full_messages
+          render :edit
+        end
+      }
+      format.json {
+        if @record.update(permitted_params)
+          render json: {message: 'sukses simpan',data: @record}, status: :ok
+        else
+          render_json_error(@record)
+        end
+      }
+    end
+  end
+
+  def destroy
+    find_product!
+    if @record.destroy
+      head :no_content
     else
-      add_breadcrumb(product_path(id: @product.id), @product.name)
-      add_breadcrumb('', 'Edit')
-      flash[:alert] = @product.errors.full_messages
-      render :edit
+      render_json_error(@record)
     end
   end
 
   def new
     add_breadcrumb('', 'Tambah Baru')
-    @product = Product.new
+    @record = Product.new
   end
 
   def edit
     find_product!
-    add_breadcrumb(product_path(id: @product.id), @product.name)
+    add_breadcrumb(product_path(id: @record.id), @record.name)
     add_breadcrumb('', 'Edit')
   end
 
   private
 
+  def permit_params
+    permitted_params = params.required(:product)
+                             .permit(:name, :product_type,:dimension_p,:dimension_l,:dimension_t,:weight)
+  end
+
   def find_product!
-    @product = Product.find(params[:id])
+    @record = Product.find(params[:id])
   end
 
   def root_breadcrumb
@@ -67,17 +108,17 @@ class ProductsController < ApplicationController
 
   def search_json
     result = extract_search_query(params, Product)
-    @products = Product.all
+    @records = Product.all
                        .order(result.order)
-    if result.filter.present?
-      @products = @products.where(result.filter)
+    result.filter.each do|query_filter|
+      @records = @records.where(query_filter)
     end
     if result.search_text.present?
-      columns = ['name', 'default_ports.name', 'address']
+      columns = ['name', 'product_tpe']
       query = columns.map{|column|"#{column} ilike ?"}.join(' OR ')
-      @products = @products.where(query,*Array.new(columns.length){"%#{result.search_text}%"})
+      @records = @records.where(query,*Array.new(columns.length){"%#{result.search_text}%"})
     end
-    @products = @products.page(result.page)
+    @records = @records.page(result.page)
                            .per(result.limit)
   end
 end

@@ -1,0 +1,43 @@
+ship_names = [
+  'KM Binaiya',
+  'KM Awu',
+  'KM Tilongkabila',
+  'KM Lawit',
+  'KM Tatamailau',
+  'KM Wilis',
+  'KM Leuser',
+  'KM Kelimutu',
+  'KM Egon',
+  'KM Sangiang',
+  'KM Kelud',
+  'KM Pangrango',
+  'KFC Jetliner',
+  'KM Bukit Raya',
+  'KM Labobar',
+  'KM Dobonsolo',
+  'REZEKI FORTUNA 8',
+  'KARYA FORTUNA 5',
+  'USAHA BARU I',
+  'SEBUTIR PADI',
+  'BAHAGIA',
+  'MULIA JAYA 2',
+  'BINTANG LAUT',
+  'USAHA MAJU',
+  'REZEKI LAUT',
+  'ERINA 12',
+  'GEDE GEDE SUKSES',
+  'INDO LAUT SAKTI 8',
+  'KASIH SETIA XVI',
+  'ARABIKA JAYA I',
+  'HALBAR PRATAMA',
+  'KUPANG PERMAI',
+  'HARAPAN INDAH',
+  'MEGA SETIA',
+  'MAROS JAYA 05',
+  'SOUTHERN CROSS',
+  'MITRA JAYA V'
+]
+
+ship_names.each do |name|
+  Ship.find_or_create_by!(name: name)
+end

@@ -43,8 +43,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_25_092427) do
     t.string "container_number", null: false
     t.string "seal_number"
     t.integer "order_type", null: false
-    t.integer "ship_id", null: false
-    t.integer "ship_schedule_id", null: false
+    t.integer "ship_schedule_id"
     t.integer "agent_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -186,7 +185,6 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_25_092427) do
   add_foreign_key "clients", "ports", column: "default_port_id"
   add_foreign_key "containers", "clients", column: "agent_id"
   add_foreign_key "containers", "ship_schedules"
-  add_foreign_key "containers", "ships"
   add_foreign_key "packing_lists", "clients", column: "customer_id"
   add_foreign_key "packing_lists", "clients", column: "supplier_id"
   add_foreign_key "packing_lists", "containers"

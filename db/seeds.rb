@@ -1,146 +1,18 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
-ship_names = [
-  'KM Binaiya',
-  'KM Awu',
-  'KM Tilongkabila',
-  'KM Lawit',
-  'KM Tatamailau',
-  'KM Wilis',
-  'KM Leuser',
-  'KM Kelimutu',
-  'KM Egon',
-  'KM Sangiang',
-  'KM Kelud',
-  'KM Pangrango',
-  'KFC Jetliner',
-  'KM Bukit Raya',
-  'KM Labobar',
-  'KM Dobonsolo',
-  'REZEKI FORTUNA 8',
-  'KARYA FORTUNA 5',
-  'USAHA BARU I',
-  'SEBUTIR PADI',
-  'BAHAGIA',
-  'MULIA JAYA 2',
-  'BINTANG LAUT',
-  'USAHA MAJU',
-  'REZEKI LAUT',
-  'ERINA 12',
-  'GEDE GEDE SUKSES',
-  'INDO LAUT SAKTI 8',
-  'KASIH SETIA XVI',
-  'ARABIKA JAYA I',
-  'HALBAR PRATAMA',
-  'KUPANG PERMAI',
-  'HARAPAN INDAH',
-  'MEGA SETIA',
-  'MAROS JAYA 05',
-  'SOUTHERN CROSS',
-  'MITRA JAYA V'
-]
-
-ship_names.each do |name|
-  Ship.find_or_create_by(name: name)
+def load_dummy
+  Dir[File.join(Rails.root, 'db', 'seeds','dummy', '*.rb')].sort.each do |seed|
+    load seed
+  end
 end
-
-ports = [
-  ['Tanjung Priok', 'Jakarta'],
-  ['Merak', 'Banten'],
-  ['Bakauheni', 'Lampung'],
-  ['Tanjung Mas', 'Semarang'],
-  ['Tanjung Intan', 'Cilacap'],
-  ['Guluk', 'Sumenep'],
-  ['Kalianget', 'Surabaya'],
-  ['Kalimas', 'Surabaya'],
-  ['Kamal', 'Bangkalan'],
-  ['Ketapang', 'Banyuwangi'],
-  ['Tanjung Perak', 'Surabaya'],
-  ['Ujung', 'Surabaya'],
-  ['Tanjung Wangi', 'Kalipuro'],
-  ['Cirebon', 'Jawa Barat'],
-  ['Pertiwi', 'Subang'],
-  ['Pramuka', 'Garut'],
-  ['Sunda Kelapa', 'Jakarta'],
-  ['ASDP Jagoh', 'Kepulauan Riau'],
-  ['ASDP Dompak', 'Tanjungpinang'],
-  ['Bakong', 'Kepulauan Riau'],
-  ['Batam Center', 'Pulau Batam'],
-  ['Kote', 'Kepulauan Riau'],
-  ['Harbour Bay', 'Batam'],
-  ['Marok Tua', 'Kepulauan Riau'],
-  ['Telaga Punggur', 'Batam'],
-  ['Tarempa', 'Kepulauan Riau'],
-  ['Teluk Bayur', 'Padang'],
-  ['Muara', 'Padang'],
-  ['Tanjung Pandan', 'Kabupaten Belitung'],
-  ['Tanjung Balai', 'Medan'],
-  ['Belawan', 'Medan'],
-  ['Yoseph Iskandar', 'Padang'],
-  ['Krueng Geukueh', 'Aceh'],
-  ['Soekarno-Hatta', 'Makassar'],
-  ['Gorontalo dan Anggrek', 'Gorontalo'],
-  ['Paotere', 'Sulawesi Selatan'],
-  ['Pamatata', 'Sulawesi Selatan'],
-  ['Tanjung Ringgit', 'Sulawesi Selatan'],
-  ['Bitung', 'Sulawesi Utara'],
-  ['Donggala', 'Sulawesi Tengah'],
-  ['Belopa', 'Sulawesi Selatan'],
-  ['Malili', 'Sulawesi Selatan'],
-  ['Pare Pare', 'Sulawesi Selatan'],
-  ['Barru', 'Sulawesi Selatan'],
-  ['Kendari', 'Sulawesi Tenggara'],
-  ['Buton', 'Sulawesi Tenggara'],
-  ['Banjarmasin', 'Kalimantan Selatan'],
-  ['Dwikora', 'Pontianak'],
-  ['Palangkaraya', 'Kalimantan Tengah'],
-  ['Semayang', 'Kalimantan Timur'],
-  ['Malundung', 'Tarakan'],
-  ['Trisakti', 'Banjarmasin'],
-  ['Samudera', 'Kalimantan Timur'],
-  ['Gilimanuk', 'Bali'],
-  ['Labuan Bajo', 'Lombok'],
-  ['Rinca', 'NTT'],
-  ['Dermaga Pink', 'NTT'],
-  ['Pulau Molas', 'Flores'],
-  ['Aimere', 'NTT'],
-  ['Pota', 'Kabupaten Manggarai'],
-  ['Mamboro', 'NTT'],
-  ['Waingapu', 'Sumba Timur'],
-  ['Tobelo', 'Maluku Utara'],
-  ['Galela', 'Maluku Utara'],
-  ['Wonreli', 'Maluku Barat Daya'],
-  ['Pulau Teor', 'Kabupaten Seram'],
-  ['Tutu Kembong', 'Maluku Tenggara'],
-  ['Merauke', 'Papua'],
-  ['Nabire', 'Papua'],
-  ['Biak', 'Papua'],
-  ['Omako', 'Papua'],
-  ['Jayapura', 'Papua Barat'],
-  ['Fak-fak', 'Papua Barat'],
-  ['Kaimana', 'Papua Barat'],
-  ['Bintuni', 'Papua Barat'],
-]
-ports.each do |(name,city)|
-  Port.find_or_create_by(name: name,city: city, country: 'indonesia')
+puts 'seeds master'
+Dir[File.join(Rails.root, 'db', 'seeds','master', '*.rb')].sort.each do |seed|
+  load seed
 end
-['superadmin','accounting','manager','sales','driver'].each do |name|
-  Role.find_or_create_by(name: name)
-end
-I18n.locale = :id
-admin_password = ENV['ADMIN_PASSWORD']
-if admin_password.present?
-  user = User.find_or_initialize_by(username: 'superadmin')
-  user.password = admin_password
-  user.password_confirmation = admin_password
-  user.email = 'ciptakarya@gmail.com'
-  user.role = Role.find_by(name:'superadmin')
-  user.save!
+include_dummy_seeds = ENV['INCLUDE'].split(',').map(&:strip) rescue []
+include_dummy_seeds.each do |key|
+  puts "seeds #{key}"
+  if key == 'dummy'
+    load_dummy
+    break
+  end
+  load Rails.root.join('db', 'seeds','dummy', "#{key}_dummy.rb")
 end

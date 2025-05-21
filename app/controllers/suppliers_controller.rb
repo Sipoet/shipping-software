@@ -1,5 +1,6 @@
 class SuppliersController < ApplicationController
   before_action :root_breadcrumb, :authenticate_user!
+  skip_before_action :verify_authenticity_token, only: [:create,:update]
   def index
     respond_to do |format|
       format.html {
@@ -12,52 +13,87 @@ class SuppliersController < ApplicationController
   end
 
   def show
-    find_supplier!
-    add_breadcrumb('', @supplier.name)
+    find_customer!
+    respond_to do |format|
+      format.html {
+        add_breadcrumb('', @record.name)
+      }
+      format.json {
+        @record
+      }
+    end
   end
 
   def create
-    permitted_params = params.required(:supplier)
-                             .permit(:name, :default_port_id, :address, :bank, :bank_account, :bank_register_name, :contact_number, :tax_account)
-    @supplier = Supplier.new(permitted_params)
-    if @supplier.save
-      redirect_to supplier_path(id: @supplier.id)
-    else
-      add_breadcrumb('', 'Tambah Baru')
-      flash[:alert] = @supplier.errors.full_messages
-      render :new
+    permitted_params = permit_params
+    @record = Supplier.new(permitted_params)
+    respond_to do |format|
+      format.html {
+        if @record.save
+          redirect_to customer_path(id: @record.id)
+        else
+          add_breadcrumb('', 'Tambah Baru')
+          flash[:alert] = @record.errors.full_messages
+          render :new
+        end
+      }
+      format.json {
+        if @record.save
+          render json: {message: 'sukses simpan',data: @record}, status: :created
+        else
+          render_json_error(@record)
+        end
+      }
     end
+
   end
 
   def update
-    find_supplier!
-    permitted_params = params.required(:supplier)
-                             .permit(:name, :default_port_id, :address, :bank, :bank_account, :bank_register_name, :contact_number, :tax_account)
-    if @supplier.update(permitted_params)
-      redirect_to supplier_path(id: @supplier.id)
-    else
-      add_breadcrumb(supplier_path(id: @supplier.id), @supplier.name)
-      add_breadcrumb('', 'Edit')
-      flash[:alert] = @supplier.errors.full_messages
-      render :edit
+    find_customer!
+    permitted_params = permit_params
+    respond_to do |format|
+      format.html {
+        if @record.update(permitted_params)
+          redirect_to customer_path(id: @record.id)
+        else
+          add_breadcrumb(customer_path(id: @record.id), @record.name)
+          add_breadcrumb('', 'Edit')
+          flash[:alert] = @record.errors.full_messages
+          render :edit
+        end
+      }
+      format.json {
+        if @record.update(permitted_params)
+          render json: {message: 'sukses simpan',data: @record}, status: :ok
+        else
+          render_json_error(@record)
+        end
+      }
     end
+
   end
 
   def new
     add_breadcrumb('', 'Tambah Baru')
-    @supplier = Supplier.new
+    @record = Supplier.new
   end
 
   def edit
-    find_supplier!
-    add_breadcrumb(supplier_path(id: @supplier.id), @supplier.name)
+    find_customer!
+    add_breadcrumb(customer_path(id: @record.id), @record.name)
     add_breadcrumb('', 'Edit')
   end
 
   private
 
-  def find_supplier!
-    @supplier = Supplier.find(params[:id])
+  def permit_params
+    params
+      .required(:supplier)
+      .permit(:name, :default_port_id, :address, :bank, :bank_account, :bank_register_name, :contact_number, :tax_account)
+  end
+
+  def find_customer!
+    @record = Supplier.find(params[:id])
   end
 
   def root_breadcrumb
@@ -66,18 +102,18 @@ class SuppliersController < ApplicationController
 
   def search_json
     result = extract_search_query(params, Supplier)
-    @suppliers = Supplier.all
+    @records = Supplier.all
                          .includes(:default_port)
                          .order(result.order)
-    if result.filter.present?
-      @suppliers = @suppliers.where(result.filter)
+    result.filter.each do|query_filter|
+      @records = @records.where(query_filter)
     end
     if result.search_text.present?
-      columns = ['name', 'default_ports.name', 'address']
+      columns = ['name', 'default_ports.name', 'address','contact_number']
       query = columns.map{|column|"#{column} ilike ?"}.join(' OR ')
-      @suppliers = @suppliers.where(query,*Array.new(columns.length){"%#{result.search_text}%"})
+      @records = @records.where(query,*Array.new(columns.length){"%#{result.search_text}%"})
     end
-    @suppliers = @suppliers.page(result.page)
+    @records = @records.page(result.page)
                            .per(result.limit)
   end
 end

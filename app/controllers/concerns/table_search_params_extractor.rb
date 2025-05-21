@@ -23,38 +23,40 @@ module TableSearchParamsExtractor
 
   def extract_search_filter(params)
     query_filter = []
-    values = []
-    return nil if params[:filter].blank?
+    return query_filter if params[:filter].blank?
     params[:filter].each do |filter|
-      next if filter[:value].blank?
+      value = filter[:value]
+      next if value.blank?
       if filter[:type] == 'like'
-        query_filter << "#{filter[:field]} ilike ?"
-        values << "%#{filter[:value].strip}%"
-      elsif filter[:value].is_a?(Array)
-        query_filter << "#{filter[:field]} IN (?)"
-        values << filter[:value]
-      else
-        query_filter << "#{filter[:field]} = ?"
-        values << filter[:value].strip
+        query_filter << ApplicationRecord.sanitize_sql_array(["#{filter[:field]} ilike ?","%#{value.strip}%"])
+      elsif filter[:type] == 'eq'
+        query_filter << {filter[:field] => value}
+      elsif filter[:type] == 'gt'
+        query_filter << ApplicationRecord.sanitize_sql_array(["#{filter[:field]} > ?",value.strip])
+      elsif filter[:type] == 'gte'
+        query_filter << {filter[:field] => value..}
+      elsif filter[:type] == 'lt'
+        query_filter << {filter[:field] => ..value}
+      elsif filter[:type] == 'lte'
+        query_filter << {filter[:field] => ...value}
+      elsif filter[:type] == 'btw'
+        query_filter << {filter[:field] => value[0]..(value[1])}
       end
     end
-    return [] if values.blank?
-    query_filter = query_filter.join(' AND ')
     Rails.logger.debug "=====#{query_filter}"
-    values.unshift query_filter
-    ApplicationRecord.sanitize_sql_array(values)
+    query_filter
   end
 
   def extract_search_page(params)
-    params[:page] || 1
+    (params[:page] || 1).to_i
   end
 
   def extract_search_limit(params, klass)
-    params[:length] || klass.default_per_page
+    (params[:length] || params[:limit] || klass.default_per_page).to_i
   end
 
   def extract_search_text(params)
-    params[:term].try(:strip)
+    ApplicationRecord.sanitize_sql(params[:term].try(:strip))
   end
 
   def extract_search_sort(params, klass)

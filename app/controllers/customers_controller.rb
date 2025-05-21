@@ -1,5 +1,6 @@
 class CustomersController < ApplicationController
   before_action :authenticate_user!,:root_breadcrumb
+  skip_before_action :verify_authenticity_token, only: [:create,:update]
   def index
     respond_to do |format|
       format.html {
@@ -13,51 +14,86 @@ class CustomersController < ApplicationController
 
   def show
     find_customer!
-    add_breadcrumb('', @customer.name)
+    respond_to do |format|
+      format.html {
+        add_breadcrumb('', @record.name)
+      }
+      format.json {
+        @record
+      }
+    end
   end
 
   def create
-    permitted_params = params.required(:customer)
-                             .permit(:name, :default_port_id, :address, :bank, :bank_account, :bank_register_name, :contact_number, :tax_account)
-    @customer = Customer.new(permitted_params)
-    if @customer.save
-      redirect_to customer_path(id: @customer.id)
-    else
-      add_breadcrumb('', 'Tambah Baru')
-      flash[:alert] = @customer.errors.full_messages
-      render :new
+    permitted_params = permit_params
+    @record = Customer.new(permitted_params)
+    respond_to do |format|
+      format.html {
+        if @record.save
+          redirect_to customer_path(id: @record.id)
+        else
+          add_breadcrumb('', 'Tambah Baru')
+          flash[:alert] = @record.errors.full_messages
+          render :new
+        end
+      }
+      format.json {
+        if @record.save
+          render json: {message: 'sukses simpan',data: @record}, status: :created
+        else
+          render_json_error(@record)
+        end
+      }
     end
+
   end
 
   def update
     find_customer!
-    permitted_params = params.required(:customer)
-                             .permit(:name, :default_port_id, :address, :bank, :bank_account, :bank_register_name, :contact_number, :tax_account)
-    if @customer.update(permitted_params)
-      redirect_to customer_path(id: @customer.id)
-    else
-      add_breadcrumb(customer_path(id: @customer.id), @customer.name)
-      add_breadcrumb('', 'Edit')
-      flash[:alert] = @customer.errors.full_messages
-      render :edit
+    permitted_params = permit_params
+    respond_to do |format|
+      format.html {
+        if @record.update(permitted_params)
+          redirect_to customer_path(id: @record.id)
+        else
+          add_breadcrumb(customer_path(id: @record.id), @record.name)
+          add_breadcrumb('', 'Edit')
+          flash[:alert] = @record.errors.full_messages
+          render :edit
+        end
+      }
+      format.json {
+        if @record.update(permitted_params)
+          render json: {message: 'sukses simpan',data: @record}, status: :ok
+        else
+          render_json_error(@record)
+        end
+      }
     end
+
   end
 
   def new
     add_breadcrumb('', 'Tambah Baru')
-    @customer = Customer.new
+    @record = Customer.new
   end
 
   def edit
     find_customer!
-    add_breadcrumb(customer_path(id: @customer.id), @customer.name)
+    add_breadcrumb(customer_path(id: @record.id), @record.name)
     add_breadcrumb('', 'Edit')
   end
 
   private
 
+  def permit_params
+    params
+      .required(:customer)
+      .permit(:name, :default_port_id, :address, :bank, :bank_account, :bank_register_name, :contact_number, :tax_account)
+  end
+
   def find_customer!
-    @customer = Customer.find(params[:id])
+    @record = Customer.find(params[:id])
   end
 
   def root_breadcrumb
@@ -66,18 +102,18 @@ class CustomersController < ApplicationController
 
   def search_json
     result = extract_search_query(params, Customer)
-    @customers = Customer.all
+    @records = Customer.all
                          .includes(:default_port)
                          .order(result.order)
     if result.filter.present?
-      @customers = @customers.where(result.filter)
+      @records = @records.where(result.filter)
     end
     if result.search_text.present?
-      columns = ['name', 'default_ports.name', 'address']
+      columns = ['name', 'default_ports.name', 'address','contact_number']
       query = columns.map{|column|"#{column} ilike ?"}.join(' OR ')
-      @customers = @customers.where(query,*Array.new(columns.length){"%#{result.search_text}%"})
+      @records = @records.where(query,*Array.new(columns.length){"%#{result.search_text}%"})
     end
-    @customers = @customers.page(result.page)
+    @records = @records.page(result.page)
                            .per(result.limit)
   end
 end

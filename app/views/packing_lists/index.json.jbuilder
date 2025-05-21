@@ -1,6 +1,6 @@
-json.total_pages @packing_lists.total_pages
+json.total_pages @records.total_pages
 json.data do
-  json.array! @packing_lists do |record|
+  json.array! @records do |record|
     json.id record.id
     customer = record.customer
     if customer.present?

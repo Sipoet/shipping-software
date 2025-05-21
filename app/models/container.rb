@@ -4,10 +4,12 @@ class Container < ApplicationRecord
     less_container_load: 0,
     full_container_load: 1
   }
-  validates :ship_schedule, presence: true
+
   validates :container_number, presence: true
   validates :order_type, presence: true
+
   belongs_to :agent, class_name: 'Client'
-  belongs_to :ship
-  belongs_to :ship_schedule, inverse_of: :containers
+  belongs_to :container_type
+  belongs_to :ship_schedule, inverse_of: :containers, optional: true
+  has_one :ship, through: :ship_schedule
 end

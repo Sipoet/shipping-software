@@ -1,5 +1,6 @@
 class AgentsController < ApplicationController
   before_action :root_breadcrumb
+  skip_before_action :verify_authenticity_token, only: [:create,:update]
   def index
     respond_to do |format|
       format.html {
@@ -12,52 +13,87 @@ class AgentsController < ApplicationController
   end
 
   def show
-    find_agent!
-    add_breadcrumb('', @agent.name)
+    find_customer!
+    respond_to do |format|
+      format.html {
+        add_breadcrumb('', @record.name)
+      }
+      format.json {
+        @record
+      }
+    end
   end
 
   def create
-    permitted_params = params.required(:agent)
-                             .permit(:name, :default_port_id, :address, :bank, :bank_account, :bank_register_name, :contact_number, :tax_account)
-    @agent = Agent.new(permitted_params)
-    if @agent.save
-      redirect_to agent_path(id: @agent.id)
-    else
-      add_breadcrumb('', 'Tambah Baru')
-      flash[:alert] = @agent.errors.full_messages
-      render :new
+    permitted_params = permit_params
+    @record = Agent.new(permitted_params)
+    respond_to do |format|
+      format.html {
+        if @record.save
+          redirect_to customer_path(id: @record.id)
+        else
+          add_breadcrumb('', 'Tambah Baru')
+          flash[:alert] = @record.errors.full_messages
+          render :new
+        end
+      }
+      format.json {
+        if @record.save
+          render json: {message: 'sukses simpan',data: @record}, status: :created
+        else
+          render_json_error(@record)
+        end
+      }
     end
+
   end
 
   def update
-    find_agent!
-    permitted_params = params.required(:agent)
-                             .permit(:name, :default_port_id, :address, :bank, :bank_account, :bank_register_name, :contact_number, :tax_account)
-    if @agent.update(permitted_params)
-      redirect_to agent_path(id: @agent.id)
-    else
-      add_breadcrumb(agent_path(id: @agent.id), @agent.name)
-      add_breadcrumb('', 'Edit')
-      flash[:alert] = @agent.errors.full_messages
-      render :edit
+    find_customer!
+    permitted_params = permit_params
+    respond_to do |format|
+      format.html {
+        if @record.update(permitted_params)
+          redirect_to customer_path(id: @record.id)
+        else
+          add_breadcrumb(customer_path(id: @record.id), @record.name)
+          add_breadcrumb('', 'Edit')
+          flash[:alert] = @record.errors.full_messages
+          render :edit
+        end
+      }
+      format.json {
+        if @record.update(permitted_params)
+          render json: {message: 'sukses simpan',data: @record}, status: :ok
+        else
+          render_json_error(@record)
+        end
+      }
     end
+
   end
 
   def new
     add_breadcrumb('', 'Tambah Baru')
-    @agent = Agent.new
+    @record = Agent.new
   end
 
   def edit
-    find_agent!
-    add_breadcrumb(agent_path(id: @agent.id), @agent.name)
+    find_customer!
+    add_breadcrumb(customer_path(id: @record.id), @record.name)
     add_breadcrumb('', 'Edit')
   end
 
   private
 
-  def find_agent!
-    @agent = Agent.find(params[:id])
+  def permit_params
+    params
+      .required(:agent)
+      .permit(:name, :default_port_id, :address, :bank, :bank_account, :bank_register_name, :contact_number, :tax_account)
+  end
+
+  def find_customer!
+    @record = Agent.find(params[:id])
   end
 
   def root_breadcrumb
@@ -66,18 +102,20 @@ class AgentsController < ApplicationController
 
   def search_json
     result = extract_search_query(params, Agent)
-    @agents = Agent.all
-                         .includes(:default_port)
-                         .order(result.order)
-    if result.filter.present?
-      @agents = @agents.where(result.filter)
+    @records = Agent.all
+                    .left_outer_joins(:default_port)
+                    .includes(:default_port)
+                    .order(result.order)
+    result.filter.each do|query_filter|
+      @records = @records.where(query_filter)
     end
     if result.search_text.present?
-      columns = ['name', 'default_ports.name', 'address']
+      columns = ['clients.name', 'ports.name', 'address','contact_number']
       query = columns.map{|column|"#{column} ilike ?"}.join(' OR ')
-      @agents = @agents.where(query,*Array.new(columns.length){"%#{result.search_text}%"})
+      @records = @records.where(query,*Array.new(columns.length){"%#{result.search_text}%"})
     end
-    @agents = @agents.page(result.page)
-                     .per(result.limit)
+
+    @records = @records.page(result.page)
+                           .per(result.limit)
   end
 end

@@ -1,9 +1,10 @@
-json.total_pages @ship_schedules.total_pages
+json.total_pages @records.total_pages
 json.data do
-  json.array! @ship_schedules do |record|
+  json.array! @records do |record|
     json.id record.id
     json.voyage record.voyage
     json.status record.status
+    json.detail "#{record.estimated_departure_sour_at.strftime('%d %B %Y')} - #{record.estimated_arrived_dest_at.strftime('%d %B %Y')}"
     ship = record.ship
     if ship.present?
       json.ship_id ship.id
