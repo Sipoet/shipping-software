@@ -1,11 +1,16 @@
 {
-  "name": "app",
+  "name": "shipping-app",
   "private": true,
+  "type": "module",
   "devDependencies": {
     "esbuild": "^0.25.3",
     "esbuild-sass-plugin": "^3.3.1",
-    "vite": "^5.4.19",
+    "vite": "^6.3.5",
     "vite-plugin-ruby": "^5.1.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sipoet/shipping-software.git"
   },
   "scripts": {
     "build:js": "node app/javascript/esbuild.config.mjs",
@@ -13,7 +18,9 @@
     "build:css:compile": "sass ./app/assets/stylesheets/application.bootstrap.scss:./app/assets/builds/application.css --no-source-map --load-path=node_modules",
     "build:css:prefix": "postcss ./app/assets/builds/application.css --use=autoprefixer --output=./app/assets/builds/application.css",
     "build:css": "npm run build:css:compile && npm run build:css:prefix",
-    "watch:css": "nodemon --watch ./app/assets/stylesheets/ --ext scss --exec \"npm run build:css\""
+    "watch:css": "nodemon --watch ./app/assets/stylesheets/ --ext scss --exec \"npm run build:css\"",
+    "build": "vite build",
+    "dev": "vite"
   },
   "dependencies": {
     "@coreui/coreui-free-react-admin-template": "github:coreui/coreui-free-react-admin-template",
@@ -33,9 +40,9 @@
     "postcss-cli": "^11.0.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-imask": "^7.6.1",
     "react-router": "^7.5.3",
-    "react-select": "^5.10.1",
-    "react-tabulator": "^0.21.0",
+    "react-select-async-paginate": "^0.7.10",
     "sass": "^1.79.4",
     "simplebar": "^6.2.7",
     "tabulator-tables": "^6.3.1",

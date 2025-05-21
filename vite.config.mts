@@ -10,5 +10,9 @@ export default defineConfig({
     watch: {
       usePolling: true
     }
+  },
+  css: {
+    devSourcemap: true,
+    postcss: './postcss.config.mjs'
   }
 })

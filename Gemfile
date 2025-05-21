@@ -40,7 +40,8 @@ gem 'sidekiq-cron', '~>1.12.0'
 gem 'sidekiq', '~> 7.2'
 gem 'devise', '~>4.9.0'
 gem 'kaminari', '~> 1.2.2'
-gem 'vite_rails'
+gem 'vite_rails','~> 3.0.19'
+gem 'foreman','~> 0.88.1'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
