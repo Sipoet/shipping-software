@@ -1,6 +1,6 @@
 import {CAlert, CCol,CForm,CButton,CModal,CModalBody,CCard,CCardHeader,CCardBody,CCardTitle,CCardFooter,CModalHeader,CModalTitle,CModalFooter,CFormInput,CToast, CToastBody, CToaster, CToastHeader } from '@coreui/react'
 import React  from 'react'
-import { deleteRecord, saveRecord } from '../../lib/form_helper'
+import { deleteRecord, saveRecord } from '~/lib/form_helper'
 import { useNavigate , useLoaderData, useOutletContext } from 'react-router'
 import { Eye, Pencil } from '@phosphor-icons/react'
 
@@ -32,7 +32,7 @@ const ShipForm = () => {
     saveRecord(record,progressOptions).then((result)=>{
       if(result.isSuccess && isNewRecord){
         setError({})
-        navigate(`/ships/${record.id}`, {replace: true})
+        navigate(`/ships/${record.id}/edit`, {replace: true})
       }
       if(result.isSuccess){
         setRecord(result.record)
@@ -140,7 +140,7 @@ const ShipForm = () => {
             <CAlert color={status} dismissible visible={visible} onClose={() => setVisible(false)}>
               {message}
             </CAlert>
-            <CCol md={3}>
+            <CCol md={4}>
               <CFormInput readOnly={viewState} type="text" id="ship-name" label='Nama Kapal' invalid={error.name != null}  feedback={error.name} name='name' onChange={changeRecord} defaultValue={record.name} placeholder="nama kapal"/>
             </CCol>
           </CCardBody>

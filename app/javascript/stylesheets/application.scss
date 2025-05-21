@@ -14,17 +14,17 @@
 // Custom styles for this theme
 // @use "theme";
 // @use "examples";
-@use "@phosphor-icons/web/src/light/style";
-@use "@phosphor-icons/web/src/bold/style";
-@use "@phosphor-icons/web/src/regular/style";
+// @use "@phosphor-icons/web/src/light/style";
+// @use "@phosphor-icons/web/src/bold/style";
+// @use "@phosphor-icons/web/src/regular/style";
 
-// @use '@coreui/coreui/dist/css/coreui-reboot.min';
+@use '@coreui/coreui/dist/css/coreui-reboot.min';
 
 // datatable css
-// @use 'tabulator-tables/dist/css/tabulator_bootstrap5.min';
+@use 'tabulator-tables/dist/css/tabulator_bootstrap5.css';
 
 // tom-select css
-// @use 'tom-select/dist/css/tom-select.bootstrap5.min';
+@use 'tom-select/dist/css/tom-select.bootstrap5.min';
 
 // custom style self
 @use "custom";

@@ -3,24 +3,11 @@ import {createRoot } from 'react-dom/client'
 import {TabulatorFull} from "tabulator-tables"; //import Tabulator library
 import "tabulator-tables/dist/css/tabulator_bootstrap5.min.css"; //import Tabulator stylesheet
 import {DateTime} from "luxon";
-// import 'react-tabulator/lib/styles.css';
-// import { ReactTabulator } from 'react-tabulator'
 import { CaretDown, CaretUp, CaretUpDown, Eye, Pencil, X } from '@phosphor-icons/react';
 import { CButton } from '@coreui/react';
+import {find} from 'lodash'
 
-function _decorateColumn(column){
-    column.headerMenu = _headerMenu()
-    column.headerWordWrap = true
-    column.headerFilter = true
-    column.resizable = 'header'
-    if(column.noSort === true){
-      column.headerSort = false
-      column.headerFilter = false
-    }
-    let typeDef = _fieldType(column)
-    Object.assign(column,typeDef)
-    return column;
-}
+
 
 function isMobileDevice() {
   let check = false;
@@ -38,6 +25,7 @@ function _deviceOption(){
   }else{
     return {
       minHeight: '150px',
+      // rowHeader: {hozAlign:"center", resizable: true, frozen: true},
       maxHeight:`${window.innerHeight -300}px`,
     }
   }
@@ -51,11 +39,25 @@ function _dateFormatter(cell,formatterParams,onRendered){
   return value.toFormat(formatterParams.outputFormat)
 }
 
+function _linkFormatter(cell, formatterParams, onRendered){
+  const row = cell.getData()
+  onRendered(()=>{
+    createRoot(cell.getElement()).render(<a href={`#${row[formatterParams.urlField]}`} target='_blank'>{row[formatterParams.labelField]}</a>)
+  })
+}
+function _enumFormatter(cell, formatterParams, onRendered){
+  const value = cell.getValue()
+  const label = find(formatterParams.enum,(e)=> e.value === value)?.label
+  onRendered(()=>{
+    createRoot(cell.getElement()).render(<>{label}</>)
+  })
+}
+
 function _fieldType(column){
   switch (column.fieldType) {
     case 'link':
       return {
-        formatter: "link",
+        formatter: _linkFormatter,
         formatterParams: {
           labelField: column.field,
           urlField: column.recordPath,
@@ -71,13 +73,17 @@ function _fieldType(column){
         },
       }
     case 'enum':
-      let data = JSON.parse(column.enum)
+      let data = column.enum
       return {
+        formatter: _enumFormatter,
         headerFilter: 'list',
         headerFilterParams:{
           multiselect: true,
           clearable: true,
           values: Object.assign(data, {"":""})
+        },
+        formatterParams:{
+          enum: data
         }
       }
     case 'date':
@@ -150,7 +156,9 @@ function _fieldType(column){
             })
             // return buttonsStringElems.join('');
         },
-        headerSort: false
+        headerSort: false,
+        headerFilter: false,
+        frozen: true,
       }
     default:
       return {
@@ -166,16 +174,6 @@ function _fieldType(column){
 
 }
 
-function _headerMenu(){
-  return [
-    {
-      label:"Hide Column",
-      action:function(e, column){
-          column.hide();
-      }
-    },
-  ]
-}
 
 function _tomSelectEditor(cell, onRendered, success, cancel, editorParams){
   //cell - the cell component for the editable cell
@@ -211,9 +209,64 @@ function _tomSelectEditor(cell, onRendered, success, cancel, editorParams){
 }
 
 
-function AsyncReactTabulator({columns, ajaxURL}) {
+function AsyncReactTabulator({columns, ajaxURL,onRef}) {
   let el = React.createRef()
 
+  function _decorateColumn(column){
+    if(column.fieldType !=='action'){
+      column.headerMenu = _headerMenu()
+    }
+    column.headerWordWrap = true
+    column.headerFilter = true
+    column.resizable = 'header'
+    if(column.noSort === true){
+      column.headerSort = false
+      column.headerFilter = false
+    }
+    let typeDef = _fieldType(column)
+    Object.assign(column,typeDef)
+    return column;
+  }
+
+  function _headerMenu(){
+    return [
+      {
+        label:"Hide Column",
+        action:function(e, columnComponent){
+            columnComponent.hide();
+        }
+      },
+      // {
+      //   label:"Show Columns",
+      //   action:function(e, columnComponent){
+      //       columnComponent.hide();
+      //   }
+      // },
+      {
+        label:"Freeze Column",
+        action:function(e, columnComponent){
+          let colDefs = columnComponent.getDefinition()
+          colDefs.frozen = true
+          columnComponent.updateDefinition(colDefs)
+        }
+      },
+      {
+        label:"Unfreeze Column",
+        action:function(e, columnComponent){
+          let colDefs = columnComponent.getDefinition()
+          colDefs.frozen = false
+          columnComponent.updateDefinition(colDefs)
+          console.log(colDefs)
+        }
+      },
+      {
+        label:"reset Filter",
+        action:function(e, columnComponent){
+          columnComponent.getTable().clearFilter()
+        }
+      },
+    ]
+  }
   function _convertToNewFilter(filters){
     let newFilter=[]
     for(const filter of filters){
@@ -243,7 +296,7 @@ function AsyncReactTabulator({columns, ajaxURL}) {
   }
   let root= {};
   let sortElems = {};
-  const options = {
+  const defaultOptions = {
     ajaxURL: ajaxURL,
     dependencies:{
       DateTime: DateTime
@@ -307,15 +360,19 @@ function AsyncReactTabulator({columns, ajaxURL}) {
   }
 
   React.useEffect(() => {
-    let tabulator = new TabulatorFull(el, options);
+    let options = defaultOptions
+    options = Object.assign(options,_deviceOption())
+    let tabulator = new TabulatorFull(el, options)
     tabulator.on('columnsLoading',()=> {
       console.log('columns loading')
-      // Object.values(root).forEach((rootie)=>{rootie.unmount()})
     })
     tabulator.on('tableDestroyed',()=> {
       console.log('table destroyed')
       Object.values(root).forEach((rootie)=>{rootie.unmount()})
     })
+    if(onRef != null){
+      onRef(tabulator)
+    }
   }, []);
 
   //add table holder element to DOM

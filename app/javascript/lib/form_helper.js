@@ -19,6 +19,8 @@ async function findRecord(modelName, id,options={}){
     return createModel(modelName, jsonData)})
 }
 
+
+
 function pathFromModelName(modelName){
   return pluralize.plural(snakeCase(modelName))
 }
@@ -40,7 +42,16 @@ function requestBody(model){
 async function _initProgress(options){
   if(!options.showProgress){return;}
   options.setProgressColor('info')
-  options.setProgressBar(7)
+  options.setProgressBar(1)
+  let intervalId = setInterval(()=>{
+    if(options.progressBar > 95 || options.progressColor !='info'){
+      console.log(options.progressColor)
+      clearInterval(intervalId)
+      options.setProgressBar(0)
+      return;
+    }
+    options.setProgressBar(++options.progressBar)
+  },500)
 }
 
 async function showProgressBar(response, options){
@@ -55,6 +66,7 @@ async function showProgressBar(response, options){
         options.setProgressColor('success')
       }else{
         options.setProgressColor('danger')
+        options.progressColor = 'danger'
       }
       setTimeout(()=>{options.setProgressBar(0)},1000)
     }else{
@@ -131,12 +143,14 @@ function _updateRecord(model, options = {}){
 }
 
 function deleteRecord(model){
+   _initProgress(options)
   let pathNamespace = pathFromModelName(model._modelName)
   return fetch(`${pathNamespace}/${model.id}.json`,
     {
       method:'DELETE'
     }).then((response)=>{
-      if(response.status == 203) {
+      showProgressBar(response.clone(), options)
+      if([200,204].includes(response.status)) {
         return true
       }else if(response.status == 422){
         return response.json().then((result)=> {

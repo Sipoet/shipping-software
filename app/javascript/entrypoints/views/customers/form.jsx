@@ -1,8 +1,9 @@
-import {CAlert,CFormSelect, CCol,CForm,CButton,CModal,CModalBody,CCard,CCardHeader,CCardBody,CCardFooter,CModalHeader,CModalTitle,CModalFooter,CFormInput,CToast, CToastBody, CToaster, CToastHeader } from '@coreui/react'
+import {CAlert, CCol,CForm,CButton,CModal,CModalBody,CCard,CCardHeader,CCardBody,CCardFooter,CModalHeader,CModalTitle,CModalFooter,CFormInput,CToast, CToastBody, CToaster, CToastHeader, CFormTextarea } from '@coreui/react'
 import React  from 'react'
-import { deleteRecord, saveRecord } from '../../lib/form_helper'
+import { deleteRecord, saveRecord } from '~/lib/form_helper'
 import { useNavigate , useLoaderData, useOutletContext } from 'react-router'
 import { Eye, Pencil } from '@phosphor-icons/react'
+import { PhoneInput } from '~/components/NumberInput'
 
 
 const CustomerForm = () => {
@@ -14,11 +15,12 @@ const CustomerForm = () => {
   const [status, setStatus] = React.useState('info')
   const [message, setMessage] = React.useState('')
   const [toast, addToast] = React.useState()
-  const [error, addError] = React.useState({})
+  const [error, setError] = React.useState({})
   const toaster = React.useRef(null)
   const [progressBar,setProgressBar,progressColor,setProgressColor] = useOutletContext()
   const progressOptions ={progressBar,setProgressBar,progressColor,setProgressColor,showProgress: true}
   const navigate = useNavigate()
+  const phoneRef = React.useRef(null)
 
   const handleSubmit = (event) => {
     const form = event.currentTarget
@@ -31,13 +33,14 @@ const CustomerForm = () => {
     let isNewRecord = record.isNewRecord
     saveRecord(record,progressOptions).then((result)=>{
       if(result.isSuccess && isNewRecord){
-        navigate(`/ships/${record.id}`, {replace: true})
+        navigate(`/customers/${record.id}/edit`, {replace: true})
       }
       if(result.isSuccess){
+        setError({})
         setRecord(result.record)
         showSuccessNotif(result.message)
       }else{
-        addError(result.error)
+        setError(result.error)
         showErrorNotif(result.message)
       }
     })
@@ -69,7 +72,12 @@ const CustomerForm = () => {
     setRecord(record)
   }
 
-
+  function changePhoneRecord(event){
+    let targetName = event.currentTarget.name
+    record[targetName] = phoneRef.current.maskRef.unmaskedValue
+    setRecord(record)
+    console.log(record[targetName])
+  }
 
   function confirmDelete(){
     deleteRecord(record).then((result)=>{
@@ -82,17 +90,17 @@ const CustomerForm = () => {
             </CToastHeader>
             <CToastBody>Sukses hapus</CToastBody>
           </CToast>))
-        navigate('ships')
+        navigate('customers')
       }
     })
   }
 
   function toggleNavigate(){
     if(viewState){
-      navigate(`/ships/${record.id}/edit` )
+      navigate(`/customers/${record.id}/edit` )
       setViewState(false)
     }else{
-      navigate(`/ships/${record.id}`)
+      navigate(`/customers/${record.id}`)
       setViewState(true)
     }
   }
@@ -107,7 +115,7 @@ const CustomerForm = () => {
         <CModalHeader>
           <CModalTitle id="deleteConfirmation">Konfirmasi Hapus</CModalTitle>
         </CModalHeader>
-        <CModalBody>Apakah Yakin Hapus kapal {record.name} ?</CModalBody>
+        <CModalBody>Apakah Yakin Hapus Pelanggan {record.name} ?</CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setVisibleConfirmationDelete(false)}>
             Batal
@@ -138,17 +146,26 @@ const CustomerForm = () => {
             <CAlert color={status} dismissible visible={visible} onClose={() => setVisible(false)}>
               {message}
             </CAlert>
-            <CCol md={3}>
-              <CFormInput readOnly={viewState} type="text" id="port-name" label='Nama Pelabuhan' invalid={error.name != null}  feedback={error.name} name='name' onChange={changeRecord} defaultValue={record.name} placeholder="nama kapal"/>
+            <CCol md={4}>
+              <CFormInput readOnly={viewState} type="text" id="customer-name" label='Nama Customer' invalid={error.name != null}  feedback={error.name} name='name' onChange={changeRecord} defaultValue={record.name} placeholder="nama kapal"/>
             </CCol>
-            <CCol md={3}>
-              <CFormInput readOnly={viewState} type="text" id="port-city" label='Kota / Kabupaten' invalid={error.name != null}  feedback={error.name} name='city' onChange={changeRecord} defaultValue={record.name} placeholder="Kota / Kabupaten"/>
+            <CCol md={4}>
+              <PhoneInput readOnly={viewState} ref={phoneRef} id="customer-contactNumber" label='Kontak' invalid={error.contact_number != null}  feedback={error.contact_number} name='contact_number' onChange={changePhoneRecord} defaultValue={record.contact_number}/>
             </CCol>
-            <CCol md={3}>
-              <CFormInput readOnly={viewState} type="text" id="port-district" label='Kecamatan' invalid={error.name != null}  feedback={error.name} name='district' onChange={changeRecord} defaultValue={record.name} placeholder="Kota / Kabupaten"/>
+            <CCol md={4}>
+              <CFormInput readOnly={viewState} type="text" id="customer-taxAccount" label='NPWP' invalid={error.tax_account != null}  feedback={error.tax_account} name='tax_account' onChange={changeRecord} defaultValue={record.tax_account} />
             </CCol>
-            <CCol md={3}>
-              <CFormSelect readOnly={viewState} type="text" id="port-country" label='Negara' invalid={error.name != null}  feedback={error.name} name='country' onChange={changeRecord} defaultValue={record.name} placeholder="Kota / Kabupaten"/>
+            <CCol md={4}>
+              <CFormTextarea readOnly={viewState} type="text" id="customer-address" label='Alamat' invalid={error.address != null}  feedback={error.address} name='address' onChange={changeRecord} defaultValue={record.address} />
+            </CCol>
+            <CCol md={4}>
+              <CFormInput readOnly={viewState} type="text" id="customer-bank" label='Bank' invalid={error.bank != null}  feedback={error.bank} name='bank' onChange={changeRecord} defaultValue={record.bank} />
+            </CCol>
+            <CCol md={4}>
+              <CFormInput readOnly={viewState} type="text" id="customer-bankRegisterName" label='Nama pemilik rekening' invalid={error.bank_register_name != null}  feedback={error.bank_register_name} name='bank_register_name' onChange={changeRecord} defaultValue={record.bank_register_name} />
+            </CCol>
+            <CCol md={4}>
+              <CFormInput readOnly={viewState} type="text" id="customer-bankAccount" label='Nomor Rekening' invalid={error.bank_account != null}  feedback={error.bank_account} name='bank_account' onChange={changeRecord} defaultValue={record.bank_account} />
             </CCol>
           </CCardBody>
           <CCardFooter hidden={viewState}>

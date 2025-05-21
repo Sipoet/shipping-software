@@ -1,8 +1,8 @@
 import React from 'react'
 import { createHashRouter } from 'react-router'
 import DefaultLayout from './views/layouts/default_layout'
-import { findRecord } from './lib/form_helper'
-import { createModel } from './lib/model'
+import { findRecord } from '~/lib/form_helper'
+import { createModel } from '~/lib/model'
 
 const Dashboard = React.lazy(() => import('./views/home/Dashboard'))
 const CustomerData = React.lazy(() => import('./views/customers/index'))
@@ -30,7 +30,7 @@ const ProductForm = React.lazy(() => import('./views/products/form'))
 function newLoader(modelName){
   return async (route)=>{
     let params =route.params
-    let record = await createModel(modelName,params.id)
+    let record = createModel(modelName,params.id)
     return {params: params, record: record,isViewState: false}
   }
 }

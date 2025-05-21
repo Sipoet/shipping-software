@@ -1,8 +1,10 @@
-import {CAlert, CCol,CForm,CButton,CModal,CModalBody,CCard,CCardHeader,CCardBody,CCardTitle,CCardFooter,CModalHeader,CModalTitle,CModalFooter,CFormInput,CToast, CToastBody, CToaster, CToastHeader } from '@coreui/react'
+import {CAlert, CCol,CForm,CButton,CModal,CModalBody,CCard,CCardHeader,CCardBody,CFormSelect,CCardFooter,CModalHeader,CModalTitle,CModalFooter,CFormInput,CToast, CToastBody, CToaster, CToastHeader } from '@coreui/react'
 import React  from 'react'
-import { deleteRecord, saveRecord } from '../../lib/form_helper'
+import { deleteRecord, saveRecord } from '~/lib/form_helper'
 import { useNavigate , useLoaderData, useOutletContext } from 'react-router'
 import { Eye, Pencil } from '@phosphor-icons/react'
+import  {CustomAsyncSelect}  from '~/components/CustomAsyncSelect'
+import { dateFormat } from '~/lib/text_formatter'
 
 
 const ContainerForm = () => {
@@ -14,7 +16,7 @@ const ContainerForm = () => {
   const [status, setStatus] = React.useState('info')
   const [message, setMessage] = React.useState('')
   const [toast, addToast] = React.useState()
-  const [error, addError] = React.useState({})
+  const [error, setError] = React.useState({})
   const toaster = React.useRef(null)
   const [progressBar,setProgressBar,progressColor,setProgressColor] = useOutletContext()
   const progressOptions ={progressBar,setProgressBar,progressColor,setProgressColor,showProgress: true}
@@ -31,13 +33,14 @@ const ContainerForm = () => {
     let isNewRecord = record.isNewRecord
     saveRecord(record,progressOptions).then((result)=>{
       if(result.isSuccess && isNewRecord){
-        navigate(`/ships/${record.id}`, {replace: true})
+        navigate(`/containers/${record.id}/edit`, {replace: true})
       }
       if(result.isSuccess){
+        setError({})
         setRecord(result.record)
         showSuccessNotif(result.message)
       }else{
-        addError(result.error)
+        setError(result.error)
         showErrorNotif(result.message)
       }
     })
@@ -69,7 +72,11 @@ const ContainerForm = () => {
     setRecord(record)
   }
 
-
+  function changeSelectRecord(selectValue,metadata){
+    let targetName = metadata.name
+    record[targetName] = selectValue.value
+    setRecord(record)
+  }
 
   function confirmDelete(){
     deleteRecord(record).then((result)=>{
@@ -82,19 +89,23 @@ const ContainerForm = () => {
             </CToastHeader>
             <CToastBody>Sukses hapus</CToastBody>
           </CToast>))
-        navigate('ships')
+        navigate('containers')
       }
     })
   }
 
   function toggleNavigate(){
     if(viewState){
-      navigate(`/ships/${record.id}/edit` )
+      navigate(`/containers/${record.id}/edit` )
       setViewState(false)
     }else{
-      navigate(`/ships/${record.id}`)
+      navigate(`/containers/${record.id}`)
       setViewState(true)
     }
+  }
+
+  function shipScheduleDetail(data){
+    return `${data.ship_name}, ${dateFormat(data.estimated_departure_sour_at)}-${dateFormat(data.estimated_arrived_dest_at)}`
   }
 
   return (
@@ -107,7 +118,7 @@ const ContainerForm = () => {
         <CModalHeader>
           <CModalTitle id="deleteConfirmation">Konfirmasi Hapus</CModalTitle>
         </CModalHeader>
-        <CModalBody>Apakah Yakin Hapus kapal {record.name} ?</CModalBody>
+        <CModalBody>Apakah Yakin Hapus Kontainer {record.container_number} ?</CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setVisibleConfirmationDelete(false)}>
             Batal
@@ -138,8 +149,34 @@ const ContainerForm = () => {
             <CAlert color={status} dismissible visible={visible} onClose={() => setVisible(false)}>
               {message}
             </CAlert>
-            <CCol md={3}>
-              <CFormInput readOnly={viewState} type="text" id="ship-name" label='Nama Kapal' invalid={error.name != null}  feedback={error.name} name='name' onChange={changeRecord} defaultValue={record.name} placeholder="nama kapal"/>
+            <CCol md={4}>
+              <CFormInput readOnly={viewState} type="text" id="container-containerNumber" label='Nomor Kontainer' invalid={error.container_number != null}  feedback={error.container_number} name='container_number' onChange={changeRecord} defaultValue={record.container_number}/>
+            </CCol>
+            <CCol md={4}>
+              <CFormInput readOnly={viewState} type="text" id="container-sealNumber" label='Nomor Segel' invalid={error.seal_number != null}  feedback={error.seal_number} name='seal_number' onChange={changeRecord} defaultValue={record.seal_number} />
+            </CCol>
+            <CCol md={4}>
+              <CFormSelect readOnly={viewState}
+                id="container-orderType"
+                label='Jenis Pengiriman'
+                invalid={error.order_type != null}
+                feedback={error.order_type}
+                name='order_type'
+                onChange={changeRecord}
+                defaultValue={record.order_type} >
+                  <option>Pilih..</option>
+                  <option value="less_container_load">LCL (Less Than Container Load)</option>
+                  <option value="full_container_load">FCL (Full Container Load)</option>
+              </CFormSelect>
+            </CCol>
+            <CCol md={4}>
+              <CustomAsyncSelect readOnly={viewState} cacheOptions path='container_types.json' name='container_type_id' label="Tipe Kontainer" feedback={error.container_type} onChange={changeSelectRecord} defaultValue={{label: record.container_type_name,value: record.container_type_id}} placeholder="pilih Tipe Kontainer..." />
+            </CCol>
+            <CCol md={4}>
+              <CustomAsyncSelect readOnly={viewState} cacheOptions path='ship_schedules.json' getOptionLabel={shipScheduleDetail} name='ship_schedule_id' label="Jadwal Kapal" feedback={error.ship_schedule} onChange={changeSelectRecord} defaultValue={{label: record.ship_schedule_detail,value: record.ship_schedule_id}} placeholder="pilih Jadwal kapal..." />
+            </CCol>
+            <CCol md={4}>
+              <CustomAsyncSelect readOnly={viewState} cacheOptions path='agents.json' name='agent_id' label="Agen Lorry" feedback={error.agent} onChange={changeSelectRecord} defaultValue={{label: record.agent_name,value: record.agent_id}} placeholder="pilih Agen Lorry..." />
             </CCol>
           </CCardBody>
           <CCardFooter hidden={viewState}>
@@ -149,9 +186,6 @@ const ContainerForm = () => {
           </CCardFooter>
         </CForm>
       </CCard>
-
-
-
     </>
   )
 }

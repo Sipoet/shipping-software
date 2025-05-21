@@ -1,9 +1,9 @@
-import {CAlert, CCol,CForm,CButton,CModal,CModalBody,CCard,CCardHeader,CCardBody,CCardTitle,CCardFooter,CModalHeader,CModalTitle,CModalFooter,CFormInput,CToast, CToastBody, CToaster, CToastHeader } from '@coreui/react'
+import {CAlert, CCol,CForm,CButton,CModal,CModalBody,CCard,CCardHeader,CCardBody,CRow,CCardFooter,CModalHeader,CModalTitle,CModalFooter,CFormInput,CToast, CToastBody, CToaster, CToastHeader } from '@coreui/react'
 import React  from 'react'
-import { deleteRecord, saveRecord } from '../../lib/form_helper'
+import { deleteRecord, saveRecord } from '~/lib/form_helper'
 import { useNavigate , useLoaderData, useOutletContext } from 'react-router'
 import { Eye, Pencil } from '@phosphor-icons/react'
-
+import { UnitInput } from '~/components/NumberInput'
 
 const ContainerTypeForm = () => {
   const params = useLoaderData()
@@ -14,7 +14,7 @@ const ContainerTypeForm = () => {
   const [status, setStatus] = React.useState('info')
   const [message, setMessage] = React.useState('')
   const [toast, addToast] = React.useState()
-  const [error, addError] = React.useState({})
+  const [error, setError] = React.useState({})
   const toaster = React.useRef(null)
   const [progressBar,setProgressBar,progressColor,setProgressColor] = useOutletContext()
   const progressOptions ={progressBar,setProgressBar,progressColor,setProgressColor,showProgress: true}
@@ -31,13 +31,14 @@ const ContainerTypeForm = () => {
     let isNewRecord = record.isNewRecord
     saveRecord(record,progressOptions).then((result)=>{
       if(result.isSuccess && isNewRecord){
-        navigate(`/container_types/${record.id}`, {replace: true})
+        navigate(`/container_types/${record.id}/edit`, {replace: true})
       }
       if(result.isSuccess){
+        setError({})
         setRecord(result.record)
         showSuccessNotif(result.message)
       }else{
-        addError(result.error)
+        setError(result.error)
         showErrorNotif(result.message)
       }
     })
@@ -82,7 +83,7 @@ const ContainerTypeForm = () => {
             </CToastHeader>
             <CToastBody>Sukses hapus</CToastBody>
           </CToast>))
-        navigate('container_types')
+        navigate('/container_types')
       }
     })
   }
@@ -107,7 +108,7 @@ const ContainerTypeForm = () => {
         <CModalHeader>
           <CModalTitle id="deleteConfirmation">Konfirmasi Hapus</CModalTitle>
         </CModalHeader>
-        <CModalBody>Apakah Yakin Hapus kapal {record.name} ?</CModalBody>
+        <CModalBody>Apakah Yakin Hapus Tipe Kontainer {record.name} ?</CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setVisibleConfirmationDelete(false)}>
             Batal
@@ -138,9 +139,20 @@ const ContainerTypeForm = () => {
             <CAlert color={status} dismissible visible={visible} onClose={() => setVisible(false)}>
               {message}
             </CAlert>
-            <CCol md={3}>
-              <CFormInput readOnly={viewState} type="text" id="ship-name" label='Nama Kapal' invalid={error.name != null}  feedback={error.name} name='name' onChange={changeRecord} defaultValue={record.name} placeholder="nama kapal"/>
+            <CCol className='mb-3' md={4}>
+              <CFormInput readOnly={viewState} type="text" id="containerType-name" label='Nama Kapal' invalid={error.name != null}  feedback={error.name} name='name' onChange={changeRecord} defaultValue={record.name} placeholder="nama kapal"/>
             </CCol>
+            <CRow>
+              <CCol md={4}>
+                <UnitInput readOnly={viewState} groupMeasurement='length' type="text" id="containerType-dimension_p" label='Panjang' invalid={error.dimension_p != null}  feedback={error.dimension_p} name='dimension_p' onChange={changeRecord} defaultValue={record.dimension_p}/>
+              </CCol>
+              <CCol md={4}>
+                <UnitInput readOnly={viewState} groupMeasurement='length' type="text" id="containerType-dimension_l" label='Lebar' invalid={error.dimension_l != null}  feedback={error.dimension_l} name='dimension_l' onChange={changeRecord} defaultValue={record.dimension_l}/>
+              </CCol>
+              <CCol md={4}>
+                <UnitInput readOnly={viewState} groupMeasurement='length' type="text" id="containerType-dimension_t" label='Tinggi' invalid={error.dimension_t != null}  feedback={error.dimension_t} name='dimension_t' onChange={changeRecord} defaultValue={record.dimension_t}/>
+              </CCol>
+            </CRow>
           </CCardBody>
           <CCardFooter hidden={viewState}>
             <CButton color="primary" type="submit">

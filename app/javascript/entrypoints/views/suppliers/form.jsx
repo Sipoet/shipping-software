@@ -1,11 +1,12 @@
-import {CAlert, CCol,CForm,CButton,CModal,CModalBody,CCard,CCardHeader,CCardBody,CCardTitle,CCardFooter,CModalHeader,CModalTitle,CModalFooter,CFormInput,CToast, CToastBody, CToaster, CToastHeader } from '@coreui/react'
+import {CAlert, CCol,CForm,CButton,CModal,CModalBody,CCard,CCardHeader,CCardBody,CCardFooter,CModalHeader,CModalTitle,CModalFooter,CFormInput,CToast, CToastBody, CToaster, CToastHeader, CFormTextarea } from '@coreui/react'
 import React  from 'react'
-import { deleteRecord, saveRecord } from '../../lib/form_helper'
+import { deleteRecord, saveRecord } from '~/lib/form_helper'
 import { useNavigate , useLoaderData, useOutletContext } from 'react-router'
 import { Eye, Pencil } from '@phosphor-icons/react'
+import { PhoneInput } from '~/components/NumberInput'
 
 
-const ShipForm = () => {
+const SupplierForm = () => {
   const params = useLoaderData()
   const [record,setRecord] = React.useState(params.record)
   const [visible, setVisible] = React.useState(false)
@@ -19,6 +20,7 @@ const ShipForm = () => {
   const [progressBar,setProgressBar,progressColor,setProgressColor] = useOutletContext()
   const progressOptions ={progressBar,setProgressBar,progressColor,setProgressColor,showProgress: true}
   const navigate = useNavigate()
+  const phoneRef = React.useRef(null)
 
   const handleSubmit = (event) => {
     const form = event.currentTarget
@@ -31,7 +33,7 @@ const ShipForm = () => {
     let isNewRecord = record.isNewRecord
     saveRecord(record,progressOptions).then((result)=>{
       if(result.isSuccess && isNewRecord){
-        navigate(`/ships/${record.id}`, {replace: true})
+        navigate(`/suppliers/${record.id}`, {replace: true})
       }
       if(result.isSuccess){
         setRecord(result.record)
@@ -69,7 +71,12 @@ const ShipForm = () => {
     setRecord(record)
   }
 
-
+  function changePhoneRecord(event){
+    let targetName = event.currentTarget.name
+    record[targetName] = phoneRef.current.maskRef.unmaskedValue
+    setRecord(record)
+    console.log(record[targetName])
+  }
 
   function confirmDelete(){
     deleteRecord(record).then((result)=>{
@@ -82,17 +89,17 @@ const ShipForm = () => {
             </CToastHeader>
             <CToastBody>Sukses hapus</CToastBody>
           </CToast>))
-        navigate('ships')
+        navigate('suppliers')
       }
     })
   }
 
   function toggleNavigate(){
     if(viewState){
-      navigate(`/ships/${record.id}/edit` )
+      navigate(`/suppliers/${record.id}/edit` )
       setViewState(false)
     }else{
-      navigate(`/ships/${record.id}`)
+      navigate(`/suppliers/${record.id}`)
       setViewState(true)
     }
   }
@@ -107,7 +114,7 @@ const ShipForm = () => {
         <CModalHeader>
           <CModalTitle id="deleteConfirmation">Konfirmasi Hapus</CModalTitle>
         </CModalHeader>
-        <CModalBody>Apakah Yakin Hapus kapal {record.name} ?</CModalBody>
+        <CModalBody>Apakah Yakin Hapus Supplier {record.name} ?</CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setVisibleConfirmationDelete(false)}>
             Batal
@@ -118,7 +125,7 @@ const ShipForm = () => {
       <CToaster className="p-3" placement="top-end" push={toast} ref={toaster} />
 
       <CCard>
-        <CCardHeader>Form Kapal
+        <CCardHeader>Form Supplier
 
         <div className='float-end' hidden={record.isNewRecord}>
           <CButton color={viewState ? 'secondary' : 'info'} type="button" className='me-3' onClick={toggleNavigate}>
@@ -138,8 +145,26 @@ const ShipForm = () => {
             <CAlert color={status} dismissible visible={visible} onClose={() => setVisible(false)}>
               {message}
             </CAlert>
-            <CCol md={3}>
-              <CFormInput readOnly={viewState} type="text" id="ship-name" label='Nama Kapal' invalid={error.name != null}  feedback={error.name} name='name' onChange={changeRecord} defaultValue={record.name} placeholder="nama kapal"/>
+            <CCol md={4}>
+              <CFormInput readOnly={viewState} type="text" id="supplier-name" label='Nama Supplier' invalid={error.name != null}  feedback={error.name} name='name' onChange={changeRecord} defaultValue={record.name} />
+            </CCol>
+            <CCol md={4}>
+              <PhoneInput readOnly={viewState} ref={phoneRef} id="supplier-contactNumber" label='Kontak' invalid={error.contact_number != null}  feedback={error.contact_number} name='contact_number' onChange={changePhoneRecord} defaultValue={record.contact_number}/>
+            </CCol>
+            <CCol md={4}>
+              <CFormInput readOnly={viewState} type="text" id="supplier-taxAccount" label='NPWP' invalid={error.tax_account != null}  feedback={error.tax_account} name='tax_account' onChange={changeRecord} defaultValue={record.tax_account} />
+            </CCol>
+            <CCol md={4}>
+              <CFormTextarea readOnly={viewState} type="text" id="supplier-address" label='Alamat' invalid={error.address != null}  feedback={error.address} name='address' onChange={changeRecord} defaultValue={record.address} />
+            </CCol>
+            <CCol md={4}>
+              <CFormInput readOnly={viewState} type="text" id="supplier-bank" label='Bank' invalid={error.bank != null}  feedback={error.bank} name='bank' onChange={changeRecord} defaultValue={record.bank} />
+            </CCol>
+            <CCol md={4}>
+              <CFormInput readOnly={viewState} type="text" id="supplier-bankRegisterName" label='Nama pemilik rekening' invalid={error.bank_register_name != null}  feedback={error.bank_register_name} name='bank_register_name' onChange={changeRecord} defaultValue={record.bank_register_name} />
+            </CCol>
+            <CCol md={4}>
+              <CFormInput readOnly={viewState} type="text" id="supplier-bankAccount" label='Nomor Rekening' invalid={error.bank_account != null}  feedback={error.bank_account} name='bank_account' onChange={changeRecord} defaultValue={record.bank_account} />
             </CCol>
           </CCardBody>
           <CCardFooter hidden={viewState}>
@@ -156,4 +181,4 @@ const ShipForm = () => {
   )
 }
 
-export default ShipForm
+export default SupplierForm

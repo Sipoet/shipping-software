@@ -57,7 +57,7 @@ const _nav = [
       },
       {
         component: CNavItem,
-        name: 'Agent',
+        name: 'Agen Lorry',
         to: '/agents',
         icon: <User className="nav-icon" />,
       },
@@ -81,8 +81,8 @@ const _nav = [
   },
   {
     component: CNavItem,
-    name: 'Order Kapal',
-    to: '/ship_orders',
+    name: 'Jadwal Kapal',
+    to: '/ship_schedules',
     icon: <Calendar className="nav-icon" />,
   },
   {
