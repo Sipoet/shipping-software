@@ -7,7 +7,7 @@ function UpperBody(){
   return(
     <>
       <div className='text-end'>
-        <CButton as="a" color="primary" href="#ship_schedules/new" role="button" variant='outline'>Tambah <Plus/></CButton>
+        <CButton as="a" color="primary" href="/ship_schedules/new" role="button" variant='outline'>Tambah <Plus/></CButton>
       </div>
       <br />
     </>

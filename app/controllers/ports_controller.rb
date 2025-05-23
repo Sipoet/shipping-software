@@ -4,7 +4,7 @@ class PortsController < ApplicationController
   def index
     respond_to do |format|
       format.html {
-        render :index
+        render_home
       }
       format.json {
         search_json
@@ -13,12 +13,12 @@ class PortsController < ApplicationController
   end
 
   def show
-    find_port!
     respond_to do |format|
       format.html do
-        add_breadcrumb('', @port.name)
+        render_home
       end
       format.json do
+        find_record!
         render json: @port
       end
     end
@@ -28,70 +28,36 @@ class PortsController < ApplicationController
     permitted_params = params.required(:port)
                              .permit(:name, :city, :country)
     @port = Port.new(permitted_params)
-    respond_to do |format|
-      format.html do
-        if @port.save
-          redirect_to port_path(id: @port.id)
-        else
-          add_breadcrumb('', 'Tambah Baru')
-          flash[:alert] = @port.errors.full_messages
-          render :new
-        end
-      end
-      format.json  do
-        if @port.save
-          render json: {message: 'sukses simpan',data: @port}, status: :created
-        else
-          render_json_error(@port)
-        end
-      end
+    if @port.save
+      render json: {message: 'sukses simpan',data: @port}, status: :created
+    else
+      render_json_error(@port)
     end
   end
 
   def update
-    find_port!
+    find_record!
     permitted_params = params.required(:port)
                              .permit(:name, :city, :country)
-    respond_to do |format|
-      format.html {
-        if @port.update(permitted_params)
-          redirect_to port_path(id: @port.id)
-        else
-          add_breadcrumb(port_path(id: @port.id), @port.name)
-          add_breadcrumb('', 'Edit')
-          flash[:alert] = @port.errors.full_messages
-          render :edit
-        end
-      }
-      format.json {
-        if @port.update(permitted_params)
-          render json: {message: 'sukses simpan',data: @port}, status: :ok
-        else
-          render_json_error(@port)
-        end
-      }
+    if @port.update(permitted_params)
+      render json: {message: 'sukses simpan',data: @port}, status: :ok
+    else
+      render_json_error(@port)
     end
   end
 
   def new
-    add_breadcrumb('', 'Tambah Baru')
-    @port = Port.new
+    render_home
   end
 
   def edit
-    find_port!
-    add_breadcrumb(port_path(id: @port.id), @port.name)
-    add_breadcrumb('', 'Edit')
+    render_home
   end
 
   private
 
-  def find_port!
+  def find_record!
     @port = Port.find(params[:id])
-  end
-
-  def root_breadcrumb
-    add_breadcrumb(ports_path, Port.model_name.human)
   end
 
   def search_json

@@ -6,6 +6,7 @@ import {DateTime} from "luxon";
 import { CaretDown, CaretUp, CaretUpDown, Eye, Pencil, X } from '@phosphor-icons/react';
 import { CButton } from '@coreui/react';
 import {find} from 'lodash'
+import { useNavigate } from "react-router";
 
 
 
@@ -53,7 +54,64 @@ function _enumFormatter(cell, formatterParams, onRendered){
   })
 }
 
-function _fieldType(column){
+
+
+
+function _tomSelectEditor(cell, onRendered, success, cancel, editorParams){
+  //cell - the cell component for the editable cell
+  //onRendered - function to call when the editor has been rendered
+  //success - function to call to pass thesuccessfully updated value to Tabulator
+  //cancel - function to call to abort the edit and return to a normal cell
+  //editorParams - params object passed into the editorParams column definition property
+
+  //create and style editor
+  var editor = document.createElement("select")
+  editor.setAttribute("class", "form-select")
+  editor.setAttribute("name", editorParams.field)
+  editor.setAttribute("multiple", true)
+  editor.setAttribute("data-allow-empty", 'true')
+  editor.setAttribute("data-path", editorParams.path)
+  editor.setAttribute("data-select-label", editorParams.labelField || 'label')
+  editor.setAttribute("data-placeholder", editorParams.placeholder)
+  editor.setAttribute("data-controller", 'select2')
+
+  //set focus on the select box when the editor is selected (timeout allows for editor to be added to DOM)
+  onRendered(function(){
+      editor.focus();
+  });
+
+  //when the value has been set, trigger the cell to update
+  function successFunc(){
+    let value = editor.tomselect.getValue()
+    table.setFilter(editorParams.field,'=',value)
+    success(value);
+  }
+  editor.addEventListener("change", successFunc);
+  return editor;
+}
+
+
+function AsyncReactTabulator({columns, ajaxURL,onRef}) {
+  let el = React.createRef()
+  let navigate = useNavigate()
+
+  function _decorateColumn(column){
+    if(column.fieldType !=='action'){
+      column.headerMenu = _headerMenu()
+    }
+    column.headerWordWrap = true
+    column.headerFilter = true
+    column.resizable = 'header'
+    if(column.noSort === true){
+      column.headerSort = false
+      column.headerFilter = false
+    }
+    let typeDef = _fieldType(column)
+    Object.assign(column,typeDef)
+    return column;
+  }
+
+  function _fieldType(column){
   switch (column.fieldType) {
     case 'link':
       return {
@@ -144,12 +202,11 @@ function _fieldType(column){
               createRoot(cell.getElement()).render(
                 <>{listButtonDef.map((buttonDef)=> {
               if(buttonDef == 'edit'){
-                return (<CButton key={`${row.id}-edit`} as='a' href={`#${row.edit_path}`} color='primary'><Pencil /></CButton>)
-
+                return (<CButton key={`${row.id}-edit`} type='button' onClick={()=> navigate(row.edit_path) } color='primary'><Pencil /></CButton>)
               }else if(buttonDef == 'view'){
-                return (<CButton key={`${row.id}-view`} as='a' href={`#${row.view_path}`} color='secondary'><Eye /></CButton>)
+                return (<CButton key={`${row.id}-view`} type='button' onClick={()=> navigate(row.view_path) } color='secondary'><Eye /></CButton>)
               }else if(buttonDef == 'delete'){
-                return (<CButton key={`${row.id}-delete`} as='a' href={`#${row.destroy_path}`} data={{'turbo-method':'delete'}} color='danger'><X size={17} /></CButton>)
+                return (<CButton key={`${row.id}-delete`} type='button' onClick={()=> navigate(row.destroy_path) } data={{'turbo-method':'delete'}} color='danger'><X size={17} /></CButton>)
               }
             })}</>
               )
@@ -173,60 +230,6 @@ function _fieldType(column){
   }
 
 }
-
-
-function _tomSelectEditor(cell, onRendered, success, cancel, editorParams){
-  //cell - the cell component for the editable cell
-  //onRendered - function to call when the editor has been rendered
-  //success - function to call to pass thesuccessfully updated value to Tabulator
-  //cancel - function to call to abort the edit and return to a normal cell
-  //editorParams - params object passed into the editorParams column definition property
-
-  //create and style editor
-  var editor = document.createElement("select")
-  editor.setAttribute("class", "form-select")
-  editor.setAttribute("name", editorParams.field)
-  editor.setAttribute("multiple", true)
-  editor.setAttribute("data-allow-empty", 'true')
-  editor.setAttribute("data-path", editorParams.path)
-  editor.setAttribute("data-select-label", editorParams.labelField || 'label')
-  editor.setAttribute("data-placeholder", editorParams.placeholder)
-  editor.setAttribute("data-controller", 'select2')
-
-  //set focus on the select box when the editor is selected (timeout allows for editor to be added to DOM)
-  onRendered(function(){
-      editor.focus();
-  });
-
-  //when the value has been set, trigger the cell to update
-  function successFunc(){
-    let value = editor.tomselect.getValue()
-    table.setFilter(editorParams.field,'=',value)
-    success(value);
-  }
-  editor.addEventListener("change", successFunc);
-  return editor;
-}
-
-
-function AsyncReactTabulator({columns, ajaxURL,onRef}) {
-  let el = React.createRef()
-
-  function _decorateColumn(column){
-    if(column.fieldType !=='action'){
-      column.headerMenu = _headerMenu()
-    }
-    column.headerWordWrap = true
-    column.headerFilter = true
-    column.resizable = 'header'
-    if(column.noSort === true){
-      column.headerSort = false
-      column.headerFilter = false
-    }
-    let typeDef = _fieldType(column)
-    Object.assign(column,typeDef)
-    return column;
-  }
 
   function _headerMenu(){
     return [

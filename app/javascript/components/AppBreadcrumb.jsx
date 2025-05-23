@@ -1,5 +1,5 @@
 import React from 'react'
-import {  useLocation } from 'react-router'
+import {  Link, useLocation } from 'react-router'
 import { CBreadcrumb, CBreadcrumbItem } from '@coreui/react'
 
 const AppBreadcrumb = () => {
@@ -17,7 +17,7 @@ const AppBreadcrumb = () => {
       const routeName = getRouteName(currentPathname)
       routeName &&
         breadcrumbs.push({
-          pathname: `#${currentPathname}`,
+          pathname: currentPathname,
           name: routeName,
           active: index + 1 === array.length ? true : false,
         })
@@ -30,15 +30,18 @@ const AppBreadcrumb = () => {
 
   return (
     <CBreadcrumb className="my-0">
-      <CBreadcrumbItem href="/">Home</CBreadcrumbItem>
+      <CBreadcrumbItem ><Link to={'/'}>Home</Link></CBreadcrumbItem>
+
       {breadcrumbs.map((breadcrumb, index) => {
         return (
           <CBreadcrumbItem
-            {...(breadcrumb.active ? { active: true } : { href: breadcrumb.pathname })}
+            {...( { active: breadcrumb.active })}
             key={index}
           >
-            {breadcrumb.name}
+            {breadcrumb.active ? breadcrumb.name : <Link to={breadcrumb.pathname}>{breadcrumb.name}</Link>}
+
           </CBreadcrumbItem>
+
         )
       })}
     </CBreadcrumb>

@@ -6,7 +6,7 @@ async function findRecord(modelName, id,options={}){
   if(id == null){return null}
   _initProgress(options)
   let pathNamespace = pathFromModelName(modelName)
-  return fetch(`${pathNamespace}/${id}.json`,{method:'GET',headers:{'Content-Type':'application/json'}})
+  return fetch(`/${pathNamespace}/${id}.json`,{method:'GET',headers:{'Content-Type':'application/json'}})
   .then((response)=>{
     showProgressBar(response.clone(),options)
     if(response.status ==200 || response.status == 304){
@@ -78,7 +78,7 @@ async function showProgressBar(response, options){
 
 async function _createRecord(model, options={}){
   let pathNamespace = pathFromModelName(model._modelName)
-  return fetch(`${pathNamespace}.json`,
+  return fetch(`/${pathNamespace}.json`,
     {
       method:'POST',
       body: requestBody(model),
@@ -111,7 +111,7 @@ async function _createRecord(model, options={}){
 
 function _updateRecord(model, options = {}){
   let pathNamespace = pathFromModelName(model._modelName)
-  return fetch(`${pathNamespace}/${model.id}.json`,
+  return fetch(`/${pathNamespace}/${model.id}.json`,
     {
       method:'PUT',
       body: requestBody(model),
@@ -145,7 +145,7 @@ function _updateRecord(model, options = {}){
 function deleteRecord(model){
    _initProgress(options)
   let pathNamespace = pathFromModelName(model._modelName)
-  return fetch(`${pathNamespace}/${model.id}.json`,
+  return fetch(`/${pathNamespace}/${model.id}.json`,
     {
       method:'DELETE'
     }).then((response)=>{

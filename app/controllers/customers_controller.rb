@@ -1,10 +1,11 @@
 class CustomersController < ApplicationController
   before_action :authenticate_user!,:root_breadcrumb
   skip_before_action :verify_authenticity_token, only: [:create,:update]
+  respond_to :json, only:[:create, :update]
   def index
     respond_to do |format|
       format.html {
-        render :index
+        render_home
       }
       format.json {
         search_json
@@ -13,12 +14,12 @@ class CustomersController < ApplicationController
   end
 
   def show
-    find_customer!
     respond_to do |format|
       format.html {
-        add_breadcrumb('', @record.name)
+        render_home
       }
       format.json {
+        find_customer!
         @record
       }
     end
@@ -27,61 +28,29 @@ class CustomersController < ApplicationController
   def create
     permitted_params = permit_params
     @record = Customer.new(permitted_params)
-    respond_to do |format|
-      format.html {
-        if @record.save
-          redirect_to customer_path(id: @record.id)
-        else
-          add_breadcrumb('', 'Tambah Baru')
-          flash[:alert] = @record.errors.full_messages
-          render :new
-        end
-      }
-      format.json {
-        if @record.save
-          render json: {message: 'sukses simpan',data: @record}, status: :created
-        else
-          render_json_error(@record)
-        end
-      }
+    if @record.save
+      render json: {message: 'sukses simpan',data: @record}, status: :created
+    else
+      render_json_error(@record)
     end
-
   end
 
   def update
     find_customer!
     permitted_params = permit_params
-    respond_to do |format|
-      format.html {
-        if @record.update(permitted_params)
-          redirect_to customer_path(id: @record.id)
-        else
-          add_breadcrumb(customer_path(id: @record.id), @record.name)
-          add_breadcrumb('', 'Edit')
-          flash[:alert] = @record.errors.full_messages
-          render :edit
-        end
-      }
-      format.json {
-        if @record.update(permitted_params)
-          render json: {message: 'sukses simpan',data: @record}, status: :ok
-        else
-          render_json_error(@record)
-        end
-      }
+    if @record.update(permitted_params)
+      render json: {message: 'sukses simpan',data: @record}, status: :ok
+    else
+      render_json_error(@record)
     end
-
   end
 
   def new
-    add_breadcrumb('', 'Tambah Baru')
-    @record = Customer.new
+    render_home
   end
 
   def edit
-    find_customer!
-    add_breadcrumb(customer_path(id: @record.id), @record.name)
-    add_breadcrumb('', 'Edit')
+    render_home
   end
 
   private
@@ -89,15 +58,12 @@ class CustomersController < ApplicationController
   def permit_params
     params
       .required(:customer)
-      .permit(:name, :default_port_id, :address, :bank, :bank_account, :bank_register_name, :contact_number, :tax_account)
+      .permit(:name, :default_port_id, :address, :bank, :bank_account,
+              :bank_register_name, :contact_number, :tax_account)
   end
 
   def find_customer!
     @record = Customer.find(params[:id])
-  end
-
-  def root_breadcrumb
-    add_breadcrumb(customers_path, Customer.model_name.human)
   end
 
   def search_json

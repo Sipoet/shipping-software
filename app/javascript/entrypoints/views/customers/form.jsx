@@ -64,7 +64,8 @@ const CustomerForm = () => {
   }
 
   React.useEffect(() =>  {
-  }, [error])
+    setViewState(params.isViewState)
+  }, [params.isViewState])
 
   function changeRecord(event){
     let targetName = event.currentTarget.name

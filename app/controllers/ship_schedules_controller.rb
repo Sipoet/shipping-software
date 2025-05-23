@@ -1,99 +1,61 @@
 class ShipSchedulesController < ApplicationController
-  before_action :root_breadcrumb, :authenticate_user!
+  before_action :authenticate_user!
   skip_before_action :verify_authenticity_token, only: [:create,:update]
   def index
     respond_to do |format|
       format.html {
-        render :index
+        render_home
       }
       format.json {
         search_json
       }
     end
-
   end
 
   def show
-    find_ship_schedule!
     respond_to do |format|
       format.html {
-        add_breadcrumb('', @record.id)
+        render_home
       }
       format.json {
+        find_record!
         @record
       }
     end
-
   end
 
   def create
-    permitted_params = params
-      .required(:ship_schedule)
-      .permit(:ship_id, :loading_port_id, :destination_port_id, :voyage, :booking_code,
-              :estimated_arrived_dest_at, :estimated_arrived_sour_at, :estimated_departure_sour_at)
+    permitted_params = permit_params
     @record = ShipSchedule.new(permitted_params)
-     respond_to do |format|
-      format.html {
-        if @record.save
-          redirect_to ship_schedule_path(id: @record.id)
-        else
-          add_breadcrumb('', 'Tambah Baru')
-          get_error_record
-          render :new
-        end
-      }
-      format.json {
-        if @record.save
-          render json: {message: 'sukses simpan',data: @record}, status: :created
-        else
-          render_json_error(@record)
-        end
-      }
+    if @record.save
+      render json: {message: 'sukses simpan',data: @record}, status: :created
+    else
+      render_json_error(@record)
     end
+
   end
 
   def update
-    find_ship_schedule!
-    permitted_params = params
-      .required(:ship_schedule)
-      .permit(:ship_id, :loading_port_id, :destination_port_id, :voyage, :booking_code,
-              :estimated_arrived_dest_at, :estimated_arrived_sour_at, :estimated_departure_sour_at)
-    respond_to do |format|
-      format.html {
-        if @record.update(permitted_params)
-          redirect_to ship_schedule_path(id: @record.id)
-        else
-          add_breadcrumb(ship_schedule_path(id: @record.id), @record.id)
-          add_breadcrumb('', 'Edit')
-          get_error_record
-          render :edit
-        end
-      }
-      format.json {
-        if @record.update(permitted_params)
-          render json: {message: 'sukses simpan',data: @record}, status: :ok
-        else
-          render_json_error(@record)
-        end
-      }
+    find_record!
+    permitted_params = permit_params
+    if @record.update(permitted_params)
+      render json: {message: 'sukses simpan',data: @record}, status: :ok
+    else
+      render_json_error(@record)
     end
-
   end
 
   def new
-    add_breadcrumb('', 'Tambah Baru')
-    @record = ShipSchedule.new
+    render_home
   end
 
   def edit
-    find_ship_schedule!
-    add_breadcrumb(ship_schedule_path(id: @record.id), @record.id)
-    add_breadcrumb('', 'Edit')
+    render_home
   end
 
   ShipSchedule.statuses.each do |key, int_value|
     define_method("set_#{key}") do
-      find_ship_schedule!
+      find_record!
       result = @record.send("#{key}!") rescue false
       if result == false
         get_error_record
@@ -106,16 +68,15 @@ class ShipSchedulesController < ApplicationController
 
   private
 
-  def get_error_record
-    flash[:alert] = @record.errors.full_messages
-  end
-
-  def find_ship_schedule!
+  def find_record!
     @record = ShipSchedule.find(params[:id])
   end
 
-  def root_breadcrumb
-    add_breadcrumb(ship_schedules_path, ShipSchedule.model_name.human)
+  def permit_params
+    params
+      .required(:ship_schedule)
+      .permit(:ship_id, :loading_port_id, :destination_port_id, :voyage, :booking_code,
+              :estimated_arrived_dest_at, :estimated_arrived_sour_at, :estimated_departure_sour_at)
   end
 
   def search_json

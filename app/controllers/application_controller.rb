@@ -13,6 +13,9 @@ class ApplicationController < ActionController::Base
     add_breadcrumb(root_path, 'Dashboard')
   end
 
+  def render_home
+    render 'home/dashboard'
+  end
 
   def set_locale
     I18n.locale = :id

@@ -61,7 +61,8 @@ const ShipScheduleForm = () => {
   }
 
   React.useEffect(() =>  {
-  }, [error])
+    setViewState(params.isViewState)
+  }, [params.isViewState])
 
   function changeRecord(event){
     let targetName = event.currentTarget.name
@@ -93,11 +94,9 @@ const ShipScheduleForm = () => {
 
   function toggleNavigate(){
     if(viewState){
-      navigate(`/ship_schedules/${record.id}/edit` )
-      setViewState(false)
+      navigate(`/ship_schedules/${record.id}/edit`)
     }else{
       navigate(`/ship_schedules/${record.id}`)
-      setViewState(true)
     }
   }
 

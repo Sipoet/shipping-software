@@ -4,7 +4,7 @@ class PackingListsController < ApplicationController
   def index
     respond_to do |format|
       format.html {
-        render :index
+        render_home
       }
       format.json {
         search_json
@@ -14,12 +14,12 @@ class PackingListsController < ApplicationController
   end
 
   def show
-    find_record!
     respond_to do |format|
       format.html {
-        add_breadcrumb('', @record.id)
+        render_home
       }
       format.json {
+        find_record!
         @record
       }
     end
@@ -27,82 +27,45 @@ class PackingListsController < ApplicationController
   end
 
   def create
-    permitted_params = params
-      .required(:packing_list)
-      .permit(:container_id, :customer_schedule_id, :customer_id, :supplier_id, :product_id,
-              :price, :unit_of_measurement, :total_dimension)
+    permitted_params = permit_params
     @record = PackingList.new(permitted_params)
-     respond_to do |format|
-      format.html {
-        if @record.save
-          redirect_to packing_list_path(id: @record.id)
-        else
-          add_breadcrumb('', 'Tambah Baru')
-          get_error_record
-          render :new
-        end
-      }
-      format.json {
-        if @record.save
-          render json: {message: 'sukses simpan',data: @record}, status: :created
-        else
-          render_json_error(@record)
-        end
-      }
+    if @record.save
+      render json: {message: 'sukses simpan',data: @record}, status: :created
+    else
+      render_json_error(@record)
     end
+
   end
 
   def update
     find_record!
-    permitted_params = params
-      .required(:packing_list)
-      .permit(:container_id, :customer_schedule_id, :customer_id, :supplier_id, :product_id,
-              :price, :unit_of_measurement, :total_dimension)
-    respond_to do |format|
-      format.html {
-        if @record.update(permitted_params)
-          redirect_to packing_list_path(id: @record.id)
-        else
-          add_breadcrumb(packing_list_path(id: @record.id), @record.id)
-          add_breadcrumb('', 'Edit')
-          get_error_record
-          render :edit
-        end
-      }
-      format.json {
-        if @record.update(permitted_params)
-          render json: {message: 'sukses simpan',data: @record}, status: :ok
-        else
-          render_json_error(@record)
-        end
-      }
+    permitted_params = permit_params
+    if @record.update(permitted_params)
+      render json: {message: 'sukses simpan',data: @record}, status: :ok
+    else
+      render_json_error(@record)
     end
-
   end
 
   def new
-    add_breadcrumb('', 'Tambah Baru')
-    @record = PackingList.new
+    render_home
   end
 
   def edit
-    find_record!
-    add_breadcrumb(packing_list_path(id: @record.id), @record.id)
-    add_breadcrumb('', 'Edit')
+    render_home
   end
 
   private
 
-  def get_error_record
-    flash[:alert] = @record.errors.full_messages
+  def permit_params
+    params
+      .required(:packing_list)
+      .permit(:container_id, :customer_schedule_id, :customer_id, :supplier_id, :product_id,
+              :price, :unit_of_measurement, :total_dimension)
   end
 
   def find_record!
     @record = PackingList.find(params[:id])
-  end
-
-  def root_breadcrumb
-    add_breadcrumb(packing_lists_path, PackingList.model_name.human)
   end
 
   def search_json

@@ -1,5 +1,5 @@
 import React from 'react'
-import { createHashRouter } from 'react-router'
+import { createBrowserRouter } from 'react-router'
 import DefaultLayout from './views/layouts/default_layout'
 import { findRecord } from '~/lib/form_helper'
 import { createModel } from '~/lib/model'
@@ -31,7 +31,7 @@ function newLoader(modelName){
   return async (route)=>{
     let params =route.params
     let record = createModel(modelName,params.id)
-    return {params: params, record: record,isViewState: false}
+    return {params: params, record: record, isViewState: false}
   }
 }
 
@@ -51,7 +51,7 @@ function editLoader(modelName){
   }
 }
 
-const routerDef = createHashRouter( [
+const routerDef = createBrowserRouter( [
   { Component: DefaultLayout,
     children:[
       { index: true, Component: Dashboard, name: 'Home' },
