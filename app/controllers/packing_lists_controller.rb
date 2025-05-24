@@ -61,7 +61,8 @@ class PackingListsController < ApplicationController
     params
       .required(:packing_list)
       .permit(:container_id, :customer_schedule_id, :customer_id, :supplier_id, :product_id,
-              :price, :unit_of_measurement, :total_dimension)
+              :price, :unit_of_measurement, :quantity, :total_weight, :total_dimension_p,
+              :total_dimension_l,:total_dimension_t)
   end
 
   def find_record!

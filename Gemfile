@@ -39,6 +39,7 @@ gem "bootsnap", require: false
 gem 'sidekiq-cron', '~>1.12.0'
 gem 'sidekiq', '~> 7.2'
 gem 'devise', '~>4.9.0'
+gem 'devise-jwt'
 gem 'kaminari', '~> 1.2.2'
 gem 'vite_rails','~> 3.0.19'
 gem 'foreman','~> 0.88.1'

@@ -19,7 +19,7 @@ class PortsController < ApplicationController
       end
       format.json do
         find_record!
-        render json: @port
+        @record
       end
     end
   end
@@ -27,11 +27,11 @@ class PortsController < ApplicationController
   def create
     permitted_params = params.required(:port)
                              .permit(:name, :city, :country)
-    @port = Port.new(permitted_params)
-    if @port.save
-      render json: {message: 'sukses simpan',data: @port}, status: :created
+    @record = Port.new(permitted_params)
+    if @record.save
+      render json: {message: 'sukses simpan',data: @record}, status: :created
     else
-      render_json_error(@port)
+      render_json_error(@record)
     end
   end
 
@@ -39,10 +39,10 @@ class PortsController < ApplicationController
     find_record!
     permitted_params = params.required(:port)
                              .permit(:name, :city, :country)
-    if @port.update(permitted_params)
-      render json: {message: 'sukses simpan',data: @port}, status: :ok
+    if @record.update(permitted_params)
+      render json: {message: 'sukses simpan',data: @record}, status: :ok
     else
-      render_json_error(@port)
+      render_json_error(@record)
     end
   end
 
@@ -57,21 +57,21 @@ class PortsController < ApplicationController
   private
 
   def find_record!
-    @port = Port.find(params[:id])
+    @record = Port.find(params[:id])
   end
 
   def search_json
     result = extract_search_query(params, Port)
-    @ports = Port.all.order(result.order)
+    @records = Port.all.order(result.order)
     if result.filter.present?
-      @ports = @ports.where(result.filter)
+      @records = @records.where(result.filter)
     end
     if result.search_text.present?
       columns = ['name', 'city']
       query = columns.map{|column|"#{column} ilike ?"}.join(' OR ')
-      @ports = @ports.where(query,*Array.new(columns.length){"%#{result.search_text}%"})
+      @records = @records.where(query,*Array.new(columns.length){"%#{result.search_text}%"})
     end
-    @ports = @ports.page(result.page)
+    @records = @records.page(result.page)
                    .per(result.limit)
   end
 end

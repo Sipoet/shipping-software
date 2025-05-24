@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_09_25_092427) do
+ActiveRecord::Schema[7.2].define(version: 2025_05_23_134035) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -39,7 +39,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_25_092427) do
   end
 
   create_table "containers", force: :cascade do |t|
-    t.integer "container_type_id", null: false
+    t.integer "container_type_id"
     t.string "container_number", null: false
     t.string "seal_number"
     t.integer "order_type", null: false
@@ -49,19 +49,37 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_25_092427) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "packing_details", force: :cascade do |t|
+    t.integer "packing_list_id", null: false
+    t.integer "product_id"
+    t.integer "quantity"
+    t.decimal "total_weight", null: false
+    t.string "weight_uom", null: false
+    t.decimal "total_volume", null: false
+    t.string "volume_uom", null: false
+    t.decimal "send_cost", null: false
+    t.text "description", null: false
+    t.decimal "total_dimension_p"
+    t.decimal "total_dimension_l"
+    t.decimal "total_dimension_t"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "packing_lists", force: :cascade do |t|
     t.integer "container_id"
-    t.integer "product_id", null: false
+    t.string "code", null: false
     t.text "description"
-    t.decimal "quantity", null: false
-    t.decimal "total_dimension_p", default: "0.0", null: false
-    t.decimal "total_dimension_l", default: "0.0", null: false
-    t.decimal "total_dimension_t", default: "0.0", null: false
+    t.decimal "subtotal", default: "0.0", null: false
+    t.decimal "grandtotal", default: "0.0", null: false
+    t.decimal "tax_amount", default: "0.0", null: false
+    t.decimal "total_item", null: false
+    t.decimal "total_volume", default: "0.0", null: false
+    t.string "volume_uom", null: false
     t.decimal "total_weight", default: "0.0", null: false
-    t.integer "supplier_id"
-    t.integer "customer_id", null: false
-    t.decimal "price"
-    t.string "unit_of_measurement"
+    t.string "weight_uom", null: false
+    t.integer "sender_id", null: false
+    t.integer "receiver_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -184,11 +202,12 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_25_092427) do
 
   add_foreign_key "clients", "ports", column: "default_port_id"
   add_foreign_key "containers", "clients", column: "agent_id"
+  add_foreign_key "containers", "container_types"
   add_foreign_key "containers", "ship_schedules"
-  add_foreign_key "packing_lists", "clients", column: "customer_id"
-  add_foreign_key "packing_lists", "clients", column: "supplier_id"
+  add_foreign_key "packing_details", "products"
+  add_foreign_key "packing_lists", "clients", column: "receiver_id"
+  add_foreign_key "packing_lists", "clients", column: "sender_id"
   add_foreign_key "packing_lists", "containers"
-  add_foreign_key "packing_lists", "products"
   add_foreign_key "role_auths", "roles"
   add_foreign_key "sales_invoice_details", "packing_lists"
   add_foreign_key "sales_invoice_details", "products"

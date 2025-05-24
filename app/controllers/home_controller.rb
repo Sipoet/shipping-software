@@ -8,4 +8,8 @@ class HomeController < ApplicationController
   def dashboard2
     render :dashboard, layout: 'application_old'
   end
+
+  def company_image
+
+  end
 end

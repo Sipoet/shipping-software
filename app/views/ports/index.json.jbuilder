@@ -1,6 +1,6 @@
-json.total_pages @ports.total_pages
+json.total_pages @records.total_pages
 json.data do
-  json.array! @ports do |port|
+  json.array! @records do |port|
     json.id port.id
     json.name port.name
     json.city port.city

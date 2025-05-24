@@ -1,21 +1,22 @@
 services:
-  app:
+  shipping-app:
     build: .
     image: shipping-app
     restart: on-failure
-    command: bash -c "rm -f tmp/pids/server.pid && bin/dev"
-    # command: sleep 3600
+    # command: bash -c "rm -f tmp/pids/server.pid && bin/dev"
+    # command: bash -c "rm -f tmp/pids/server.pid && bin/rails s -b 0.0.0.0 -p 3000"
+    command: sleep 3600
     container_name: shipping-app
     volumes:
       # - .:/shipping-software
       - ./app:/shipping-software/app
-      - ./bin:/shipping-software/bin
       - ./config:/shipping-software/config
       - ./db:/shipping-software/db
       - ./lib:/shipping-software/lib
-      - ./public:/shipping-software/public
+      # - ./public:/shipping-software/public
       - ./spec:/shipping-software/spec
       - ./vendor:/shipping-software/vendor
+      # - ./node_modules:/shipping-software/node_modules
       - ./.env:/shipping-software/.env
       - ./package.json:/shipping-software/package.json
       - ./package-lock.json:/shipping-software/package-lock.json
@@ -24,13 +25,15 @@ services:
       - ./Procfile.dev:/shipping-software/Procfile.dev
     ports:
       - "${SERVER_PORT}:3000"
+      - "3036:3036"
     stdin_open: true
     tty: true
     depends_on:
-      - db
-      - redis
+      - shipping_db
+      - shipping_redis
     environment:
         - HOST=${HOST}
+        - DEVELOPMENT_DATABASE_HOST=${DEVELOPMENT_DATABASE_HOST}
         - DEVELOPMENT_DATABASE_USERNAME=${DEVELOPMENT_DATABASE_USERNAME}
         - DEVELOPMENT_DATABASE_PASSWORD=${DEVELOPMENT_DATABASE_PASSWORD}
         - PRODUCTION_DATABASE_USERNAME=${PRODUCTION_DATABASE_USERNAME}
@@ -38,36 +41,32 @@ services:
         - RAILS_ENV=${RAILS_ENV}
         - PRODUCTION_DATABASE_HOST=${PRODUCTION_DATABASE_HOST}
         - NODE_ENV = development
+        - FAST_REFRESH=false
   background:
     image: shipping-app
     container_name: shipping-background
+    restart: on-failure
     command: bundle exec sidekiq -C config/sidekiq.yml
     volumes:
-      - ./app:/shipping-software/app
-      - ./bin:/shipping-software/bin
       - ./config:/shipping-software/config
-      - ./db:/shipping-software/db
+      - ./app:/shipping-software/app
       - ./lib:/shipping-software/lib
-      - ./public:/shipping-software/public
-      - ./spec:/shipping-software/spec
-      - ./vendor:/shipping-software/vendor
       - ./.env:/shipping-software/.env
-      - ./Gemfile:/shipping-software/Gemfile
-      - ./Gemfile.lock:/shipping-software/Gemfile.lock
     stdin_open: true
     tty: true
     depends_on:
-      - redis
-      - app
+      - shipping_redis
+      - shipping_db
     environment:
         - HOST=${HOST}
+        - DEVELOPMENT_DATABASE_HOST=${DEVELOPMENT_DATABASE_HOST}
         - DEVELOPMENT_DATABASE_USERNAME=${DEVELOPMENT_DATABASE_USERNAME}
         - DEVELOPMENT_DATABASE_PASSWORD=${DEVELOPMENT_DATABASE_PASSWORD}
         - PRODUCTION_DATABASE_USERNAME=${PRODUCTION_DATABASE_USERNAME}
         - PRODUCTION_DATABASE_PASSWORD=${PRODUCTION_DATABASE_PASSWORD}
         - RAILS_ENV=${RAILS_ENV}
         - PRODUCTION_DATABASE_HOST=${PRODUCTION_DATABASE_HOST}
-  db:
+  shipping_db:
     image: postgres:16.4-alpine3.20
     restart: always
     volumes:
@@ -81,8 +80,8 @@ services:
         - DEVELOPMENT_DATABASE_PASSWORD=${DEVELOPMENT_DATABASE_PASSWORD}
         - PRODUCTION_DATABASE_USERNAME=${PRODUCTION_DATABASE_USERNAME}
         - PRODUCTION_DATABASE_PASSWORD=${PRODUCTION_DATABASE_PASSWORD}
-  redis:
-    image: redis:7.2.3
+  shipping_redis:
+    image: redis:7.2.3-alpine
     restart: always
     volumes:
       - D:\shipping_redis\:/data

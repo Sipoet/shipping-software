@@ -82,7 +82,7 @@ class ProductsController < ApplicationController
       @records = @records.where(query_filter)
     end
     if result.search_text.present?
-      columns = ['name', 'product_tpe']
+      columns = ['name']
       query = columns.map{|column|"#{column} ilike ?"}.join(' OR ')
       @records = @records.where(query,*Array.new(columns.length){"%#{result.search_text}%"})
     end

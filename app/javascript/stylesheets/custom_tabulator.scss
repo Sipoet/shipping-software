@@ -1,7 +1,3 @@
-// .dataTable.fixedHeader-floating{
-//   background-color: white !important;
-// }
-
 // tabulator
 .tabulator-cell .btn ~ .btn, .btn-action-container .btn ~ .btn{
   margin-left: 1.2em;
@@ -18,13 +14,3 @@
   z-index: 1000;
 }
 
-// print css
-.print-only {
-   display : none;
-}
-
-@media print {
-    .print-only {
-       display : block;
-    }
-}

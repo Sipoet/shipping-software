@@ -1,5 +1,5 @@
 class CustomersController < ApplicationController
-  before_action :authenticate_user!,:root_breadcrumb
+  before_action :authenticate_user!
   skip_before_action :verify_authenticity_token, only: [:create,:update]
   respond_to :json, only:[:create, :update]
   def index

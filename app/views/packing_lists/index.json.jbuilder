@@ -2,23 +2,17 @@ json.total_pages @records.total_pages
 json.data do
   json.array! @records do |record|
     json.id record.id
-    customer = record.customer
-    if customer.present?
-      json.customer_detail customer.name
-      json.customer_id record.customer_id
-      json.customer_path customer_path(record.customer_id)
+    sender = record.sender
+    if sender.present?
+      json.sender_detail sender.name
+      json.sender_id record.sender_id
+      json.sender_path customer_path(record.sender_id)
     end
-    supplier = record.supplier
-    if supplier.present?
-      json.supplier_detail supplier.name
-      json.supplier_id record.supplier_id
-      json.supplier_path supplier_path(record.supplier_id)
-    end
-    product = record.product
-    if product.present?
-      json.product_detail product.name
-      json.product_id record.product_id
-      json.product_path product_path(record.product_id)
+    reciever = record.reciever
+    if reciever.present?
+      json.reciever_detail reciever.name
+      json.reciever_id record.reciever_id
+      json.reciever_path customer_path(record.reciever_id)
     end
     container = record.container
     if container.present?
@@ -26,14 +20,16 @@ json.data do
       json.container_id record.container_id
       json.container_path container_path(record.container_id)
     end
-    json.name record.name
-    json.quantity record.quantity
+    json.total_item record.total_item
     json.total_weight record.total_weight
-    json.price record.price
-    json.unit_of_measurement record.unit_of_measurement
-    json.total_dimension_p record.total_dimension_p
-    json.total_dimension_l record.total_dimension_l
-    json.total_dimension_t record.total_dimension_t
+    json.weight_uom record.weight_uom
+    json.total_volume record.total_volume
+    json.volume_uom record.volume_uom
+    json.grandtotal record.grandtotal
+    json.subtotal record.subtotal
+    json.tax_amount record.tax_amount
+    json.description record.description
+    json.code record.code
     json.view_path packing_list_path(id: record.id)
     json.edit_path edit_packing_list_path(id: record.id)
     json.created_at record.created_at
