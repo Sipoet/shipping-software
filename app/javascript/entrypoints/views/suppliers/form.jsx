@@ -63,7 +63,8 @@ const SupplierForm = () => {
   }
 
   React.useEffect(() =>  {
-  }, [error])
+    setViewState(params.isViewState)
+  }, [params.isViewState])
 
   function changeRecord(event){
     let targetName = event.currentTarget.name
@@ -97,10 +98,8 @@ const SupplierForm = () => {
   function toggleNavigate(){
     if(viewState){
       navigate(`/suppliers/${record.id}/edit` )
-      setViewState(false)
     }else{
       navigate(`/suppliers/${record.id}`)
-      setViewState(true)
     }
   }
 

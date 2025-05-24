@@ -118,6 +118,8 @@ const ShipScheduleForm = () => {
           <CButton color="danger" onClick={confirmDelete}>Hapus</CButton>
         </CModalFooter>
       </CModal>
+
+
       <CToaster className="p-3" placement="top-end" push={toast} ref={toaster} />
 
       <CCard>
@@ -147,16 +149,16 @@ const ShipScheduleForm = () => {
               </CCol>
 
               <CCol md={4} className='mb-3'>
-                <CustomAsyncSelect readOnly={viewState} cacheOptions path='ships.json' name='ship_id' label="Kapal"feedback={error.ship} onChange={changeSelectRecord} defaultValue={{label: record.ship_name,value: record.ship_id}} placeholder="pilih kapal..." />
+                <CustomAsyncSelect readOnly={viewState} cacheOptions path='/ships.json' name='ship_id' label="Kapal"feedback={error.ship} onChange={changeSelectRecord} defaultValue={{label: record.ship_name,value: record.ship_id}} placeholder="pilih kapal..." />
               </CCol>
               <CCol md={4} className='mb-3'>
                 <CFormInput readOnly={viewState}  type="text" id="shipSchedule-voyage" label='Voyage' invalid={error.voyage != null}  feedback={error.voyage} name='voyage' onChange={changeRecord} defaultValue={record.voyage} placeholder="Voyage..."/>
               </CCol>
               <CCol md={4} className='mb-3'>
-                <CustomAsyncSelect readOnly={viewState} cacheOptions path='ports.json' name='loading_port_id' label="Pelabuhan Muatan"feedback={error.loading_port} onChange={changeSelectRecord} defaultValue={{label: record.loading_port_name,value: record.loading_port_id}} placeholder="pilih Pelabuhan..." />
+                <CustomAsyncSelect readOnly={viewState} cacheOptions path='/ports.json' name='loading_port_id' label="Pelabuhan Muatan"feedback={error.loading_port} onChange={changeSelectRecord} defaultValue={{label: record.loading_port_name,value: record.loading_port_id}} placeholder="pilih Pelabuhan..." />
               </CCol>
               <CCol md={4} className='mb-3'>
-                <CustomAsyncSelect readOnly={viewState} cacheOptions path='ports.json' name='destination_port_id' label="Pelabuhan Tujuan"feedback={error.destination_port} onChange={changeSelectRecord} defaultValue={{label: record.destination_port_name,value: record.destination_port_id}} placeholder="pilih Pelabuhan..." />
+                <CustomAsyncSelect readOnly={viewState} cacheOptions path='/ports.json' name='destination_port_id' label="Pelabuhan Tujuan"feedback={error.destination_port} onChange={changeSelectRecord} defaultValue={{label: record.destination_port_name,value: record.destination_port_id}} placeholder="pilih Pelabuhan..." />
               </CCol>
               <CRow>
                 <CCol md={4} className='mb-3'>

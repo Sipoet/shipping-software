@@ -2,12 +2,16 @@ import React  from 'react'
 import { AsyncReactTabulator } from '~/components/async_react_tabulator'
 import {Plus} from '@phosphor-icons/react'
 import { CButton } from '@coreui/react'
+import { Link } from 'react-router'
 
 function UpperBody(){
   return(
     <>
       <div className='text-end'>
-        <CButton as="a" color="primary" href="/packing_lists/new" role="button" variant='outline'>Tambah <Plus/></CButton>
+        <Link to='/packing_lists/new'>
+          <CButton type='button' color="primary" role="button" variant='outline'>Tambah <Plus/></CButton>
+        </Link>
+
       </div>
       <br />
     </>

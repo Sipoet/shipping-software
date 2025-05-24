@@ -69,7 +69,8 @@ const AgentForm = () => {
   }
 
   React.useEffect(() =>  {
-  }, [error])
+    setViewState(params.isViewState)
+  }, [params.isViewState])
 
   function changeRecord(event){
     let targetName = event.currentTarget.name
@@ -103,10 +104,8 @@ const AgentForm = () => {
   function toggleNavigate(){
     if(viewState){
       navigate(`/agents/${record.id}/edit` )
-      setViewState(false)
     }else{
       navigate(`/agents/${record.id}`)
-      setViewState(true)
     }
   }
 

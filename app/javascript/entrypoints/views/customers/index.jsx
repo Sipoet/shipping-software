@@ -3,12 +3,15 @@ import { AsyncReactTabulator } from '~/components/async_react_tabulator'
 import {Plus} from '@phosphor-icons/react'
 import { CButton } from '@coreui/react'
 import { phoneFormat } from '~/lib/text_formatter'
+import { Link } from 'react-router'
 
 function UpperBody(){
   return(
     <>
       <div className='text-end'>
-        <CButton as="a" color="primary" href="#customers/new" role="button" variant='outline'>Tambah <Plus/></CButton>
+        <Link to="/customers/new">
+          <CButton type='button' color="primary" role="button" variant='outline'>Tambah <Plus/></CButton>
+        </Link>
       </div>
       <br />
     </>
@@ -18,11 +21,11 @@ function UpperBody(){
 
 
 
-const SupplierIndex = () => {
+const CustomerIndex = () => {
 
   const columns = [
     {title:'Nama',field:'name',width:150},
-    {title:'Kontak',field:'contact_number',formatter: (cell)=> phoneFormat(cell.getData()),width:170},
+    {title:'Kontak',field:'contact_number',formatter: (cell)=>  phoneFormat(cell.getValue()),width:170},
     {title:'NPWP',field:'tax_account',width:170},
     {title:'Tanggal Dibuat', field:'created_at', fieldType:'datetime', width:150},
     {title:'Tanggal Diubah', field:'updated_at', fieldType:'datetime', width:150},
@@ -43,4 +46,4 @@ const SupplierIndex = () => {
   )
 }
 
-export default SupplierIndex
+export default CustomerIndex

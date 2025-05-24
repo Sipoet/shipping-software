@@ -11,7 +11,7 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 
-import { AppSidebarNav } from '@coreui/coreui-free-react-admin-template/src/components/AppSidebarNav'
+import { AppSidebarNav } from '~/components/AppSidebarNav'
 
 // import { logo } from 'src/assets/brand/logo'
 // import { sygnet } from 'src/assets/brand/sygnet'

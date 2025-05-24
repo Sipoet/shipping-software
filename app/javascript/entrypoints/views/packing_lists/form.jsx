@@ -2,13 +2,19 @@ import {CAlert, CCol,CForm,CButton,CModal,CModalBody,CCard,CCardHeader,CCardBody
 import React  from 'react'
 import { deleteRecord, saveRecord } from '~/lib/form_helper'
 import { useNavigate , useLoaderData, useOutletContext } from 'react-router'
-import { Eye, Pencil } from '@phosphor-icons/react'
+import { Eye, Pencil, Printer } from '@phosphor-icons/react'
 import  {CustomAsyncSelect}  from '~/components/CustomAsyncSelect'
-import { NumberInput,MoneyInput } from '~/components/NumberInput'
-import { UnitInput } from '../../../components/NumberInput'
-
+import { UnitInput,NumberInput,MoneyInput } from '~/components/NumberInput'
+import { useReactToPrint } from "react-to-print";
+import InvoicePrint from './invoice_print'
 
 const PackingListForm = () => {
+  const printContentRef = React.useRef(null);
+  const reactToPrintFn = useReactToPrint({
+    contentRef: printContentRef,
+    documentTitle:'Surat Jalan',
+  });
+  const company = {name: 'PT. Cipta Karya',city: 'Surabaya',address:'Jl Kalianget',contact_numbers:['021 32322','6282148473']}
   const params = useLoaderData()
   const [record,setRecord] = React.useState(params.record)
   const [visible, setVisible] = React.useState(false)
@@ -22,11 +28,7 @@ const PackingListForm = () => {
   const [progressBar,setProgressBar,progressColor,setProgressColor] = useOutletContext()
   const progressOptions ={progressBar,setProgressBar,progressColor,setProgressColor,showProgress: true}
   const navigate = useNavigate()
-  record.unit_of_measurement ||= 'kg'
-  record.p_uom ||= 'm'
-  record.l_uom ||= 'm'
-  record.t_uom ||= 'm'
-
+  record.lines = [{description:'produk A',price: 300000},{description:'produk B',price: 600000}]
 
   const handleSubmit = (event) => {
     const form = event.currentTarget
@@ -70,12 +72,18 @@ const PackingListForm = () => {
   }
 
   React.useEffect(() =>  {
-
-  }, [error])
+    setViewState(params.isViewState)
+  }, [params.isViewState])
 
   function changeRecord(event){
     let targetName = event.currentTarget.name
     record[targetName] = event.currentTarget.value
+    setRecord(record)
+  }
+
+  function changeNumberRecord(event){
+    let targetName = event.currentTarget.name
+    record[targetName] = parseFloat(event.currentTarget.value)
     setRecord(record)
   }
 
@@ -104,10 +112,8 @@ const PackingListForm = () => {
   function toggleNavigate(){
     if(viewState){
       navigate(`/packing_lists/${record.id}/edit` )
-      setViewState(false)
     }else{
       navigate(`/packing_lists/${record.id}`)
-      setViewState(true)
     }
   }
 
@@ -130,11 +136,12 @@ const PackingListForm = () => {
         </CModalFooter>
       </CModal>
       <CToaster className="p-3" placement="top-end" push={toast} ref={toaster} />
-
+      <InvoicePrint company={company} record={record} ref={printContentRef} ></InvoicePrint>
       <CCard>
         <CCardHeader>Form Packing List
 
         <div className='float-end' hidden={record.isNewRecord}>
+          <CButton hidden={!viewState} color='secondary' type='buttom' className='me-3' onClick={reactToPrintFn}>print Invoice <Printer /></CButton>
           <CButton color={viewState ? 'secondary' : 'info'} type="button" className='me-3' onClick={toggleNavigate}>
               {viewState ?  (<>Edit <Pencil /></>): (<>Lihat <Eye /></>) }
           </CButton>
@@ -153,35 +160,35 @@ const PackingListForm = () => {
               {message}
             </CAlert>
             <CCol md={4}>
-              <CustomAsyncSelect readOnly={viewState} cacheOptions path='products.json' name='product_id' label="Produk" feedback={error.product} onChange={changeSelectRecord} defaultValue={{label: record.product_name,value: record.product_id}} placeholder="pilih Produk..." />
+              <CustomAsyncSelect readOnly={viewState} cacheOptions path='/products.json' name='product_id' label="Produk" feedback={error.product} onChange={changeSelectRecord} defaultValue={{label: record.product_name,value: record.product_id}} placeholder="pilih Produk..." />
             </CCol>
             <CCol md={4}>
-              <CustomAsyncSelect readOnly={viewState} cacheOptions path='customers.json' name='customer_id' label="Pelanggan" feedback={error.customer} onChange={changeSelectRecord} defaultValue={{label: record.customer_name,value: record.customer_id}} placeholder="pilih Produk..." />
+              <CustomAsyncSelect readOnly={viewState} cacheOptions path='/customers.json' name='customer_id' label="Pelanggan" feedback={error.customer} onChange={changeSelectRecord} defaultValue={{label: record.customer_name,value: record.customer_id}} placeholder="pilih Produk..." />
             </CCol>
             <CCol md={4}>
-              <CustomAsyncSelect readOnly={viewState} cacheOptions path='suppliers.json' name='supplier_id' label="Supplier" feedback={error.supplier} onChange={changeSelectRecord} defaultValue={{label: record.supplier_name,value: record.supplier_id}} placeholder="pilih Produk..." />
+              <CustomAsyncSelect readOnly={viewState} cacheOptions path='/suppliers.json' name='supplier_id' label="Supplier" feedback={error.supplier} onChange={changeSelectRecord} defaultValue={{label: record.supplier_name,value: record.supplier_id}} placeholder="pilih Produk..." />
             </CCol>
             <CCol className='mb-3' md={4}>
-              <CustomAsyncSelect readOnly={viewState} cacheOptions path='containers.json' name='container_id' label="Kontainer" feedback={error.container} onChange={changeSelectRecord} defaultValue={{label: record.container_name,value: record.container_id}} placeholder="pilih Produk..." />
+              <CustomAsyncSelect readOnly={viewState} cacheOptions path='/containers.json' name='container_id' label="Kontainer" feedback={error.container} onChange={changeSelectRecord} defaultValue={{label: record.container_number,value: record.container_id}} placeholder="pilih Produk..." />
             </CCol>
             <CCol className='mb-3' md={4}>
-              <NumberInput readOnly={viewState} type="text" id="packingList-quantity" label='Jumlah' invalid={error.quantity != null}  feedback={error.quantity} name='quantity' onChange={changeRecord} defaultValue={record.quantity} placeholder="Jumlah.."/>
+              <NumberInput readOnly={viewState} type="text" id="packingList-quantity" label='Jumlah' invalid={error.quantity != null}  feedback={error.quantity} name='quantity' onChange={changeNumberRecord} defaultValue={record.quantity} placeholder="Jumlah.."/>
             </CCol>
             <CCol className='mb-3' md={4}>
-              <MoneyInput readOnly={viewState} type="text" id="packingList-price" label='Harga' invalid={error.price != null}  feedback={error.price} name='price' onChange={changeRecord} defaultValue={record.price} placeholder="Harga.."/>
+              <MoneyInput readOnly={viewState} type="text" id="packingList-price" label='Harga' invalid={error.price != null}  feedback={error.price} name='price' onChange={changeNumberRecord} defaultValue={record.price} placeholder="Harga.."/>
             </CCol>
             <CCol className='mb-3' md={4}>
-              <UnitInput groupMeasurement='weight' uom={record.unit_of_measurement} onMeasurementChange={changeRecord} measurementName='unit_of_measurement' readOnly={viewState} type="text" id="packingList-totalWeight" label='Total Berat' invalid={error.total_weight != null}  feedback={error.total_weight} name='total_weight' onChange={changeRecord} defaultValue={record.total_weight} placeholder="Berat.."/>
+              <UnitInput groupMeasurement='weight' uom={record.unit_of_measurement} onMeasurementChange={changeRecord} measurementName='unit_of_measurement' readOnly={viewState} type="text" id="packingList-totalWeight" label='Total Berat' invalid={error.total_weight != null}  feedback={error.total_weight} name='total_weight' onChange={changeNumberRecord} defaultValue={record.total_weight} placeholder="Berat.."/>
             </CCol>
             <CRow>
               <CCol className='mb-3' md={4}>
-                <UnitInput groupMeasurement='length' uom={record.p_uom} onMeasurementChange={changeRecord} measurementName='p_uom' readOnly={viewState} type="text" id="packingList-totalDimensionP" label='Panjang' invalid={error.total_dimension_p != null}  feedback={error.total_dimension_p} name='total_dimension_p' onChange={changeRecord} defaultValue={record.total_dimension_p} placeholder="Jumlah.."/>
+                <UnitInput groupMeasurement='length' uom={record.p_uom} onMeasurementChange={changeRecord} measurementName='p_uom' readOnly={viewState} type="text" id="packingList-totalDimensionP" label='Panjang' invalid={error.total_dimension_p != null}  feedback={error.total_dimension_p} name='total_dimension_p' onChange={changeNumberRecord} defaultValue={record.total_dimension_p} placeholder="Jumlah.."/>
               </CCol>
               <CCol className='mb-3' md={4}>
-                <UnitInput groupMeasurement='length' uom={record.l_uom} onMeasurementChange={changeRecord} measurementName='l_uom' readOnly={viewState} type="text" id="packingList-totalDimensionL" label='Lebar' invalid={error.total_dimension_l != null}  feedback={error.total_dimension_l} name='total_dimension_l' onChange={changeRecord} defaultValue={record.total_dimension_l} placeholder="Jumlah.."/>
+                <UnitInput groupMeasurement='length' uom={record.l_uom} onMeasurementChange={changeRecord} measurementName='l_uom' readOnly={viewState} type="text" id="packingList-totalDimensionL" label='Lebar' invalid={error.total_dimension_l != null}  feedback={error.total_dimension_l} name='total_dimension_l' onChange={changeNumberRecord} defaultValue={record.total_dimension_l} placeholder="Jumlah.."/>
               </CCol>
               <CCol className='mb-3' md={4}>
-                <UnitInput groupMeasurement='length' uom={record.t_uom} onMeasurementChange={changeRecord} measurementName='t_uom' readOnly={viewState} type="text" id="packingList-totalDimensionT" label='Tinggi' invalid={error.total_dimension_l != null}  feedback={error.total_dimension_l} name='total_dimension_l' onChange={changeRecord} defaultValue={record.total_dimension_t} placeholder="Jumlah.."/>
+                <UnitInput groupMeasurement='length' uom={record.t_uom} onMeasurementChange={changeRecord} measurementName='t_uom' readOnly={viewState} type="text" id="packingList-totalDimensionT" label='Tinggi' invalid={error.total_dimension_t != null}  feedback={error.total_dimension_t} name='total_dimension_t' onChange={changeNumberRecord} defaultValue={record.total_dimension_t} placeholder="Jumlah.."/>
               </CCol>
             </CRow>
           </CCardBody>

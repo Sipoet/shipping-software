@@ -1,5 +1,5 @@
 import React from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink } from 'react-router'
 import PropTypes from 'prop-types'
 
 import SimpleBar from 'simplebar-react'

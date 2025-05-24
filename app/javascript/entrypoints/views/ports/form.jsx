@@ -63,7 +63,8 @@ const PortForm = () => {
   }
 
   React.useEffect(() =>  {
-  }, [error])
+    setViewState(params.isViewState)
+  }, [params.isViewState])
 
   function changeRecord(event){
     let targetName = event.currentTarget.name
@@ -92,10 +93,8 @@ const PortForm = () => {
   function toggleNavigate(){
     if(viewState){
       navigate(`/ports/${record.id}/edit` )
-      setViewState(false)
     }else{
       navigate(`/ports/${record.id}`)
-      setViewState(true)
     }
   }
 

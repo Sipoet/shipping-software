@@ -65,8 +65,8 @@ const ProductForm = () => {
   }
 
   React.useEffect(() =>  {
-
-  }, [error])
+    setViewState(params.isViewState)
+  }, [params.isViewState])
 
   function changeRecord(event){
     let targetName = event.currentTarget.name
@@ -99,10 +99,8 @@ const ProductForm = () => {
   function toggleNavigate(){
     if(viewState){
       navigate(`/products/${record.id}/edit` )
-      setViewState(false)
     }else{
       navigate(`/products/${record.id}`)
-      setViewState(true)
     }
   }
 
