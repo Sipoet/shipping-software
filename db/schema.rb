@@ -88,6 +88,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_25_031556) do
     t.string "name", null: false
     t.string "city", null: false
     t.string "country", null: false
+    t.string "district"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -216,6 +217,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_25_031556) do
   add_foreign_key "containers", "clients", column: "agent_id"
   add_foreign_key "containers", "container_types"
   add_foreign_key "containers", "ship_schedules"
+  add_foreign_key "packing_details", "packing_lists"
   add_foreign_key "packing_details", "products"
   add_foreign_key "packing_lists", "clients", column: "receiver_id"
   add_foreign_key "packing_lists", "clients", column: "sender_id"
