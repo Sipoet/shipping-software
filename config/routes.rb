@@ -1,20 +1,20 @@
 Rails.application.routes.draw do
-  resources :ships, except: :destroy
-  resources :ports, except: :destroy
+  resources :ships, except: [:destroy]
+  resources :ports, except: [:destroy]
   resources :products
-  resources :ship_schedules, except: :destroy do
+  resources :ship_schedules, except: [:destroy] do
     ShipSchedule.statuses.each do |key, int_value|
       post "set_#{key}", on: :member
     end
   end
-  resources :containers, except: :destroy
-  resources :packing_lists, except: :destroy
-  resources :roles, except: :destroy
-  resources :container_types, except: :destroy
-  resources :suppliers, except: :destroy
-  resources :customers, except: :destroy
-  resources :agents, except: :destroy
-  resources :packing_lists, except: :destroy
+  resources :containers, except: [:destroy]
+  resources :packing_lists, except: [:destroy]
+  resources :roles, except: [:destroy]
+  resources :container_types, except: [:destroy]
+  resources :suppliers, except: [:destroy]
+  resources :customers, except: [:destroy]
+  resources :agents, except: [:destroy]
+  resources :packing_lists, except: [:destroy]
 
 
   devise_for :users, controllers: {
@@ -37,4 +37,5 @@ Rails.application.routes.draw do
   get 'company_image'=> 'home#company_image'
   # Defines the root path route ("/")
   root "home#dashboard"
+
 end

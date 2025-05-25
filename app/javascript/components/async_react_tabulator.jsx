@@ -7,6 +7,7 @@ import { CaretDown, CaretUp, CaretUpDown, Eye, Pencil, X } from '@phosphor-icons
 import { CButton } from '@coreui/react';
 import {find} from 'lodash'
 import { useNavigate } from "react-router";
+import { AuthContext } from '~/lib/context';
 
 
 
@@ -94,6 +95,7 @@ function _tomSelectEditor(cell, onRendered, success, cancel, editorParams){
 function AsyncReactTabulator({columns, ajaxURL,onRef}) {
   let el = React.createRef()
   let navigate = useNavigate()
+  const [auth,setAuth] = React.useContext(AuthContext)
 
   function _decorateColumn(column){
     if(column.fieldType !=='action'){
@@ -259,7 +261,6 @@ function AsyncReactTabulator({columns, ajaxURL,onRef}) {
           let colDefs = columnComponent.getDefinition()
           colDefs.frozen = false
           columnComponent.updateDefinition(colDefs)
-          console.log(colDefs)
         }
       },
       {
@@ -341,6 +342,10 @@ function AsyncReactTabulator({columns, ajaxURL,onRef}) {
     paginationInitialPage:1,
     paginationMode:"remote",
     paginationCounter:"rows",
+    ajaxConfig:{
+      method:"GET", //set request type to Position
+      headers: auth.defaultRequestHeader
+    },
     ajaxURLGenerator:function(path, config, params){
       let newParam = {
         page: params.page,
@@ -352,7 +357,6 @@ function AsyncReactTabulator({columns, ajaxURL,onRef}) {
       if(params.sort.length > 0){
         let sort = _convertToNewSort(params.sort)
         newParam = Object.assign(newParam, sort)
-        console.log(newParam)
       }
       return `${path}?params=${JSON.stringify(newParam)}`;
     },
@@ -366,11 +370,13 @@ function AsyncReactTabulator({columns, ajaxURL,onRef}) {
     let options = defaultOptions
     options = Object.assign(options,_deviceOption())
     let tabulator = new TabulatorFull(el, options)
-    tabulator.on('columnsLoading',()=> {
-      console.log('columns loading')
-    })
+    tabulator.on("dataLoadError", function(error){
+      console.error('tabulator event error',error)
+      if(error.status ==401){
+        auth.navigate('/users/sign_in')
+      }
+    });
     tabulator.on('tableDestroyed',()=> {
-      console.log('table destroyed')
       Object.values(root).forEach((rootie)=>{rootie.unmount()})
     })
     if(onRef != null){

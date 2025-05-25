@@ -1,8 +1,9 @@
 import React from 'react'
-import { createBrowserRouter } from 'react-router'
+import { createBrowserRouter,data,isRouteErrorResponse,useNavigate,useRouteError } from 'react-router'
 import DefaultLayout from './views/layouts/default_layout'
-import { findRecord } from '~/lib/form_helper'
+import { FormHelper } from '~/lib/form_helper'
 import { createModel } from '~/lib/model'
+import {Auth} from '~/lib/auth'
 
 const Dashboard = React.lazy(() => import('./views/home/Dashboard'))
 const CustomerData = React.lazy(() => import('./views/customers/index'))
@@ -29,32 +30,74 @@ const LoginForm = React.lazy(() => import('./views/user_sessions/form'))
 
 function newLoader(modelName){
   return async (route)=>{
-    let params =route.params
-    let record = createModel(modelName,params.id)
-    return {params: params, record: record, isViewState: false}
+    let record = createModel(modelName,{id: null})
+    return {params: route.params, record: record, isViewState: false}
   }
 }
 
 function viewLoader(modelName){
   return async (route)=>{
-    let params =route.params
-    let record = await findRecord(modelName,params.id)
-    return {params: params, record: record, isViewState: true}
+    const auth = new Auth({setToken:()=>{}})
+    const formHelper = new FormHelper(auth)
+    let record = await formHelper.findRecord(modelName,route.params.id)
+    if(!record){
+      throw data('data tidak ditemukan',{status: 404})
+    }
+    return {params: route.params, record: record, isViewState: true}
   }
 }
 
 function editLoader(modelName){
   return async (route)=>{
-    let params =route.params
-    let record = await findRecord(modelName,params.id)
-    return {params: params, record: record, isViewState: false}
+    const auth = new Auth({setToken:()=>{}})
+    const formHelper = new FormHelper(auth)
+    let record = await formHelper.findRecord(modelName,route.params.id)
+    if(!record){
+      throw data('data tidak ditemukan',{status: 404})
+    }
+    return {params: route.params, record: record, isViewState: false}
+  }
+}
+
+function ErrorBoundary() {
+  const error = useRouteError()
+  const navigate = useNavigate()
+  if (isRouteErrorResponse(error)) {
+      return (
+        <>
+          <h1>
+            {error.status} {error.statusText}
+          </h1>
+          <p>{error.data}</p>
+        </>
+      )
+
+
+  } else if (error instanceof Error) {
+    return (
+      <div>
+        <h1>Error</h1>
+        <p>{error.message}</p>
+        <p>The stack trace is:</p>
+        <pre>{error.stack}</pre>
+      </div>
+    );
+  } else {
+    if(error.status === 401){
+      React.useEffect(()=>{
+        navigate('/users/sign_in')
+      },[])
+
+    }else{
+
+    }
   }
 }
 
 const routerDef = createBrowserRouter( [
-  { Component: DefaultLayout,
+  { Component: DefaultLayout,ErrorBoundary: ErrorBoundary,
     children:[
-      { index: true, Component: Dashboard, name: 'Home' },
+      { index: true, Component: Dashboard, name: 'Home'},
       { path: '/dashboard', name: 'Dashboard',Component: Dashboard , exact: true },
       { path: '/customers', name: 'Pelanggan', Component: CustomerData, exact: true },
       { path: '/customers/new', loader: newLoader('Customer'), name: 'Buat Pelanggan', Component: CustomerForm, exact: true },
@@ -104,6 +147,6 @@ const routerDef = createBrowserRouter( [
     exact: true,
     Component: LoginForm,
   }
-])
+],{})
 
 export default routerDef

@@ -160,16 +160,13 @@ const PackingListForm = () => {
               {message}
             </CAlert>
             <CCol md={4}>
-              <CustomAsyncSelect readOnly={viewState} cacheOptions path='/products.json' name='product_id' label="Produk" feedback={error.product} onChange={changeSelectRecord} defaultValue={{label: record.product_name,value: record.product_id}} placeholder="pilih Produk..." />
+              <CustomAsyncSelect readOnly={viewState} cacheOptions path='/customers.json' name='sender_id' label="Pengirim" feedback={error.sender} onChange={changeSelectRecord} defaultValue={{label: record.sender_name,value: record.sender_id}}  />
             </CCol>
             <CCol md={4}>
-              <CustomAsyncSelect readOnly={viewState} cacheOptions path='/customers.json' name='customer_id' label="Pelanggan" feedback={error.customer} onChange={changeSelectRecord} defaultValue={{label: record.customer_name,value: record.customer_id}} placeholder="pilih Produk..." />
-            </CCol>
-            <CCol md={4}>
-              <CustomAsyncSelect readOnly={viewState} cacheOptions path='/suppliers.json' name='supplier_id' label="Supplier" feedback={error.supplier} onChange={changeSelectRecord} defaultValue={{label: record.supplier_name,value: record.supplier_id}} placeholder="pilih Produk..." />
+              <CustomAsyncSelect readOnly={viewState} cacheOptions path='/customers.json' name='receiver_id' label="Penerima" feedback={error.receiver} onChange={changeSelectRecord} defaultValue={{label: record.receiver_name,value: record.receiver_id}}  />
             </CCol>
             <CCol className='mb-3' md={4}>
-              <CustomAsyncSelect readOnly={viewState} cacheOptions path='/containers.json' name='container_id' label="Kontainer" feedback={error.container} onChange={changeSelectRecord} defaultValue={{label: record.container_number,value: record.container_id}} placeholder="pilih Produk..." />
+              <CustomAsyncSelect readOnly={viewState} cacheOptions path='/containers.json' name='container_id' label="Kontainer" feedback={error.container} onChange={changeSelectRecord} defaultValue={{label: record.container_number,value: record.container_id}}  />
             </CCol>
             <CCol className='mb-3' md={4}>
               <NumberInput readOnly={viewState} type="text" id="packingList-quantity" label='Jumlah' invalid={error.quantity != null}  feedback={error.quantity} name='quantity' onChange={changeNumberRecord} defaultValue={record.quantity} placeholder="Jumlah.."/>

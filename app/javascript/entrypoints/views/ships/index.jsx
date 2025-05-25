@@ -9,7 +9,7 @@ function UpperBody(){
     <>
       <div className='text-end'>
         <Link to='/ships/new'>
-        <CButton as="a" color="primary" href="/ships/new" role="button" variant='outline'>Tambah <Plus/></CButton>
+          <CButton type='button' color="primary" role="button" variant='outline'>Tambah <Plus/></CButton>
         </Link>
 
       </div>

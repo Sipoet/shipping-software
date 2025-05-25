@@ -1,20 +1,22 @@
-import React, { Suspense, useEffect } from 'react'
-import { RouterProvider } from 'react-router'
+import React, { Suspense } from 'react'
+import { RouterProvider, useNavigate } from 'react-router'
 import { useSelector } from 'react-redux'
 
 import { CSpinner, useColorModes } from '@coreui/react'
 // import '@coreui/coreui-free-react-admin-template/src/scss/style.scss'
 import routerDef from './routes'
 import '~/stylesheets/style.scss'
-
-
-
-
+import {CompanyContext,AuthContext, SettingContext} from '~/lib/context'
 const App = () => {
   const { isColorModeSet, setColorMode } = useColorModes('coreui-free-react-admin-template-theme')
   const storedTheme = useSelector((state) => state.theme)
+  const [defaultAuth,setDefAuth] = React.useContext(AuthContext)
+  const [auth,setAuth] = React.useState(defaultAuth)
+  const [company,setCompany] = React.useState({})
 
-  useEffect(() => {
+
+
+  React.useEffect(() => {
     const urlParams = new URLSearchParams(window.location.href.split('?')[1])
     const theme = urlParams.get('theme') && urlParams.get('theme').match(/^[A-Za-z0-9\s]+/)[0]
     if (theme) {
@@ -37,7 +39,12 @@ const App = () => {
         </div>
       }
     >
-      <RouterProvider router={routerDef} />
+      <AuthContext.Provider value ={[auth,setAuth]}>
+        <CompanyContext.Provider value ={[company,setCompany]}>
+          <RouterProvider router={routerDef} />
+        </CompanyContext.Provider>
+      </AuthContext.Provider>
+
     </Suspense>
 
   )

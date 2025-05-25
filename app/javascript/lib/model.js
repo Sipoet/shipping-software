@@ -13,7 +13,7 @@ class Model {
   }
 
   get attributes(){
-    let result ={_model: this._modelName};
+    let result ={};
     forOwn(this,(value,key)=> {
       if(blackListKey.includes(key)){return;}
       result[key] = value

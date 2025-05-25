@@ -34,7 +34,7 @@ import { Provider } from 'react-redux'
 import 'core-js'
 
 import App from './app'
-import store from '@coreui/coreui-free-react-admin-template/src/store'
+import store from './store'
 
 createRoot(document.getElementById('root')).render(
   <Provider store={store}>

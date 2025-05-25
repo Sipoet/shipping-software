@@ -4,9 +4,12 @@ class CreateUsers < ActiveRecord::Migration[7.2]
       t.string :username, null: false
       t.boolean :is_active, null: false, default: false
       t.integer :role_id, null: false
+      t.string :jti, null: false
+
       t.timestamps
     end
     add_index :users,:username, unique: true
+    add_index :users, :jti, unique: true
     add_foreign_key :users, :roles, column: :role_id
   end
 end

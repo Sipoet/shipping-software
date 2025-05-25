@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
 
   before_action :init_main_breadcrumbs, :set_locale
   # allow_browser versions: :modern
+  rescue_from ActiveRecord::RecordNotFound, with: :json_not_found
 
   private
   def init_main_breadcrumbs
@@ -19,5 +20,9 @@ class ApplicationController < ActionController::Base
 
   def set_locale
     I18n.locale = :id
+  end
+
+  def json_not_found
+    render json:{message:"data #{params[:id]} tidak ditemukan"},status: :not_found
   end
 end

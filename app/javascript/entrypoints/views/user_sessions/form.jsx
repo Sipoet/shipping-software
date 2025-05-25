@@ -1,6 +1,8 @@
 import React, { Suspense } from 'react'
 import {DateTime}  from 'luxon'
 import { useNavigate } from 'react-router'
+import{createModel} from '~/lib/model'
+import {AuthContext} from '~/lib/context'
 import {
   CButton,
   CCard,
@@ -22,9 +24,14 @@ import { User,LockKey } from '@phosphor-icons/react'
 function LoginForm(){
   const [error,setError] = React.useState({})
   const [message,setMessage] = React.useState('')
+  const [auth,setAuth] = React.useContext(AuthContext)
   const todayYear = DateTime.now().year
-  const [user,setUser] = React.useState({username: '',password:''})
+  const [user,setUser] = React.useState(createModel('User',{username: '',password:''}))
   const navigate = useNavigate();
+  if(auth.navigate === null){
+    auth.navigate = navigate
+    setAuth(auth)
+  }
   let onProgress = false;
 
 
@@ -36,40 +43,18 @@ function LoginForm(){
     if (form.checkValidity() === false || onProgress) {
       return;
     }
-    const csrfToken = document.head.querySelector('meta[name="csrf-token"]').content
-    let headers = {'Content-Type':'application/json','X-CSRF-Token': csrfToken}
-    onProgress = true;
-    fetch('/users/sign_in.json',{
-      method:'POST',
-      body: JSON.stringify({user: user}),
-      headers: headers
-    }).then((response)=>{
-      if(response.status == 200) {
-        return response.json().then((result)=> {
-          user.password = undefined
-          user.jwt = result.data.jwt
-          user.requestCsrfToken = result.requestToken
-          setError({})
-          setMessage('')
-          navigate('/')
-        })
-      }else if(response.status == 422){
-        return response.json().then((result)=> {
-          // setError(result.error)
-          setMessage(result.error)
-        })
-      }
-      else if(response.status == 401){
-        return response.json().then((result)=> {
-          // setError(result.error)
-          setMessage(result.error)
-        })
-      }
-      response.text().then((error)=> {
-        setMessage('Terjadi Kesalahan Server. Segera Hubungi Teknikal Support')
-        console.error(error)
-      })
-    }).finally(()=> onProgress = false)
+    onProgress = true
+
+    auth.login(user)
+        .then(result=>{
+          if(result.isSuccess) {
+            setError({})
+            setMessage('')
+            navigate(result.location)
+          }else{
+            setMessage(result.message)
+          }
+        }).finally(()=> onProgress = false)
   }
   function changeRecord(event){
     let targetName = event.currentTarget.name
@@ -125,7 +110,7 @@ function LoginForm(){
                             autoComplete='off'
                           />
                         </CInputGroup>
-                        <CCol className='mb-4' md={4}>
+                        <CCol className='mb-4' md={6}>
                           <CFormCheck defaultChecked={user.remember_me} label="Remember Me" name='remember_me' onChange={changeRecord}/>
                         </CCol>
                         <CRow>
