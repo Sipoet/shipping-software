@@ -1,12 +1,13 @@
 import {CAlert, CCol,CForm,CButton,CModal,CModalBody,CCard,CCardHeader,CCardBody,CCardFooter,CModalHeader,CModalTitle,CModalFooter,CFormInput,CToast, CToastBody, CToaster, CToastHeader, CRow } from '@coreui/react'
 import React  from 'react'
-import { deleteRecord, saveRecord } from '~/lib/form_helper'
+import { FormHelper } from '~/lib/form_helper'
 import { useNavigate , useLoaderData, useOutletContext } from 'react-router'
 import { Eye, Pencil, Printer } from '@phosphor-icons/react'
 import  {CustomAsyncSelect}  from '~/components/CustomAsyncSelect'
 import { UnitInput,NumberInput,MoneyInput } from '~/components/NumberInput'
 import { useReactToPrint } from "react-to-print";
 import InvoicePrint from './invoice_print'
+import { AuthContext } from '~/lib/context'
 
 const PackingListForm = () => {
   const printContentRef = React.useRef(null);
@@ -29,6 +30,8 @@ const PackingListForm = () => {
   const progressOptions ={progressBar,setProgressBar,progressColor,setProgressColor,showProgress: true}
   const navigate = useNavigate()
   record.lines = [{description:'produk A',price: 300000},{description:'produk B',price: 600000}]
+  const [auth,setAuth] = React.useContext(AuthContext)
+  const formHelper = new FormHelper(auth)
 
   const handleSubmit = (event) => {
     const form = event.currentTarget
@@ -39,7 +42,7 @@ const PackingListForm = () => {
     }
 
     let isNewRecord = record.isNewRecord
-    saveRecord(record,progressOptions).then((result)=>{
+    formHelper.saveRecord(record,progressOptions).then((result)=>{
       if(result.isSuccess && isNewRecord){
         navigate(`/packing_lists/${record.id}/edit`, {replace: true})
       }
@@ -94,7 +97,7 @@ const PackingListForm = () => {
   }
 
   function confirmDelete(){
-    deleteRecord(record).then((result)=>{
+    formHelper.deleteRecord(record).then((result)=>{
       if(result === true){
         setVisibleConfirmationDelete(false)
         addToast(

@@ -1,29 +1,33 @@
 Rails.application.routes.draw do
-  resources :ships, except: [:destroy]
-  resources :ports, except: [:destroy]
-  resources :products
-  resources :ship_schedules, except: [:destroy] do
-    ShipSchedule.statuses.each do |key, int_value|
-      post "set_#{key}", on: :member
+  constraints(lambda { |req| req.format == :json })  do
+    resources :ships, except: [:new,:edit,:destroy]
+    resources :ports, except: [:new,:edit,:destroy]
+    resources :products, except: [:new,:edit]
+    resources :ship_schedules, except: [:new,:edit,:destroy] do
+      ShipSchedule.statuses.each do |key, int_value|
+        post "set_#{key}", on: :member
+      end
     end
-  end
-  resources :containers, except: [:destroy]
-  resources :packing_lists, except: [:destroy]
-  resources :roles, except: [:destroy]
-  resources :container_types, except: [:destroy]
-  resources :suppliers, except: [:destroy]
-  resources :customers, except: [:destroy]
-  resources :agents, except: [:destroy]
-  resources :packing_lists, except: [:destroy]
+    resources :containers, except: [:new,:edit,:destroy]
+    resources :packing_lists, except: [:new,:edit,:destroy]
+    resources :roles, except: [:new,:edit,:destroy]
+    resources :container_types, except: [:new,:edit,:destroy]
+    resources :suppliers, except: [:new,:edit,:destroy]
+    resources :customers, except: [:new,:edit,:destroy]
+    resources :agents, except: [:new,:edit,:destroy]
+    resources :packing_details, except: [:new,:edit]
+    resources :users do
+      post :activate, on: :member
+      post :deactivate, on: :member
+    end
 
+
+  end
 
   devise_for :users, controllers: {
     sessions: 'users/sessions'
   }
-  resources :users do
-    post :activate, on: :member
-    post :deactivate, on: :member
-  end
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -33,9 +37,10 @@ Rails.application.routes.draw do
   # Render dynamic PWA files from app/views/pwa/*
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-  get 'dashboard-old' => 'home#dashboard2'
   get 'company_image'=> 'home#company_image'
   # Defines the root path route ("/")
-  root "home#dashboard"
+  root 'home#dashboard'
+
+  get '*path' => 'home#dashboard', constraints: lambda { |req| req.format == :html || req.format == nil }
 
 end

@@ -204,11 +204,11 @@ function AsyncReactTabulator({columns, ajaxURL,onRef}) {
               createRoot(cell.getElement()).render(
                 <>{listButtonDef.map((buttonDef)=> {
               if(buttonDef == 'edit'){
-                return (<CButton key={`${row.id}-edit`} type='button' onClick={()=> navigate(row.edit_path) } color='primary'><Pencil /></CButton>)
+                return (<CButton key={`${row.id}-edit`} type='button' onClick={()=> navigate(`${row.view_path}/edit`) } color='primary'><Pencil /></CButton>)
               }else if(buttonDef == 'view'){
                 return (<CButton key={`${row.id}-view`} type='button' onClick={()=> navigate(row.view_path) } color='secondary'><Eye /></CButton>)
               }else if(buttonDef == 'delete'){
-                return (<CButton key={`${row.id}-delete`} type='button' onClick={()=> navigate(row.destroy_path) } data={{'turbo-method':'delete'}} color='danger'><X size={17} /></CButton>)
+                return (<CButton key={`${row.id}-delete`} type='button' onClick={()=> auth.request(pathname,{method: 'DELETE'}) }  color='danger'><X size={17} /></CButton>)
               }
             })}</>
               )

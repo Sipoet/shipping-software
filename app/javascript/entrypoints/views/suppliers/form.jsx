@@ -1,10 +1,10 @@
 import {CAlert, CCol,CForm,CButton,CModal,CModalBody,CCard,CCardHeader,CCardBody,CCardFooter,CModalHeader,CModalTitle,CModalFooter,CFormInput,CToast, CToastBody, CToaster, CToastHeader, CFormTextarea } from '@coreui/react'
 import React  from 'react'
-import { deleteRecord, saveRecord } from '~/lib/form_helper'
+import { FormHelper } from '~/lib/form_helper'
 import { useNavigate , useLoaderData, useOutletContext } from 'react-router'
 import { Eye, Pencil } from '@phosphor-icons/react'
 import { PhoneInput } from '~/components/NumberInput'
-
+import { AuthContext } from '~/lib/context'
 
 const SupplierForm = () => {
   const params = useLoaderData()
@@ -21,6 +21,8 @@ const SupplierForm = () => {
   const progressOptions ={progressBar,setProgressBar,progressColor,setProgressColor,showProgress: true}
   const navigate = useNavigate()
   const phoneRef = React.useRef(null)
+  const [auth,setAuth] = React.useContext(AuthContext)
+  const formHelper = new FormHelper(auth)
 
   const handleSubmit = (event) => {
     const form = event.currentTarget
@@ -31,8 +33,9 @@ const SupplierForm = () => {
     }
 
     let isNewRecord = record.isNewRecord
-    saveRecord(record,progressOptions).then((result)=>{
+    formHelper.saveRecord(record,progressOptions).then((result)=>{
       if(result.isSuccess && isNewRecord){
+        setError({})
         navigate(`/suppliers/${record.id}`, {replace: true})
       }
       if(result.isSuccess){
@@ -80,7 +83,7 @@ const SupplierForm = () => {
   }
 
   function confirmDelete(){
-    deleteRecord(record).then((result)=>{
+    formHelper.deleteRecord(record).then((result)=>{
       if(result === true){
         setVisibleConfirmationDelete(false)
         addToast(

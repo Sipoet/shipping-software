@@ -1,10 +1,10 @@
 import {CAlert, CCol,CForm,CButton,CModal,CModalBody,CCard,CCardHeader,CCardBody,CRow,CCardFooter,CModalHeader,CModalTitle,CModalFooter,CFormInput,CToast, CToastBody, CToaster, CToastHeader } from '@coreui/react'
 import React  from 'react'
-import { deleteRecord, saveRecord } from '~/lib/form_helper'
+import { FormHelper } from '~/lib/form_helper'
 import { useNavigate , useLoaderData, useOutletContext } from 'react-router'
 import { Eye, Pencil } from '@phosphor-icons/react'
 import { UnitInput } from '~/components/NumberInput'
-
+import { AuthContext } from '~/lib/context'
 const ContainerTypeForm = () => {
   const params = useLoaderData()
   const [record,setRecord] = React.useState(params.record)
@@ -19,6 +19,8 @@ const ContainerTypeForm = () => {
   const [progressBar,setProgressBar,progressColor,setProgressColor] = useOutletContext()
   const progressOptions ={progressBar,setProgressBar,progressColor,setProgressColor,showProgress: true}
   const navigate = useNavigate()
+  const [auth,setAuth] = React.useContext(AuthContext)
+  const formHelper = new FormHelper(auth)
 
   const handleSubmit = (event) => {
     const form = event.currentTarget
@@ -29,7 +31,7 @@ const ContainerTypeForm = () => {
     }
 
     let isNewRecord = record.isNewRecord
-    saveRecord(record,progressOptions).then((result)=>{
+    formHelper.saveRecord(record,progressOptions).then((result)=>{
       if(result.isSuccess && isNewRecord){
         navigate(`/container_types/${record.id}/edit`, {replace: true})
       }
@@ -74,7 +76,7 @@ const ContainerTypeForm = () => {
 
 
   function confirmDelete(){
-    deleteRecord(record).then((result)=>{
+    formHelper.deleteRecord(record).then((result)=>{
       if(result === true){
         setVisibleConfirmationDelete(false)
         addToast(

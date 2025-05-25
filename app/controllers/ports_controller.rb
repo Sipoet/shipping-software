@@ -1,32 +1,17 @@
 class PortsController < ApplicationController
-  before_action :root_breadcrumb, :authenticate_user!
-  skip_before_action :verify_authenticity_token, only: [:create,:update]
+  before_action :authenticate_user!
+  skip_before_action :verify_authenticity_token
   def index
-    respond_to do |format|
-      format.html {
-        render_home
-      }
-      format.json {
-        search_json
-      }
-    end
+    search_json
   end
 
   def show
-    respond_to do |format|
-      format.html do
-        render_home
-      end
-      format.json do
-        find_record!
-        @record
-      end
-    end
+    find_record!
+    @record
   end
 
   def create
-    permitted_params = params.required(:port)
-                             .permit(:name, :city, :country)
+    permitted_params = permit_params
     @record = Port.new(permitted_params)
     if @record.save
       render json: {message: 'sukses simpan',data: @record}, status: :created
@@ -37,8 +22,7 @@ class PortsController < ApplicationController
 
   def update
     find_record!
-    permitted_params = params.required(:port)
-                             .permit(:name, :city, :country)
+    permitted_params = permit_params
     if @record.update(permitted_params)
       render json: {message: 'sukses simpan',data: @record}, status: :ok
     else
@@ -46,15 +30,11 @@ class PortsController < ApplicationController
     end
   end
 
-  def new
-    render_home
-  end
-
-  def edit
-    render_home
-  end
-
   private
+
+  def permit_params
+    params.required(:port).permit(:name,:city,:district,:country)
+  end
 
   def find_record!
     @record = Port.find(params[:id])

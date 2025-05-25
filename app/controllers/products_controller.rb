@@ -1,28 +1,13 @@
 class ProductsController < ApplicationController
   before_action :authenticate_user!
-  skip_before_action :verify_authenticity_token, only: [:create,:update,:destroy]
+  skip_before_action :verify_authenticity_token
   def index
-    respond_to do |format|
-      format.html {
-        render_home
-      }
-      format.json {
-        search_json
-      }
-    end
+    search_json
   end
 
   def show
-
-    respond_to do |format|
-      format.html {
-        render_home
-      }
-      format.json {
-        find_record!
-        @record
-      }
-    end
+    find_record!
+    @record
   end
 
   def create
@@ -33,7 +18,6 @@ class ProductsController < ApplicationController
     else
       render_json_error(@record)
     end
-
   end
 
   def update
@@ -49,18 +33,10 @@ class ProductsController < ApplicationController
   def destroy
     find_record!
     if @record.destroy
-      head :no_content
+      render json: {message: 'sukses simpan',data: @record}, status: :ok
     else
       render_json_error(@record)
     end
-  end
-
-  def new
-    render_home
-  end
-
-  def edit
-    render_home
   end
 
   private

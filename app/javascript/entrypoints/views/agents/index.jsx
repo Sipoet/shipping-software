@@ -3,16 +3,15 @@ import { AsyncReactTabulator } from '~/components/async_react_tabulator'
 import {Plus} from '@phosphor-icons/react'
 import { CButton } from '@coreui/react'
 import { phoneFormat } from '~/lib/text_formatter'
+import { Link } from 'react-router'
 
 function UpperBody(){
   return(
-    <>
-      <div className='text-end'>
-        <CButton as="a" color="primary" href="/agents/new" role="button" variant='outline'>Tambah <Plus/></CButton>
-      </div>
-      <br />
-    </>
-
+    <div className='text-end mb-4'>
+      <Link to="/agents/new">
+        <CButton color="primary"  role="button" variant='outline'>Tambah <Plus/></CButton>
+      </Link>
+    </div>
   )
 }
 

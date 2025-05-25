@@ -2,26 +2,78 @@ class UsersController < ApplicationController
   before_action :authenticate_user!, only: [:index,:show]
 
   def index
+    search_json
   end
 
   def show
-  end
-
-  def new
-  end
-
-  def edit
+    find_record!
+    @record
   end
 
   def create
+    permitted_params = permit_params
+    @record = User.new(permitted_params)
+    if @record.save
+      render json: {message: 'sukses simpan',data: @record}, status: :created
+    else
+      render_json_error(@record)
+    end
   end
 
   def update
+    find_record!
+    permitted_params = permit_params
+    if @record.update(permitted_params)
+      render json: {message: 'sukses simpan',data: @record}, status: :ok
+    else
+      render_json_error(@record)
+    end
   end
 
   def activate
+    find_record!
+    if @record.update(is_active: true)
+      render json: {message: 'sukses simpan',data: @record}, status: :ok
+    else
+      render_json_error(@record)
+    end
   end
 
   def deactivate
+    find_record!
+    if @record.update(is_active: false)
+      render json: {message: 'sukses simpan',data: @record}, status: :ok
+    else
+      render_json_error(@record)
+    end
+  end
+
+  private
+
+  def permit_params
+    params
+      .required(:user)
+      .permit(:username, :password, :password_confirmation,:role_id,:email)
+  end
+
+  def find_record!
+    @record = User.find(params[:id])
+  end
+
+  def search_json
+    result = extract_search_query(params, User)
+    @records = User.all
+                  .includes(:role)
+                  .order(result.order)
+    result.filter.each do|query_filter|
+      @records = @records.where(query_filter)
+    end
+    if result.search_text.present?
+      columns = ['email', 'username']
+      query = columns.map{|column|"#{column} ilike ?"}.join(' OR ')
+      @records = @records.where(query,*Array.new(columns.length){"%#{result.search_text}%"})
+    end
+    @records = @records.page(result.page)
+                           .per(result.limit)
   end
 end

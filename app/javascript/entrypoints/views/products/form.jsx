@@ -1,11 +1,11 @@
 import {CAlert, CCol,CForm,CButton,CCard,CCardHeader,CCardBody,CCardFooter,CFormInput,CToast, CToastBody, CToaster, CToastHeader, CFormSelect, CRow } from '@coreui/react'
 import React  from 'react'
-import { deleteRecord, saveRecord } from '~/lib/form_helper'
+import { FormHelper } from '~/lib/form_helper'
 import { useNavigate , useLoaderData, useOutletContext } from 'react-router'
 import { Eye, Pencil } from '@phosphor-icons/react'
 import ConfirmModal from '~/components/ConfirmModal'
 import { UnitInput } from '~/components/NumberInput'
-
+import { AuthContext } from '~/lib/context'
 
 const ProductForm = () => {
   const params = useLoaderData()
@@ -21,7 +21,8 @@ const ProductForm = () => {
   const [progressBar,setProgressBar,progressColor,setProgressColor] = useOutletContext()
   const progressOptions ={progressBar,setProgressBar,progressColor,setProgressColor,showProgress: true}
   const navigate = useNavigate()
-
+  const [auth,setAuth] = React.useContext(AuthContext)
+  const formHelper = new FormHelper(auth)
 
   const handleSubmit = (event) => {
     const form = event.currentTarget
@@ -32,7 +33,7 @@ const ProductForm = () => {
     }
 
     let isNewRecord = record.isNewRecord
-    saveRecord(record,progressOptions).then((result)=>{
+    formHelper.saveRecord(record,progressOptions).then((result)=>{
       if(result.isSuccess && isNewRecord){
         navigate(`/products/${record.id}/edit`, {replace: true})
       }
@@ -80,7 +81,7 @@ const ProductForm = () => {
     if(result !== true){
       return
     }
-    deleteRecord(record).then((result)=>{
+    formHelper.deleteRecord(record).then((result)=>{
       if(result === true){
         addToast(
           (<CToast color='success' key={'toast-form'}>

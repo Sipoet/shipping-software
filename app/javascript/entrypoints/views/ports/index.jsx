@@ -3,16 +3,15 @@ import { AsyncReactTabulator } from '~/components/async_react_tabulator'
 import {Plus} from '@phosphor-icons/react'
 import { CButton } from '@coreui/react'
 import {capitalize} from 'lodash'
+import { Link } from 'react-router'
 
 function UpperBody(){
   return(
-    <>
-      <div className='text-end'>
-        <CButton as="a" color="primary" href="#ports/new" role="button" variant='outline'>Tambah <Plus/></CButton>
-      </div>
-      <br />
-    </>
-
+    <div className='text-end mb-4'>
+      <Link to='/ports/new'>
+        <CButton color="primary" role="button" variant='outline'>Tambah <Plus/></CButton>
+      </Link>
+    </div>
   )
 }
 

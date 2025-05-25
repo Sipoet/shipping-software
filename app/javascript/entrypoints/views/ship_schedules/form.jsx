@@ -1,9 +1,10 @@
 import {CAlert, CCol,CForm,CButton,CModal,CModalBody,CCard,CCardHeader,CCardBody,CCardTitle,CCardFooter,CModalHeader,CModalTitle,CModalFooter,CFormInput,CToast, CToastBody, CToaster, CToastHeader, CRow } from '@coreui/react'
 import React  from 'react'
-import { deleteRecord, saveRecord } from '~/lib/form_helper'
+import { FormHelper } from '~/lib/form_helper'
 import { useNavigate , useLoaderData, useOutletContext } from 'react-router'
 import { Eye, Pencil } from '@phosphor-icons/react'
 import  {CustomAsyncSelect}  from '~/components/CustomAsyncSelect'
+import { AuthContext } from '~/lib/context'
 const ShipScheduleForm = () => {
   const params = useLoaderData()
   const [record,setRecord] = React.useState(params.record)
@@ -18,6 +19,8 @@ const ShipScheduleForm = () => {
   const [progressBar,setProgressBar,progressColor,setProgressColor] = useOutletContext()
   const progressOptions ={progressBar,setProgressBar,progressColor,setProgressColor,showProgress: true}
   const navigate = useNavigate()
+  const [auth,setAuth] = React.useContext(AuthContext)
+  const formHelper = new FormHelper(auth)
 
   const handleSubmit = (event) => {
     const form = event.currentTarget
@@ -28,7 +31,7 @@ const ShipScheduleForm = () => {
     }
 
     let isNewRecord = record.isNewRecord
-    saveRecord(record,progressOptions).then((result)=>{
+    formHelper.saveRecord(record,progressOptions).then((result)=>{
       if(result.isSuccess && isNewRecord){
         navigate(`/ship_schedules/${record.id}/edit`, {replace: true})
       }
@@ -77,7 +80,7 @@ const ShipScheduleForm = () => {
   }
 
   function confirmDelete(){
-    deleteRecord(record).then((result)=>{
+    formHelper.deleteRecord(record).then((result)=>{
       if(result === true){
         setVisibleConfirmationDelete(false)
         addToast(

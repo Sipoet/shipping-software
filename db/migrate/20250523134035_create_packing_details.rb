@@ -16,5 +16,6 @@ class CreatePackingDetails < ActiveRecord::Migration[7.2]
       t.timestamps
     end
     add_foreign_key :packing_details, :products
+    add_foreign_key :packing_details, :packing_lists
   end
 end

@@ -31,7 +31,6 @@ json.data do
     json.dorry_container_opened_at record.dorry_container_opened_at
     json.booking_code record.booking_code
     json.view_path ship_schedule_path(id: record.id)
-    json.edit_path edit_ship_schedule_path(id: record.id)
     json.ship_path ship_path(record.ship_id)
     json.created_at record.created_at
     json.updated_at record.updated_at

@@ -8,6 +8,5 @@ json.data do
     json.created_at port.created_at
     json.updated_at port.updated_at
     json.view_path port_path(id: port.id)
-    json.edit_path edit_port_path(id: port.id)
   end
 end

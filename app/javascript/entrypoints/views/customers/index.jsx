@@ -7,15 +7,11 @@ import { Link } from 'react-router'
 
 function UpperBody(){
   return(
-    <>
-      <div className='text-end'>
-        <Link to="/customers/new">
-          <CButton type='button' color="primary" role="button" variant='outline'>Tambah <Plus/></CButton>
-        </Link>
-      </div>
-      <br />
-    </>
-
+    <div className='text-end mb-4'>
+      <Link to="/customers/new">
+        <CButton type='button' color="primary" role="button" variant='outline'>Tambah <Plus/></CButton>
+      </Link>
+    </div>
   )
 }
 

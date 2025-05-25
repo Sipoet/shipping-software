@@ -12,7 +12,5 @@ json.bank_account @record.bank_account
 json.bank_register_name @record.bank_register_name
 json.contact_number @record.contact_number
 json.tax_account @record.tax_account
-json.view_path agent_path(id: @record.id)
-json.edit_path edit_agent_path(id: @record.id)
 json.created_at @record.created_at
 json.updated_at @record.updated_at

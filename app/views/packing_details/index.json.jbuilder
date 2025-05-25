@@ -18,6 +18,7 @@ json.data do
     json.volume_uom record.volume_uom
     json.send_cost record.send_cost
     json.quantity record.quantity
+    json.view_path "#{packing_list_path(record.packing_list_id)}#packingDetail-#{record.id}"
   end
 
 end

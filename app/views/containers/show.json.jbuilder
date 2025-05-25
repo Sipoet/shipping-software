@@ -19,7 +19,5 @@ if container_type.present?
   json.container_type_id container_type.id
   json.container_type_path container_type_path(container_type.id)
 end
-json.view_path container_path(id: @record.id)
-json.edit_path edit_container_path(id: @record.id)
 json.created_at @record.created_at
 json.updated_at @record.updated_at

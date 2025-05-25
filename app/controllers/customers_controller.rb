@@ -1,28 +1,14 @@
 class CustomersController < ApplicationController
   before_action :authenticate_user!
-  skip_before_action :verify_authenticity_token, only: [:create,:update]
-  respond_to :json, only:[:create, :update]
+  skip_before_action :verify_authenticity_token
+
   def index
-    respond_to do |format|
-      format.html {
-        render_home
-      }
-      format.json {
-        search_json
-      }
-    end
+    search_json
   end
 
   def show
-    respond_to do |format|
-      format.html {
-        render_home
-      }
-      format.json {
-        find_customer!
-        @record
-      }
-    end
+    find_record!
+    @record
   end
 
   def create
@@ -36,21 +22,13 @@ class CustomersController < ApplicationController
   end
 
   def update
-    find_customer!
+    find_record!
     permitted_params = permit_params
     if @record.update(permitted_params)
       render json: {message: 'sukses simpan',data: @record}, status: :ok
     else
       render_json_error(@record)
     end
-  end
-
-  def new
-    render_home
-  end
-
-  def edit
-    render_home
   end
 
   private
@@ -62,7 +40,7 @@ class CustomersController < ApplicationController
               :bank_register_name, :contact_number, :tax_account)
   end
 
-  def find_customer!
+  def find_record!
     @record = Customer.find(params[:id])
   end
 

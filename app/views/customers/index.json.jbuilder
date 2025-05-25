@@ -16,7 +16,6 @@ json.data do
     json.contact_number record.contact_number
     json.tax_account record.tax_account
     json.view_path customer_path(id: record.id)
-    json.edit_path edit_customer_path(id: record.id)
     json.created_at record.created_at
     json.updated_at record.updated_at
   end

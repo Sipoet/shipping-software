@@ -6,15 +6,12 @@ import { Link } from 'react-router'
 
 function UpperBody(){
   return(
-    <>
-      <div className='text-end'>
-        <Link to='/ships/new'>
-          <CButton type='button' color="primary" role="button" variant='outline'>Tambah <Plus/></CButton>
-        </Link>
+    <div className='text-end mb-4'>
+      <Link to='/ships/new'>
+        <CButton type='button' color="primary" role="button" variant='outline'>Tambah <Plus/></CButton>
+      </Link>
+    </div>
 
-      </div>
-      <br />
-    </>
 
   )
 }

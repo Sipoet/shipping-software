@@ -1,35 +1,17 @@
 class ShipsController < ApplicationController
-  # before_action :authenticate_user!
-  skip_before_action :verify_authenticity_token, only: [:create,:update]
-  respond_to :json
-  def index
-    respond_to do |format|
-      format.html {
-        render_home
-      }
-      format.json {
-        authenticate_user!
-        search_json
-      }
-    end
+  before_action :authenticate_user!
+  skip_before_action :verify_authenticity_token
 
+  def index
+    search_json
   end
 
   def show
-    respond_to do |format|
-      format.html {
-        render_home
-      }
-      format.json {
-        authenticate_user!
-        find_record!
-        @record
-      }
-    end
+    find_record!
+    @record
   end
 
   def create
-    authenticate_user!
     permitted_params = permit_params
     @record = Ship.new(permitted_params)
     if @record.save
@@ -40,7 +22,6 @@ class ShipsController < ApplicationController
   end
 
   def update
-    authenticate_user!
     find_record!
     permitted_params = permit_params
     if @record.update(permitted_params)
@@ -48,14 +29,6 @@ class ShipsController < ApplicationController
     else
       render_json_error(@record)
     end
-  end
-
-  def new
-    render_home
-  end
-
-  def edit
-    render_home
   end
 
   private

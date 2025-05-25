@@ -45,13 +45,7 @@ const _nav = [
     items: [
       {
         component: CNavItem,
-        name: 'Supplier',
-        to: '/suppliers',
-        icon: <User className="nav-icon" />,
-      },
-      {
-        component: CNavItem,
-        name: 'Pelanggan',
+        name: 'Pelanggan / Client',
         to: '/customers',
         icon: <User className="nav-icon" />,
       },

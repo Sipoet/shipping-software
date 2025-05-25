@@ -27,8 +27,6 @@ json.subtotal @record.subtotal
 json.tax_amount @record.tax_amount
 json.description @record.description
 json.code @record.code
-json.view_path packing_list_path(id: @record.id)
-json.edit_path edit_packing_list_path(id: @record.id)
 json.created_at @record.created_at
 json.updated_at @record.updated_at
 json.packing_details do
