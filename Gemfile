@@ -11,11 +11,11 @@ gem "puma", ">= 5.0"
 # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
 gem "turbo-rails"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
-gem "propshaft"
+# gem "propshaft"
 # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
-gem "stimulus-rails"
-gem "jsbundling-rails", "~> 1.3"
-gem "cssbundling-rails", "~> 1.4"
+# gem "stimulus-rails"
+# gem "jsbundling-rails", "~> 1.3"
+# gem "cssbundling-rails", "~> 1.4"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
 # Use Redis adapter to run Action Cable in production

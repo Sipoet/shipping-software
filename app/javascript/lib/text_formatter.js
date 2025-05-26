@@ -1,13 +1,25 @@
 import { words, toString } from 'lodash'
 import { DateTime } from 'luxon'
-import { indonesianNumInWords } from 'i18n-num-in-words';
+import { indonesianNumInWords } from 'i18n-num-in-words'
+import IMask from 'imask'
 const  DEFAULT_DATE_FORMAT = 'dd LLL yyyy'
+
 function phoneFormat(text){
   return words(text,/\d+4/g).join(' ')
 }
 
-function moneyFormat(money,currency){
-
+function moneyFormat(money,currency='Rp.'){
+  const moneyImask = IMask.createPipe({
+    mask: Number,
+    scale: 2,
+    thousandsSeparator: ',',
+    padFractionalZeros: false,
+    normalizeZeros: true,
+    radix: '.',
+    mapToRadix: ['.'],
+    autofix: true,
+  })
+  return `${currency} ${moneyImask(money)}`
 }
 
 function dateFormat(dateIso){

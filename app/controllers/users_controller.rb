@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :authenticate_user!, only: [:index,:show]
+  before_action :authenticate_user!
 
   def index
     search_json
@@ -33,7 +33,7 @@ class UsersController < ApplicationController
   def activate
     find_record!
     if @record.update(is_active: true)
-      render json: {message: 'sukses simpan',data: @record}, status: :ok
+      render json: {message: 'sukses aktivasi',data: @record}, status: :ok
     else
       render_json_error(@record)
     end
@@ -42,6 +42,20 @@ class UsersController < ApplicationController
   def deactivate
     find_record!
     if @record.update(is_active: false)
+      render json: {message: 'sukses deaktivasi',data: @record}, status: :ok
+    else
+      render_json_error(@record)
+    end
+  end
+
+  def profile
+    @record = current_user
+    json.partial! "/users/show.json.jbuilder", record: @record
+  end
+
+  def force_sign_out
+    find_record!
+    if @record.update(jti: SecureRandom.uuid)
       render json: {message: 'sukses simpan',data: @record}, status: :ok
     else
       render_json_error(@record)

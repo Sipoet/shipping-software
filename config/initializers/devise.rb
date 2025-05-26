@@ -8,6 +8,7 @@
 #
 # Use this hook to configure devise mailer, warden hooks and so forth.
 # Many of these configuration options can be set straight in your model.
+dummy_token = 'd73a3b69bd1c9404ca54ccc8ed083a7fe525ebadb4952dcb91a9464b682ddaa8f26b82c547aa61d1004190e5740c51d3007df7e0e4a4093e0b54b2dc9218c0c5'
 Devise.setup do |config|
   # The secret key used by Devise. Devise uses this key to generate
   # random tokens. Changing this key will render invalid all existing
@@ -26,11 +27,11 @@ Devise.setup do |config|
   # with default "from" parameter.
   config.mailer_sender = 'please-change-me-at-config-initializers-devise@example.com'
   config.jwt do |jwt|
-    jwt.secret = Rails.application.credentials.devise_jwt_secret_key!
+    jwt.secret = Rails.application.credentials.dig(:devise_jwt_secret_key) || dummy_token
     jwt.request_formats = {
       user: [:json]
     }
-    jwt.expiration_time = 86400
+    jwt.expiration_time = 15.seconds.to_i
   end
   # Configure the class responsible to send e-mails.
   # config.mailer = 'Devise::Mailer'

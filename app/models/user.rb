@@ -9,4 +9,8 @@ class User < ApplicationRecord
   validates :username, presence: true
 
   belongs_to :role
+
+  def active?
+    is_active
+  end
 end

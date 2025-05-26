@@ -17,7 +17,7 @@ function UpperBody(){
 const PackingListIndex = () => {
 
   const columns = [
-    {title:'Kontainer',field:"container_detail", fieldType:"link", filterField:"container_id",  sortKey:"containers.container_number", linkLabel:"name", recordPath:"container_path",width: 180},
+    {title:'Kontainer',field:"container_number", fieldType:"link", filterField:"container_id",  sortKey:"containers.container_number", linkLabel:"name", recordPath:"container_path",width: 180},
     {title:'Pengirim',field:"sender_name", fieldType:"link", filterField:"sender_id",  sortKey:"senders.name", linkLabel:"name", recordPath:"sender_path",width: 180},
     {title:'Penerima',field:"receiver_name", fieldType:"link", filterField:"receiver_id",  sortKey:"receivers.name", linkLabel:"name", recordPath:"receiver_path",width: 180},
     {title:'Total Berat(KG)',field:"total_weight", fieldType:'number',width: 180},

@@ -6,15 +6,13 @@ import { CSpinner, useColorModes } from '@coreui/react'
 // import '@coreui/coreui-free-react-admin-template/src/scss/style.scss'
 import routerDef from './routes'
 import '~/stylesheets/style.scss'
-import {CompanyContext,AuthContext, SettingContext} from '~/lib/context'
+import {CompanyContext,AuthContext} from '~/lib/context'
 const App = () => {
   const { isColorModeSet, setColorMode } = useColorModes('coreui-free-react-admin-template-theme')
   const storedTheme = useSelector((state) => state.theme)
   const [defaultAuth,setDefAuth] = React.useContext(AuthContext)
   const [auth,setAuth] = React.useState(defaultAuth)
   const [company,setCompany] = React.useState({})
-
-
 
   React.useEffect(() => {
     const urlParams = new URLSearchParams(window.location.href.split('?')[1])
@@ -26,8 +24,8 @@ const App = () => {
     if (isColorModeSet()) {
       return
     }
-
     setColorMode(storedTheme)
+
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (

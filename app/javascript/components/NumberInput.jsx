@@ -1,19 +1,25 @@
 import React from 'react'
-import { CFormInput,CInputGroup,CInputGroupText,CFormLabel, CFormSelect } from '@coreui/react'
+import { CCol,CFormInput,CInputGroup,CInputGroupText,CFormLabel, CFormSelect, CRow } from '@coreui/react'
 import { IMaskMixin } from 'react-imask'
+import {moneyFormat} from '~/lib/text_formatter'
 // import IMask from 'imask';
+function onTextChange(event){
+  console.log(event)
+}
 const CFormInputWithMask =  IMaskMixin(({ inputRef, ...props }) => (
   <CFormInput
     {...props}
     ref={inputRef} // bind internal input
   />
 ))
-function NumberInput({...props}){
+function NumberInput({onChange,...props}){
   return(
     <CFormInputWithMask
       {...props}
       mask={Number}
       scale="5"
+      type="text"
+      onAccept={onChange}
       thousandsSeparator=','
       normalizeZeros={true}
       radix='.'
@@ -22,44 +28,65 @@ function NumberInput({...props}){
   )
 }
 
-function MoneyInput({label,...props}){
-  return(
+function MoneyInput({onChange,label,...props}){
+
+  if(props.plainText && props.readOnly){
+    console.log(label)
+    return (<>
+        <CRow>
+          <CFormLabel hidden={label == null} htmlFor={props.id} className="col-sm-3 col-form-label">{label}:</CFormLabel>
+          <CCol sm={9} className='pt-2'>
+            {moneyFormat(props.value || props.defaultValue)}
+          </CCol>
+        </CRow>
+    </>)
+  }
+  else{
+    return(
     <>
-      <CFormLabel htmlFor="basic-url">{label}</CFormLabel>
+      <CFormLabel hidden={label == null} htmlFor={props.id}>{label}</CFormLabel>
       <CInputGroup className="mb-3">
         <CInputGroupText id="money-addon">Rp.</CInputGroupText>
         <CFormInputWithMask
           {...props}
           mask={Number}
           scale="2"
+          onAccept={onChange}
           thousandsSeparator=','
           normalizeZeros={true}
           mapToRadix= {['.']}
           aria-describedby="money-addon"
-          radix='.' autofix={true} />
+          radix='.'
+          autofix={true} />
       </CInputGroup>
     </>
   )
+  }
+
 }
 
-function UnitInput({label,groupMeasurement,uom,measurementName,onMeasurementChange,...props}){
-  const weightOptions= [
-    {label: 'Ton',value: 'ton'},
-    {label: 'Kg',value: 'kg',default: true},
-    {label: 'Gram',value: 'gr'},
-    {label: 'Mg',value: 'mg'},
-  ]
-  const lengthOptions =[
-    {label: 'Km',value: 'km'},
-    {label: 'Meter',value: 'm',default: true},
-    {label: 'Cm',value: 'cm'},
-    {label: 'Mm',value: 'mm'},
-  ]
-  const dimensionOptions =[
-    {label: 'Kl',value: 'kl'},
-    {label: 'Liter',value: 'ltr',default: true},
-    {label: 'Ml',value: 'ml'},
-  ]
+const weightOptions= [
+  {label: 'Kg',value: 'kg'},
+  {label: 'Ton',value: 'ton'},
+  {label: 'Gram',value: 'gr'},
+  {label: 'Mg',value: 'mg'},
+]
+const lengthOptions =[
+  {label: 'Meter',value: 'm'},
+  {label: 'Km',value: 'km'},
+  {label: 'Cm',value: 'cm'},
+  {label: 'Mm',value: 'mm'},
+]
+const dimensionOptions =[
+  {label: (<>M&sup3;</>),value: 'm3'},
+  {label: (<>Cm&sup3;</>),value: 'cm3'},
+  {label: 'KL',value: 'kl'},
+  {label: 'Liter',value: 'ltr'},
+  {label: 'ML',value: 'ml'},
+]
+
+function UnitInput({label,groupMeasurement,uom,measurementName,onChange,onMeasurementChange,...props}){
+
   function optionsOf(key){
     switch (key) {
       case 'weight':
@@ -72,27 +99,29 @@ function UnitInput({label,groupMeasurement,uom,measurementName,onMeasurementChan
         return dimensionOptions
     }
   }
+
   return(
     <>
-      <CFormLabel htmlFor="basic-url">{label}</CFormLabel>
+      <CFormLabel hidden={label == null} htmlFor="basic-url">{label}</CFormLabel>
       <CInputGroup className="mb-3">
         <CFormInputWithMask
           {...props}
           mask={Number}
           scale="2"
+          onAccept={onChange}
           thousandsSeparator=','
           normalizeZeros={true}
           mapToRadix= {['.']}
           aria-describedby="money-addon"
           radix='.' autofix={true} />
-        <CFormSelect options={optionsOf(groupMeasurement)} name={measurementName} onChange={onMeasurementChange} defaultValue={uom} placeholder='Satuan...'></CFormSelect>
+        <CFormSelect readOnly={props.readOnly} className='unit-select' disabled={props.disabled} options={optionsOf(groupMeasurement)} name={measurementName} onChange={onMeasurementChange} defaultValue={uom} placeholder='Satuan...'></CFormSelect>
       </CInputGroup>
     </>
   )
 }
 
-function PhoneInput({...props}){
-  return(<CFormInputWithMask {...props} mask="+{62} 00 000 0000 0000" placeholder="+{62} 00 000 0000 0000"/>)
+function PhoneInput({onChange,...props}){
+  return(<CFormInputWithMask onAccept={onChange} {...props} mask="+{62} 00 000 0000 0000" placeholder="+{62} 00 000 0000 0000"/>)
 }
 
 export {NumberInput, PhoneInput, MoneyInput, UnitInput, CFormInputWithMask}

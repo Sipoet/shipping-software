@@ -36,9 +36,20 @@ class PackingListsController < ApplicationController
   def permit_params
     params
       .required(:packing_list)
-      .permit(:container_id, :customer_schedule_id, :customer_id, :supplier_id, :product_id,
-              :price, :unit_of_measurement, :quantity, :total_weight, :total_dimension_p,
-              :total_dimension_l,:total_dimension_t)
+      .permit(:container_id, :sender_id, :receiver_id, :code,
+              :transaction_date,
+              :tax_amount,:description,packing_details_attributes:[:packing_list_id,
+              :product_id,
+              :quantity,
+              :total_weight,
+              :weight_uom,
+              :total_volume,
+              :volume_uom,
+              :send_cost,
+              :description,
+              :total_dimension_p,
+              :total_dimension_l,
+              :total_dimension_t])
   end
 
   def find_record!
@@ -49,7 +60,7 @@ class PackingListsController < ApplicationController
     result = extract_search_query(params, PackingList)
     @records = PackingList
       .all
-      .includes(:product,:container,:supplier,:customer)
+      .includes(:container,:sender,:receiver)
       .order(result.order)
     result.filter.each do|query_filter|
       @records = @records.where(query_filter)

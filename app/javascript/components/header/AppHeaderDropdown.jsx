@@ -1,22 +1,18 @@
 import React from 'react'
 import {
   CAvatar,
-  CBadge,
   CDropdown,
-  CDropdownDivider,
-  CDropdownHeader,
   CDropdownItem,
   CDropdownMenu,
   CDropdownToggle,
 } from '@coreui/react'
 
-import avatar8 from './../../assets/images/avatars/8.jpg'
 import { SignOut, User, UserCircle } from '@phosphor-icons/react'
 import { AuthContext } from '~/lib/context'
 import { useNavigate } from 'react-router'
 
 const AppHeaderDropdown = () => {
-  const {auth,setAuth} = React.useContext(AuthContext)
+  const [auth,setAuth] = React.useContext(AuthContext)
   const navigate = useNavigate()
 
   function logout(event){

@@ -16,12 +16,15 @@ Rails.application.routes.draw do
     resources :customers, except: [:new,:edit,:destroy]
     resources :agents, except: [:new,:edit,:destroy]
     resources :packing_details, except: [:new,:edit]
-    resources :users do
+    resources :users, except: [:new,:edit] do
       post :activate, on: :member
       post :deactivate, on: :member
     end
 
+  end
 
+  devise_scope :user do
+    post "users/refresh_token", to: "users/sessions#refresh_token"
   end
 
   devise_for :users, controllers: {

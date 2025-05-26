@@ -75,11 +75,12 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_25_031556) do
     t.decimal "tax_amount", default: "0.0", null: false
     t.decimal "total_item", null: false
     t.decimal "total_volume", default: "0.0", null: false
-    t.string "volume_uom", null: false
+    t.string "volume_uom", default: "m3", null: false
     t.decimal "total_weight", default: "0.0", null: false
-    t.string "weight_uom", null: false
+    t.string "weight_uom", default: "kg", null: false
     t.integer "sender_id", null: false
     t.integer "receiver_id", null: false
+    t.date "transaction_date", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

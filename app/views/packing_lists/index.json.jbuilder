@@ -4,19 +4,19 @@ json.data do
     json.id record.id
     sender = record.sender
     if sender.present?
-      json.sender_detail sender.name
+      json.sender_name sender.name
       json.sender_id record.sender_id
       json.sender_path customer_path(record.sender_id)
     end
-    reciever = record.reciever
-    if reciever.present?
-      json.reciever_detail reciever.name
-      json.reciever_id record.reciever_id
-      json.reciever_path customer_path(record.reciever_id)
+    receiver = record.receiver
+    if receiver.present?
+      json.receiver_name receiver.name
+      json.receiver_id record.receiver_id
+      json.receiver_path customer_path(record.receiver_id)
     end
     container = record.container
     if container.present?
-      json.container_detail container.container_number
+      json.container_number container.container_number
       json.container_id record.container_id
       json.container_path container_path(record.container_id)
     end
@@ -29,6 +29,7 @@ json.data do
     json.subtotal record.subtotal
     json.tax_amount record.tax_amount
     json.description record.description
+    json.transaction_date record.transaction_date
     json.code record.code
     json.view_path packing_list_path(id: record.id)
     json.created_at record.created_at

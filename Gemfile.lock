@@ -86,8 +86,6 @@ GEM
     concurrent-ruby (1.3.4)
     connection_pool (2.4.1)
     crass (1.0.6)
-    cssbundling-rails (1.4.1)
-      railties (>= 6.0.0)
     database_cleaner-active_record (2.1.0)
       activerecord (>= 5.a)
       database_cleaner-core (~> 2.0.0)
@@ -145,8 +143,6 @@ GEM
     jbuilder (2.13.0)
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
-    jsbundling-rails (1.3.1)
-      railties (>= 6.0.0)
     json (2.7.2)
     jwt (2.10.1)
       base64
@@ -197,11 +193,6 @@ GEM
       ast (~> 2.4.1)
       racc
     pg (1.5.8)
-    propshaft (1.0.0)
-      actionpack (>= 7.0.0)
-      activesupport (>= 7.0.0)
-      rack
-      railties (>= 7.0.0)
     psych (5.1.2)
       stringio
     puma (6.4.3)
@@ -322,8 +313,6 @@ GEM
       fugit (~> 1.8)
       globalid (>= 1.0.1)
       sidekiq (>= 6)
-    stimulus-rails (1.3.4)
-      railties (>= 6.0.0)
     stringio (3.1.1)
     thor (1.3.2)
     timeout (0.4.1)
@@ -364,7 +353,6 @@ DEPENDENCIES
   bootsnap
   brakeman
   byebug
-  cssbundling-rails (~> 1.4)
   database_cleaner-active_record (~> 2.1.0)
   database_cleaner-redis (~> 2.0.0)
   debug
@@ -374,10 +362,8 @@ DEPENDENCIES
   ffaker (~> 2.23.0)
   foreman (~> 0.88.1)
   jbuilder
-  jsbundling-rails (~> 1.3)
   kaminari (~> 1.2.2)
   pg (~> 1.5)
-  propshaft
   puma (>= 5.0)
   rails (~> 7.2.2)
   rspec-rails
@@ -385,7 +371,6 @@ DEPENDENCIES
   rubocop-rails-omakase
   sidekiq (~> 7.2)
   sidekiq-cron (~> 1.12.0)
-  stimulus-rails
   turbo-rails
   tzinfo-data
   vite_rails (~> 3.0.19)

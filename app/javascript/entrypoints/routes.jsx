@@ -26,6 +26,10 @@ const PackingListData = React.lazy(() => import('./views/packing_lists/index'))
 const PackingListForm = React.lazy(() => import('./views/packing_lists/form'))
 const ProductData = React.lazy(() => import('./views/products/index'))
 const ProductForm = React.lazy(() => import('./views/products/form'))
+const UserData = React.lazy(() => import('./views/users/index'))
+const UserForm = React.lazy(() => import('./views/users/form'))
+const RoleData = React.lazy(() => import('./views/roles/index'))
+const RoleForm = React.lazy(() => import('./views/roles/form'))
 const LoginForm = React.lazy(() => import('./views/user_sessions/form'))
 
 function newLoader(modelName){
@@ -139,6 +143,15 @@ const routerDef = createBrowserRouter( [
       { path: '/container_types/new', loader: newLoader('ContainerType'), name: 'Buat Tipe Kontainer', Component: ContainerTypeForm, exact: true },
       { path: '/container_types/:id', loader: viewLoader('ContainerType'), name: 'Detail Tipe Kontainer', Component: ContainerTypeForm },
       { path: '/container_types/:id/edit',loader: editLoader('ContainerType'), name: 'Ubah Tipe Kontainer', Component: ContainerTypeForm },
+      { path: '/users', name: 'User', Component: UserData, exact: true},
+      { path: '/users/new', loader: newLoader('User'), name: 'Buat User', Component: UserForm, exact: true },
+      { path: '/users/profile', loader: editLoader('User'), name: 'Profile', Component: UserForm, exact: true },
+      { path: '/users/:id', loader: viewLoader('User'), name: 'Detail User', Component: UserForm },
+      { path: '/users/:id/edit',loader: editLoader('User'), name: 'Ubah User', Component: UserForm },
+      { path: '/roles', name: 'Jabatan', Component: RoleData, exact: true},
+      { path: '/roles/new', loader: newLoader('Role'), name: 'Buat Jabatan', Component: RoleForm, exact: true },
+      { path: '/roles/:id', loader: viewLoader('Role'), name: 'Detail Jabatan', Component: RoleForm },
+      { path: '/roles/:id/edit',loader: editLoader('Role'), name: 'Ubah Jabatan', Component: RoleForm },
     ]
   },
   {

@@ -3,6 +3,7 @@ import {DateTime}  from 'luxon'
 import { useNavigate } from 'react-router'
 import{createModel} from '~/lib/model'
 import {AuthContext} from '~/lib/context'
+import {isEmpty} from 'lodash'
 import {
   CButton,
   CCard,
@@ -52,6 +53,9 @@ function LoginForm(){
             setMessage('')
             navigate(result.location)
           }else{
+            if(result.code=='csrf'){
+              location.reload()
+            }
             setMessage(result.message)
           }
         }).finally(()=> onProgress = false)
@@ -70,7 +74,7 @@ function LoginForm(){
                         </div>
                       }>
           <CContainer>
-             <CAlert color='danger' dismissible visible={message.trim() !==''} onClose={() => setMessage('')}>
+             <CAlert color='danger' dismissible visible={!isEmpty(message)} onClose={() => setMessage('')}>
               {message}
             </CAlert>
             <CRow className="justify-content-center">

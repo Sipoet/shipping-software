@@ -41,12 +41,6 @@ function _dateFormatter(cell,formatterParams,onRendered){
   return value.toFormat(formatterParams.outputFormat)
 }
 
-function _linkFormatter(cell, formatterParams, onRendered){
-  const row = cell.getData()
-  onRendered(()=>{
-    createRoot(cell.getElement()).render(<a href={`#${row[formatterParams.urlField]}`} target='_blank'>{row[formatterParams.labelField]}</a>)
-  })
-}
 function _enumFormatter(cell, formatterParams, onRendered){
   const value = cell.getValue()
   const label = find(formatterParams.enum,(e)=> e.value === value)?.label
@@ -117,7 +111,7 @@ function AsyncReactTabulator({columns, ajaxURL,onRef}) {
   switch (column.fieldType) {
     case 'link':
       return {
-        formatter: _linkFormatter,
+        formatter:'link',
         formatterParams: {
           labelField: column.field,
           urlField: column.recordPath,
@@ -366,6 +360,18 @@ function AsyncReactTabulator({columns, ajaxURL,onRef}) {
     }
   }
 
+  async function refreshTokenAndRefreh(tabulator){
+    let token = await auth.refreshToken()
+    if(token == null){
+      auth.navigate('/users/sign_in')
+    }else{
+      console.log('same token',token === auth.token)
+      tabulator.setData()
+    }
+
+
+  }
+
   React.useEffect(() => {
     let options = defaultOptions
     options = Object.assign(options,_deviceOption())
@@ -373,6 +379,7 @@ function AsyncReactTabulator({columns, ajaxURL,onRef}) {
     tabulator.on("dataLoadError", function(error){
       console.error('tabulator event error',error)
       if(error.status ==401){
+        refreshTokenAndRefreh(tabulator)
         auth.navigate('/users/sign_in')
       }
     });

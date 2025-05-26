@@ -29,7 +29,9 @@ json.description @record.description
 json.code @record.code
 json.created_at @record.created_at
 json.updated_at @record.updated_at
+json.transaction_date @record.transaction_date
 json.packing_details do
+  index = 0
   json.array! @record.packing_details do |line|
     product = line.product
     if product.present?
@@ -48,6 +50,7 @@ json.packing_details do
     json.volume_uom line.volume_uom
     json.send_cost line.send_cost
     json.quantity line.quantity
+    json._rowIndex = index+=1
   end
 
 end

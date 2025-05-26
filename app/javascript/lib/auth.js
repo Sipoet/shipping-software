@@ -1,4 +1,5 @@
 import {isEmpty,isFunction} from 'lodash'
+const KEY_TOKEN = 'jwtToken'
 class Auth{
   constructor(){
     this.navigate = null
@@ -7,18 +8,45 @@ class Auth{
   async request(path,options){
     const newOptions = {...this.defaultOption,...options}
     try{
-      return fetch(path,newOptions).catch((error)=>{
-        console.log('request catch error',error)
-        if(error.status == 401 && isFunction(this.navigate)){
-          this.navigate('/users/sign_in')
+      let response = await fetch(path,newOptions)
+      if(response.status == 401){
+        let newToken = await this.refreshToken()
+        if(newToken == null){
+          throw {status: 401}
         }
-      })
-    }catch(error){
-      console.log('try catch error',error)
-    if(error.status == 401 && isFunction(this.navigate)){
-        this.navigate('/users/sign_in')
+        return this.request(path,options)
       }
+      return response
+    }catch(error){
+      console.log(error)
+      if(error.status !== 401){
+        throw error
+      }
+      if(isFunction(this.navigate)){
+        this.navigate('/users/sign_in')
+      }else{
+        location.href ="/users/sign_in"
+      }
+      return
     }
+
+  }
+
+  async refreshToken(){
+    let response  = await fetch('/users/refresh_token',{
+      method: 'POST',
+      headers: this.defaultRequestHeader
+    })
+    let newToken = response.headers.get('Authorization')
+    if(response.status !== 200){
+      return null
+    }
+    if(!isEmpty(newToken)){
+      this.saveToken(newToken)
+      return newToken
+    }
+    return null
+
 
   }
 
@@ -61,14 +89,14 @@ class Auth{
     })
   }
   get token(){
-    return localStorage.getItem('jwtToken')
+    return localStorage.getItem(KEY_TOKEN)
   }
   get csrfToken(){
     return document.head.querySelector('meta[name="csrf-token"]')?.content
   }
 
   saveToken(newToken){
-    localStorage.setItem('jwtToken',newToken)
+    localStorage.setItem(KEY_TOKEN,newToken)
   }
 
   get isNotSignedIn(){
@@ -78,20 +106,23 @@ class Auth{
   get isSignedIn(){
     return !this.isNotSignedIn
   }
+  removeToken(){
+    localStorage.removeItem(KEY_TOKEN)
+  }
 
  async logout(){
-    return this.request('/users/sign_out.json',{
+    return this.request('/users/sign_out',{
       method:'DELETE',
     }).then((response)=>{
       if(response.status === 204){
         return response.text().then(result=> {
-          this.saveToken(null)
+          this.removeToken()
           return {message:'Sukses Keluar',isSuccess: true}
         })
       }
       else if(response.status === 200){
+        this.removeToken()
         return response.json().then(result=> {
-          this.saveToken(null)
           return {...result,isSuccess: true}
         })
       }
@@ -106,6 +137,6 @@ class Auth{
   }
 }
 function getSavedToken(){
-  return localStorage.getItem('jwtToken')
+  return localStorage.getItem(KEY_TOKEN)
 }
 export {Auth, getSavedToken}

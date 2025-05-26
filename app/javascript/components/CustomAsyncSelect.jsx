@@ -2,9 +2,11 @@ import React from "react"
 import { AsyncPaginate } from 'react-select-async-paginate'
 import {CFormLabel} from '@coreui/react'
 import { CFormFeedback } from '@coreui/react'
+import {AuthContext} from '~/lib/context'
 function CustomAsyncSelect({path,filter,limit = 10,readOnly,label,name,getOptionLabel,feedback,onChange,defaultValue,placeholder}){
 
   const selectRef = React.useRef(null)
+  const [auth,setAuth] = React.useContext(AuthContext)
   const [inputId,setInputId] = React.useState('')
   getOptionLabel ||= (line)=>{return line.name}
   async function selectLoader(searchText,loadedOptions,{page}) {
@@ -13,7 +15,7 @@ function CustomAsyncSelect({path,filter,limit = 10,readOnly,label,name,getOption
     params.append("page", page)
     params.append("length", limit)
     params.append("filter", filter ||[])
-    return fetch(`${path}?${params}`,{method:'GET',headers:{'Content-Type':'application/json'}}).then((response)=>{
+    return auth.request(`${path}?${params}`).then((response)=>{
       if(response.status == 200){
         return response.json()
       }else {
@@ -39,7 +41,7 @@ function CustomAsyncSelect({path,filter,limit = 10,readOnly,label,name,getOption
 
   return (
     <>
-      <CFormLabel htmlFor={inputId} className="col-form-label">
+      <CFormLabel hidden={label == null} htmlFor={inputId} className="col-form-label">
             {label}
       </CFormLabel>
       <AsyncPaginate
