@@ -13,7 +13,8 @@
 
 # Ignore all default key files.
 /config/master.key
-/config/credentials/*.key
+/config/credentials/*
+/config/credentials.yml.enc
 
 # Ignore all logfiles and tempfiles.
 /log/*

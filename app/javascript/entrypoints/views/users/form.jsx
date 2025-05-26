@@ -108,8 +108,9 @@ const UserForm = () => {
     }
   }
   function activate(){
-    auth.request(`/users/${record.id}/activate`,{method: 'POST'}).then((response)=>{
+    auth.request(`/users/${record.id}/activate.json`,{method: 'POST'}).then((response)=>{
       if(response.status == 200){
+        setRecord({...record,is_active: true})
         addToast(
           (<CToast color='success' key={'toast-form'}>
             <CToastHeader closeButton>
@@ -130,8 +131,9 @@ const UserForm = () => {
   }
 
   function deactivate(){
-    auth.request(`/users/${record.id}/deactivate`,{method: 'POST'}).then((response)=>{
+    auth.request(`/users/${record.id}/deactivate.json`,{method: 'POST'}).then((response)=>{
       if(response.status == 200){
+        setRecord({...record,is_active: false})
         addToast(
           (<CToast color='success' key={'toast-form'}>
             <CToastHeader closeButton>
@@ -161,12 +163,12 @@ const UserForm = () => {
 
         <div className='float-end'>
           <CButton color={viewState ? 'secondary' : 'info'} type="button" className='me-3' onClick={toggleNavigate}>
-              {viewState ?  (<>Edit <Pencil /></>): (<>Lihat <Eye /></>) }
+              {viewState ?  (<>Edit <Pencil /></>): (<>Batal</>) }
           </CButton>
-          <CButton color="danger" hidden={record.is_active || record.isNewRecord} type="button" onClick={activate}>
+          <CButton color="success" hidden={record.is_active || !viewState} type="button" onClick={activate}>
               Aktifkan
           </CButton>
-          <CButton color="danger" hidden={!record.is_active || record.isNewRecord} type="button" onClick={deactivate}>
+          <CButton color="warning" hidden={!record.is_active || !viewState} type="button" onClick={deactivate}>
               Non Aktifkan
           </CButton>
         </div>
