@@ -4,6 +4,7 @@ import DefaultLayout from './views/layouts/default_layout'
 import { FormHelper } from '~/lib/form_helper'
 import { createModel } from '~/lib/model'
 import {Auth} from '~/lib/auth'
+import { CSpinner } from '@coreui/react'
 
 const Dashboard = React.lazy(() => import('./views/home/Dashboard'))
 const CustomerData = React.lazy(() => import('./views/customers/index'))
@@ -98,6 +99,14 @@ function ErrorBoundary() {
   }
 }
 
+function HydrateFallback(){
+  return (
+    <div className='text-center'>
+      <CSpinner color="primary" style={{ width: '3rem', height: '3rem' }} />
+    </div>
+  )
+}
+
 const routerDef = createBrowserRouter( [
   { Component: DefaultLayout,ErrorBoundary: ErrorBoundary,
     children:[
@@ -123,10 +132,10 @@ const routerDef = createBrowserRouter( [
       { path: '/ports/new', loader: newLoader('Port'), name: 'Buat Pelabuhan', Component: PortForm, exact: true },
       { path: '/ports/:id', loader: viewLoader('Port'), name: 'Detail Pelabuhan', Component: PortForm },
       { path: '/ports/:id/edit',loader: editLoader('Port'), name: 'Ubah Pelabuhan', Component: PortForm },
-      { path: '/containers', name: 'Kontainer', Component: ContainerData, exact: true},
-      { path: '/containers/new', loader: newLoader('Container'), name: 'Buat Kontainer', Component: ContainerForm, exact: true },
-      { path: '/containers/:id', loader: viewLoader('Container'), name: 'Detail Kontainer', Component: ContainerForm },
-      { path: '/containers/:id/edit',loader: editLoader('Container'), name: 'Ubah Kontainer', Component: ContainerForm },
+      { path: '/containers', name: 'Kontainer', Component: ContainerData, exact: true,HydrateFallback: HydrateFallback},
+      { path: '/containers/new', loader: newLoader('Container'), name: 'Buat Kontainer', Component: ContainerForm, exact: true,HydrateFallback: HydrateFallback },
+      { path: '/containers/:id', loader: viewLoader('Container'), name: 'Detail Kontainer', Component: ContainerForm,HydrateFallback: HydrateFallback },
+      { path: '/containers/:id/edit',loader: editLoader('Container'), name: 'Ubah Kontainer', Component: ContainerForm,HydrateFallback: HydrateFallback },
       { path: '/products', name: 'Produk', Component: ProductData, exact: true},
       { path: '/products/new', loader: newLoader('Product'), name: 'Buat Produk', Component: ProductForm, exact: true },
       { path: '/products/:id', loader: viewLoader('Product'), name: 'Detail Produk', Component: ProductForm },
@@ -145,7 +154,15 @@ const routerDef = createBrowserRouter( [
       { path: '/container_types/:id/edit',loader: editLoader('ContainerType'), name: 'Ubah Tipe Kontainer', Component: ContainerTypeForm },
       { path: '/users', name: 'User', Component: UserData, exact: true},
       { path: '/users/new', loader: newLoader('User'), name: 'Buat User', Component: UserForm, exact: true },
-      { path: '/users/profile', loader: editLoader('User'), name: 'Profile', Component: UserForm, exact: true },
+      { path: '/users/profile', loader: async (route)=>{
+          const auth = new Auth({setToken:()=>{}})
+          const formHelper = new FormHelper(auth)
+          let record = await formHelper.findRecord('User','profile')
+          if(!record){
+            throw data('data tidak ditemukan',{status: 404})
+          }
+          return {params: route.params, record: record, isViewState: false}
+        }, name: 'Profile', Component: UserForm, exact: true },
       { path: '/users/:id', loader: viewLoader('User'), name: 'Detail User', Component: UserForm },
       { path: '/users/:id/edit',loader: editLoader('User'), name: 'Ubah User', Component: UserForm },
       { path: '/roles', name: 'Jabatan', Component: RoleData, exact: true},

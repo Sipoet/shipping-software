@@ -6,6 +6,7 @@ import { Eye, Pencil } from '@phosphor-icons/react'
 import { PhoneInput } from '~/components/NumberInput'
 import {CustomAsyncSelect} from '~/components/CustomAsyncSelect'
 import { AuthContext } from '~/lib/context'
+import { createModel } from '~/lib/model'
 const AgentForm = () => {
   const params = useLoaderData()
   const [record,setRecord] = React.useState(params.record)
@@ -20,7 +21,6 @@ const AgentForm = () => {
   const [progressBar,setProgressBar,progressColor,setProgressColor] = useOutletContext()
   const progressOptions ={progressBar,setProgressBar,progressColor,setProgressColor,showProgress: true}
   const navigate = useNavigate()
-  const phoneRef = React.useRef(null)
   const [auth,setAuth] = React.useContext(AuthContext)
   const formHelper = new FormHelper(auth)
 
@@ -65,9 +65,10 @@ const AgentForm = () => {
   }
 
   function changeSelectRecord(selectValue,metadata){
-    let targetName = metadata.name
-    record[targetName] = selectValue.value
-    setRecord(record)
+    record[metadata.optionLabel] = selectValue.label
+    record[metadata.name] = selectValue.value
+    const newRecord = createModel(record._modelName,record.attributes)
+    setRecord(newRecord)
   }
 
   React.useEffect(() =>  {
@@ -75,15 +76,18 @@ const AgentForm = () => {
   }, [params.isViewState])
 
   function changeRecord(event){
-    let targetName = event.currentTarget.name
+    const targetName = event.currentTarget.name
     record[targetName] = event.currentTarget.value
-    setRecord(record)
+    const newRecord = createModel(record._modelName,record.attributes)
+    setRecord(newRecord)
   }
 
-  function changePhoneRecord(event){
+  function changePhoneRecord(maskedValue,imask,event){
+    console.log(maskedValue,imask,event)
     let targetName = event.currentTarget.name
-    record[targetName] = phoneRef.current.maskRef.unmaskedValue
-    setRecord(record)
+    record[targetName] = imask.unmaskedValue
+    const newRecord = createModel(record._modelName,record.attributes)
+    setRecord(newRecord)
     console.log(record[targetName])
   }
 
@@ -121,7 +125,7 @@ const AgentForm = () => {
         <CModalHeader>
           <CModalTitle id="deleteConfirmation">Konfirmasi Hapus</CModalTitle>
         </CModalHeader>
-        <CModalBody>Apakah Yakin Hapus kapal {record.name} ?</CModalBody>
+        <CModalBody>Apakah Yakin Hapus Agent {record.name} ?</CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setVisibleConfirmationDelete(false)}>
             Batal
@@ -132,7 +136,7 @@ const AgentForm = () => {
       <CToaster className="p-3" placement="top-end" push={toast} ref={toaster} />
 
       <CCard>
-        <CCardHeader>Form Kapal
+        <CCardHeader>Form Agent
 
         <div className='float-end' hidden={record.isNewRecord}>
           <CButton color={viewState ? 'secondary' : 'info'} type="button" className='me-3' onClick={toggleNavigate}>
@@ -153,25 +157,25 @@ const AgentForm = () => {
               {message}
             </CAlert>
             <CCol md={4}>
-              <CFormInput readOnly={viewState} type="text" id="agent-name" label='Nama Agent' invalid={error.name != null}  feedback={error.name} name='name' onChange={changeRecord} defaultValue={record.name} placeholder="nama kapal"/>
+              <CFormInput readOnly={viewState} type="text" id="agent-name" label='Nama Agent' invalid={error.name != null}  feedback={error.name} name='name' onChange={changeRecord} value={record.name} placeholder="Nama Agent"/>
             </CCol>
             <CCol md={4}>
-              <PhoneInput readOnly={viewState} ref={phoneRef} id="agent-contactNumber" label='Kontak' invalid={error.contact_number != null}  feedback={error.contact_number} name='contact_number' onChange={changePhoneRecord} defaultValue={record.contact_number}/>
+              <PhoneInput readOnly={viewState} id="agent-contactNumber" label='Kontak' invalid={error.contact_number != null}  feedback={error.contact_number} name='contact_number' onChange={changePhoneRecord} defaultValue={record.contact_number}/>
             </CCol>
             <CCol md={4}>
-              <CFormInput readOnly={viewState} type="text" id="agent-taxAccount" label='NPWP' invalid={error.tax_account != null}  feedback={error.tax_account} name='tax_account' onChange={changeRecord} defaultValue={record.tax_account} />
+              <CFormInput readOnly={viewState} type="text" id="agent-taxAccount" label='NPWP' invalid={error.tax_account != null}  feedback={error.tax_account} name='tax_account' onChange={changeRecord} value={record.tax_account} />
             </CCol>
             <CCol md={4}>
-              <CFormTextarea readOnly={viewState} type="text" id="agent-address" label='Alamat' invalid={error.address != null}  feedback={error.address} name='address' onChange={changeRecord} defaultValue={record.address} />
+              <CFormTextarea readOnly={viewState} type="text" id="agent-address" label='Alamat' invalid={error.address != null}  feedback={error.address} name='address' onChange={changeRecord} value={record.address} />
             </CCol>
             <CCol md={4}>
-              <CFormInput readOnly={viewState} type="text" id="agent-bank" label='Bank' invalid={error.bank != null}  feedback={error.bank} name='bank' onChange={changeRecord} defaultValue={record.bank} />
+              <CFormInput readOnly={viewState} type="text" id="agent-bank" label='Bank' invalid={error.bank != null}  feedback={error.bank} name='bank' onChange={changeRecord} value={record.bank} />
             </CCol>
             <CCol md={4}>
-              <CFormInput readOnly={viewState} type="text" id="agent-bankRegisterName" label='Nama pemilik rekening' invalid={error.bank_register_name != null}  feedback={error.bank_register_name} name='bank_register_name' onChange={changeRecord} defaultValue={record.bank_register_name} />
+              <CFormInput readOnly={viewState} type="text" id="agent-bankRegisterName" label='Nama pemilik rekening' invalid={error.bank_register_name != null}  feedback={error.bank_register_name} name='bank_register_name' onChange={changeRecord} value={record.bank_register_name} />
             </CCol>
             <CCol md={4}>
-              <CFormInput readOnly={viewState} type="text" id="agent-bankAccount" label='Nomor Rekening' invalid={error.bank_account != null}  feedback={error.bank_account} name='bank_account' onChange={changeRecord} defaultValue={record.bank_account} />
+              <CFormInput readOnly={viewState} type="text" id="agent-bankAccount" label='Nomor Rekening' invalid={error.bank_account != null}  feedback={error.bank_account} name='bank_account' onChange={changeRecord} value={record.bank_account} />
             </CCol>
             <CCol md={4}>
               <CustomAsyncSelect readOnly={viewState} cacheOptions path='ports.json' name='default_port_id' label="Pelabuhan Default"feedback={error.default_port} onChange={changeSelectRecord} defaultValue={{label: record.default_port_name,value: record.default_port_id}} placeholder="pilih Pelabuhan..." />

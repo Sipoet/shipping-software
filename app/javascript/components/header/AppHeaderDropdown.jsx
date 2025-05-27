@@ -30,7 +30,7 @@ const AppHeaderDropdown = () => {
         <User size={20} />
       </CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">
-        <CDropdownItem href="/user/profile">
+        <CDropdownItem href="/users/profile">
           <UserCircle/> Profile
         </CDropdownItem>
         <CDropdownItem as={'button'} onClick={logout}>

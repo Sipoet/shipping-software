@@ -7,8 +7,9 @@ class Auth{
 
   async request(path,options){
     const newOptions = {...this.defaultOption,...options}
+    let response = null
     try{
-      let response = await fetch(path,newOptions)
+      response = await fetch(path,newOptions)
       if(response.status == 401){
         let newToken = await this.refreshToken()
         if(newToken == null){
@@ -18,7 +19,6 @@ class Auth{
       }
       return response
     }catch(error){
-      console.log(error)
       if(error.status !== 401){
         throw error
       }
@@ -27,7 +27,7 @@ class Auth{
       }else{
         location.href ="/users/sign_in"
       }
-      return
+      return response
     }
 
   }

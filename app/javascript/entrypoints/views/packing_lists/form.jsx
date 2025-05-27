@@ -8,7 +8,7 @@ import { UnitInput,NumberInput,MoneyInput } from '~/components/NumberInput'
 import { useReactToPrint } from "react-to-print";
 import InvoicePrint from './invoice_print'
 import { AuthContext } from '~/lib/context'
-import {createModel} from '~/lib/model'
+import { createModel } from '~/lib/model'
 
 const PackingListForm = () => {
   const printContentRef = React.useRef(null);
@@ -82,9 +82,10 @@ const PackingListForm = () => {
   }, [params.isViewState])
 
   function changeRecord(event){
-    let targetName = event.currentTarget.name
+    const targetName = event.currentTarget.name
     record[targetName] = event.currentTarget.value
-    setRecord(record)
+    const newRecord = createModel(record._modelName,record.attributes)
+    setRecord(newRecord)
   }
 
   function changeNumberRecord(maskedValue,imask,event){
@@ -94,9 +95,10 @@ const PackingListForm = () => {
   }
 
   function changeSelectRecord(selectValue,metadata){
-    let targetName = metadata.name
-    record[targetName] = selectValue.value
-    setRecord(record)
+    record[metadata.optionLabel] = selectValue.label
+    record[metadata.name] = selectValue.value
+    const newRecord = createModel(record._modelName,record.attributes)
+    setRecord(newRecord)
   }
 
   function confirmDelete(){
@@ -191,10 +193,10 @@ const PackingListForm = () => {
               {message}
             </CAlert>
             <CCol className='mb-3' md={4}>
-              <CFormInput readOnly={viewState} id="packingList-code" label='Nota Transaksi' invalid={error.code != null}  feedback={error.code} name='code' onChange={changeRecord} defaultValue={record.code}   />
+              <CFormInput readOnly={viewState} id="packingList-code" label='Nota Transaksi' invalid={error.code != null}  feedback={error.code} name='code' onChange={changeRecord} value={record.code}   />
             </CCol>
             <CCol className='mb-3' md={4}>
-              <CFormInput readOnly={viewState} type='datetime-local' id="packingList-transactionDate" label='Tanggal Transaksi' invalid={error.transaction_date != null}  feedback={error.transaction_date} name='transaction_date' onChange={changeRecord} defaultValue={record.transaction_date}   />
+              <CFormInput readOnly={viewState} type='datetime-local' id="packingList-transactionDate" label='Tanggal Transaksi' invalid={error.transaction_date != null}  feedback={error.transaction_date} name='transaction_date' onChange={changeRecord} value={record.transaction_date}   />
             </CCol>
             <CCol className='mb-3' md={4}>
               <CustomAsyncSelect readOnly={viewState} cacheOptions path='/customers.json' name='sender_id' label="Pengirim" feedback={error.sender} onChange={changeSelectRecord} defaultValue={{label: record.sender_name,value: record.sender_id}}  />
@@ -206,7 +208,7 @@ const PackingListForm = () => {
               <CustomAsyncSelect readOnly={viewState} cacheOptions path='/containers.json' name='container_id' label="Kontainer" feedback={error.container} onChange={changeSelectRecord} defaultValue={{label: record.container_number,value: record.container_id}}  />
             </CCol>
             <CCol className='mb-3' md={4}>
-              <CFormTextarea readOnly={viewState} id="packingList-description" label='Deskripsi' invalid={error.description != null}  feedback={error.description} name='description' onChange={changeRecord} defaultValue={record.description} />
+              <CFormTextarea readOnly={viewState} id="packingList-description" label='Deskripsi' invalid={error.description != null}  feedback={error.description} name='description' onChange={changeRecord} value={record.description} />
             </CCol>
 
             <CRow className='mb-3'>
@@ -293,9 +295,10 @@ function PackingDetailRowForm(props){
   }
 
   function changeRecord(event){
-    let targetName = event.currentTarget.name
+    const targetName = event.currentTarget.name
     record[targetName] = event.currentTarget.value
-    setRecord(record)
+    const newRecord = createModel(record._modelName,record.attributes)
+    setRecord(newRecord)
   }
 
   function changeNumberRecord(maskedValue,imask,event){
@@ -305,16 +308,17 @@ function PackingDetailRowForm(props){
   }
 
   function changeSelectRecord(selectValue,metadata){
-    let targetName = metadata.name
+    const targetName = metadata.name
     record[targetName] = selectValue.value
-    setRecord(record)
+    const newRecord = createModel('Container',record.attributes)
+    setRecord(newRecord)
   }
 
   return (
     <CTableRow key={record.id || `newRow${props.rowOrder}`}>
       <CTableHeaderCell scope="row">{props.rowOrder}</CTableHeaderCell>
       <CTableDataCell><CustomAsyncSelect cacheOptions path='/products.json' name='product_id' feedback={error.product} onChange={changeSelectRecord} defaultValue={{label: record.product_name,value: record.product_id}}  /></CTableDataCell>
-      <CTableDataCell><CFormTextarea invalid={error.description != null}  feedback={error.description} name='description' onChange={changeRecord} defaultValue={record.description} /></CTableDataCell>
+      <CTableDataCell><CFormTextarea invalid={error.description != null}  feedback={error.description} name='description' onChange={changeRecord} value={record.description} /></CTableDataCell>
       <CTableDataCell><NumberInput invalid={error.quantity != null}  feedback={error.quantity} name='quantity' onChange={changeNumberRecord} defaultValue={record.quantity} placeholder="Jumlah.."/></CTableDataCell>
       <CTableDataCell><UnitInput groupMeasurement='weight' uom={record.weight_uom} onMeasurementChange={changeRecord} measurementName='weight_uom' invalid={error.total_weight != null}  feedback={error.total_weight} name='total_weight' onChange={changeNumberRecord} defaultValue={record.total_weight} placeholder="Berat.."/></CTableDataCell>
       <CTableDataCell><UnitInput groupMeasurement='volume' uom={record.volume_uom} onMeasurementChange={changeRecord} measurementName='volume_uom' invalid={error.total_volume != null}  feedback={error.total_volume} name='total_volume' onChange={changeNumberRecord} defaultValue={record.total_volume} placeholder="volume.."/></CTableDataCell>

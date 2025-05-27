@@ -5,6 +5,7 @@ import { useNavigate , useLoaderData, useOutletContext } from 'react-router'
 import { Eye, Pencil } from '@phosphor-icons/react'
 import { UnitInput } from '~/components/NumberInput'
 import { AuthContext } from '~/lib/context'
+import { createModel } from '~/lib/model'
 const ContainerTypeForm = () => {
   const params = useLoaderData()
   const [record,setRecord] = React.useState(params.record)
@@ -68,9 +69,10 @@ const ContainerTypeForm = () => {
   }, [params.isViewState])
 
   function changeRecord(event){
-    let targetName = event.currentTarget.name
+    const targetName = event.currentTarget.name
     record[targetName] = event.currentTarget.value
-    setRecord(record)
+    const newRecord = createModel(record._modelName,record.attributes)
+    setRecord(newRecord)
   }
 
 
@@ -143,17 +145,17 @@ const ContainerTypeForm = () => {
               {message}
             </CAlert>
             <CCol className='mb-3' md={4}>
-              <CFormInput readOnly={viewState} type="text" id="containerType-name" label='Nama Kapal' invalid={error.name != null}  feedback={error.name} name='name' onChange={changeRecord} defaultValue={record.name} placeholder="nama kapal"/>
+              <CFormInput readOnly={viewState} type="text" id="containerType-name" label='Nama Kapal' invalid={error.name != null}  feedback={error.name} name='name' onChange={changeRecord} value={record.name} placeholder="nama kapal"/>
             </CCol>
             <CRow>
               <CCol md={4}>
-                <UnitInput readOnly={viewState} groupMeasurement='length' type="text" id="containerType-dimension_p" label='Panjang' invalid={error.dimension_p != null}  feedback={error.dimension_p} name='dimension_p' onChange={changeRecord} defaultValue={record.dimension_p}/>
+                <UnitInput readOnly={viewState} groupMeasurement='length' type="text" id="containerType-dimension_p" label='Panjang' invalid={error.dimension_p != null}  feedback={error.dimension_p} name='dimension_p' onChange={changeRecord} value={record.dimension_p}/>
               </CCol>
               <CCol md={4}>
-                <UnitInput readOnly={viewState} groupMeasurement='length' type="text" id="containerType-dimension_l" label='Lebar' invalid={error.dimension_l != null}  feedback={error.dimension_l} name='dimension_l' onChange={changeRecord} defaultValue={record.dimension_l}/>
+                <UnitInput readOnly={viewState} groupMeasurement='length' type="text" id="containerType-dimension_l" label='Lebar' invalid={error.dimension_l != null}  feedback={error.dimension_l} name='dimension_l' onChange={changeRecord} value={record.dimension_l}/>
               </CCol>
               <CCol md={4}>
-                <UnitInput readOnly={viewState} groupMeasurement='length' type="text" id="containerType-dimension_t" label='Tinggi' invalid={error.dimension_t != null}  feedback={error.dimension_t} name='dimension_t' onChange={changeRecord} defaultValue={record.dimension_t}/>
+                <UnitInput readOnly={viewState} groupMeasurement='length' type="text" id="containerType-dimension_t" label='Tinggi' invalid={error.dimension_t != null}  feedback={error.dimension_t} name='dimension_t' onChange={changeRecord} value={record.dimension_t}/>
               </CCol>
             </CRow>
           </CCardBody>

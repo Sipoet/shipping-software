@@ -4,6 +4,7 @@ import { FormHelper } from '~/lib/form_helper'
 import { useNavigate , useLoaderData, useOutletContext } from 'react-router'
 import { Eye, Pencil } from '@phosphor-icons/react'
 import { AuthContext } from '~/lib/context'
+import { createModel } from '~/lib/model'
 
 const PortForm = () => {
   const params = useLoaderData()
@@ -66,15 +67,17 @@ const PortForm = () => {
 
   React.useEffect(() =>  {
     setViewState(params.isViewState)
+    if(record.isNewRecord){
+      setRecord({...record,country: record.country || 'indonesia'})
+    }
   }, [params.isViewState])
 
   function changeRecord(event){
-    let targetName = event.currentTarget.name
+    const targetName = event.currentTarget.name
     record[targetName] = event.currentTarget.value
-    setRecord(record)
+    const newRecord = createModel(record._modelName,record.attributes)
+    setRecord(newRecord)
   }
-
-
 
   function confirmDelete(){
     formHelper.deleteRecord(record).then((result)=>{
@@ -92,6 +95,14 @@ const PortForm = () => {
     })
   }
 
+  const countryOptions = [
+    {label: ''},
+    {label: 'Indonesia', value: 'indonesia'},
+    {label: 'Singapura', value: 'singapura'},
+    {label: 'Malaysia', value: 'malaysia'},
+    {label: 'Australia', value: 'australia'}
+  ]
+
   function toggleNavigate(){
     if(viewState){
       navigate(`/ports/${record.id}/edit` )
@@ -99,7 +110,6 @@ const PortForm = () => {
       navigate(`/ports/${record.id}`)
     }
   }
-
   return (
     <>
       <CModal
@@ -142,22 +152,13 @@ const PortForm = () => {
               {message}
             </CAlert>
             <CCol md={3}>
-              <CFormInput readOnly={viewState} type="text" id="port-name" label='Nama Pelabuhan' invalid={error.name != null}  feedback={error.name} name='name' onChange={changeRecord} defaultValue={record.name} placeholder="nama kapal"/>
+              <CFormInput readOnly={viewState} type="text" id="port-name" label='Nama Pelabuhan' invalid={error.name != null}  feedback={error.name} name='name' onChange={changeRecord} value={record.name} placeholder="nama kapal"/>
             </CCol>
             <CCol md={3}>
-              <CFormInput readOnly={viewState} type="text" id="port-city" label='Kota / Kabupaten' invalid={error.city != null}  feedback={error.city} name='city' onChange={changeRecord} defaultValue={record.city} placeholder="Kota / Kabupaten"/>
+              <CFormInput readOnly={viewState} type="text" id="port-city" label='Kota / Kabupaten' invalid={error.city != null}  feedback={error.city} name='city' onChange={changeRecord} value={record.city} placeholder="Kota / Kabupaten"/>
             </CCol>
             <CCol md={3}>
-              <CFormInput readOnly={viewState} type="text" id="port-district" label='Kecamatan' invalid={error.district != null}  feedback={error.district} name='district' onChange={changeRecord} defaultValue={record.district} placeholder="Kecamatan"/>
-            </CCol>
-            <CCol md={3}>
-              <CFormSelect disabled={viewState} options={[
-                {label: ''},
-                {label: 'Indonesia', value: 'indonesia'},
-                {label: 'Singapura', value: 'singapura'},
-                {label: 'Malaysia', value: 'malaysia'},
-                {label: 'Australia', value: 'australia'}
-              ]} id="port-country" label='Negara' invalid={error.country != null}  feedback={error.country} name='country' onChange={changeRecord} defaultValue={record.country} placeholder="Negara"/>
+              <CFormSelect disabled={viewState} options={countryOptions} id="port-country" label='Negara' invalid={error.country != null}  feedback={error.country} name='country' onChange={changeRecord} value={record.country} placeholder="Negara"/>
             </CCol>
           </CCardBody>
           <CCardFooter hidden={viewState}>

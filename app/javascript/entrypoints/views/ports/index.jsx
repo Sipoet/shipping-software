@@ -19,7 +19,6 @@ function PortIndex(){
   const columns = [
     {title:'Nama',field:'name',width:180},
     {title:'Kabupaten/Kota',field:'city',formatter:(cell)=>{return capitalize(cell.getData().city)},width:190},
-    {title:'Kecamatan',field:'district',formatter:(cell)=>{return capitalize(cell.getData().district)},width:150},
     {title:'Negara',formatter:(cell)=>{return capitalize(cell.getData().country)}, field:'country',width:150},
     {title:'Tanggal Dibuat', field:'created_at', fieldType:'datetime', width:150},
     {title:'Tanggal Diubah', field:'updated_at', fieldType:'datetime', width:150},

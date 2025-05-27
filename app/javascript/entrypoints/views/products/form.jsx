@@ -6,6 +6,7 @@ import { Eye, Pencil } from '@phosphor-icons/react'
 import ConfirmModal from '~/components/ConfirmModal'
 import { UnitInput } from '~/components/NumberInput'
 import { AuthContext } from '~/lib/context'
+import { createModel } from '~/lib/model'
 
 const ProductForm = () => {
   const params = useLoaderData()
@@ -70,9 +71,10 @@ const ProductForm = () => {
   }, [params.isViewState])
 
   function changeRecord(event){
-    let targetName = event.currentTarget.name
+    const targetName = event.currentTarget.name
     record[targetName] = event.currentTarget.value
-    setRecord(record)
+    const newRecord = createModel(record._modelName,record.attributes)
+    setRecord(newRecord)
   }
 
 
@@ -132,10 +134,10 @@ const ProductForm = () => {
               {message}
             </CAlert>
             <CCol className='mb-4' md={4}>
-              <CFormInput readOnly={viewState} type="text" id="product-name" label='Nama Produk' invalid={error.name != null}  feedback={error.name} name='name' onChange={changeRecord} defaultValue={record.name}/>
+              <CFormInput readOnly={viewState} type="text" id="product-name" label='Nama Produk' invalid={error.name != null}  feedback={error.name} name='name' onChange={changeRecord} value={record.name}/>
             </CCol>
             <CCol className='mb-4' md={4}>
-              <CFormSelect readOnly={viewState} type="text" id="product-productType" label='Tipe Produk' invalid={error.product_type != null}  feedback={error.product_type} name='product_type' onChange={changeRecord} defaultValue={record.product_type}>
+              <CFormSelect readOnly={viewState} type="text" id="product-productType" label='Tipe Produk' invalid={error.product_type != null}  feedback={error.product_type} name='product_type' onChange={changeRecord} value={record.product_type}>
                 <option>Pilih ...</option>
                 <option value='foods'>Makanan & Minuman</option>
                 <option value='electronic_appliance'>Elektronik</option>
@@ -147,17 +149,17 @@ const ProductForm = () => {
               </CFormSelect>
             </CCol>
             <CCol className='mb-4' md={4}>
-              <UnitInput readOnly={viewState} groupMeasurement='weight' type="text" id="product-weight" label='Berat' invalid={error.weight != null}  feedback={error.weight} name='weight' onChange={changeRecord} defaultValue={record.weight}/>
+              <UnitInput readOnly={viewState} groupMeasurement='weight' type="text" id="product-weight" label='Berat' invalid={error.weight != null}  feedback={error.weight} name='weight' onChange={changeRecord} value={record.weight}/>
             </CCol>
             <CRow>
               <CCol md={4}>
-                <UnitInput readOnly={viewState} groupMeasurement='length' type="text" id="product-dimension_p" label='Panjang' invalid={error.dimension_p != null}  feedback={error.dimension_p} name='dimension_p' onChange={changeRecord} defaultValue={record.dimension_p}/>
+                <UnitInput readOnly={viewState} groupMeasurement='length' type="text" id="product-dimension_p" label='Panjang' invalid={error.dimension_p != null}  feedback={error.dimension_p} name='dimension_p' onChange={changeRecord} value={record.dimension_p}/>
               </CCol>
               <CCol md={4}>
-                <UnitInput readOnly={viewState} groupMeasurement='length' type="text" id="product-dimension_l" label='Lebar' invalid={error.dimension_l != null}  feedback={error.dimension_l} name='dimension_l' onChange={changeRecord} defaultValue={record.dimension_l}/>
+                <UnitInput readOnly={viewState} groupMeasurement='length' type="text" id="product-dimension_l" label='Lebar' invalid={error.dimension_l != null}  feedback={error.dimension_l} name='dimension_l' onChange={changeRecord} value={record.dimension_l}/>
               </CCol>
               <CCol md={4}>
-                <UnitInput readOnly={viewState} groupMeasurement='length' type="text" id="product-dimension_t" label='Tinggi' invalid={error.dimension_t != null}  feedback={error.dimension_t} name='dimension_t' onChange={changeRecord} defaultValue={record.dimension_t}/>
+                <UnitInput readOnly={viewState} groupMeasurement='length' type="text" id="product-dimension_t" label='Tinggi' invalid={error.dimension_t != null}  feedback={error.dimension_t} name='dimension_t' onChange={changeRecord} value={record.dimension_t}/>
               </CCol>
             </CRow>
           </CCardBody>

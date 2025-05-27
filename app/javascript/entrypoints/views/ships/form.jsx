@@ -4,6 +4,7 @@ import { FormHelper } from '~/lib/form_helper'
 import { useNavigate , useLoaderData, useOutletContext } from 'react-router'
 import { Eye, Pencil } from '@phosphor-icons/react'
 import { AuthContext } from '~/lib/context'
+import { createModel } from '~/lib/model'
 
 
 const ShipForm = () => {
@@ -70,12 +71,11 @@ const ShipForm = () => {
   }, [params.isViewState])
 
   function changeRecord(event){
-    let targetName = event.currentTarget.name
+    const targetName = event.currentTarget.name
     record[targetName] = event.currentTarget.value
-    setRecord(record)
+    const newRecord = createModel('Ship',record.attributes)
+    setRecord(newRecord)
   }
-
-
 
   function confirmDelete(){
     formHelper.deleteRecord(record).then((result)=>{
@@ -143,7 +143,7 @@ const ShipForm = () => {
               {message}
             </CAlert>
             <CCol md={4}>
-              <CFormInput readOnly={viewState} type="text" id="ship-name" label='Nama Kapal' invalid={error.name != null}  feedback={error.name} name='name' onChange={changeRecord} defaultValue={record.name} placeholder="nama kapal"/>
+              <CFormInput readOnly={viewState} type="text" id="ship-name" label='Nama Kapal' invalid={error.name != null}  feedback={error.name} name='name' onChange={changeRecord} value={record.name} placeholder="nama kapal"/>
             </CCol>
           </CCardBody>
           <CCardFooter hidden={viewState}>

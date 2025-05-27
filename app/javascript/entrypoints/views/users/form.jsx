@@ -5,6 +5,7 @@ import { useNavigate , useLoaderData, useOutletContext } from 'react-router'
 import { Eye, Pencil } from '@phosphor-icons/react'
 import ConfirmModal from '~/components/ConfirmModal'
 import { AuthContext } from '~/lib/context'
+import { createModel } from '~/lib/model'
 import {CustomAsyncSelect} from '~/components/CustomAsyncSelect'
 const UserForm = () => {
   const params = useLoaderData()
@@ -69,15 +70,17 @@ const UserForm = () => {
   }, [params.isViewState])
 
   function changeRecord(event){
-    let targetName = event.currentTarget.name
+    const targetName = event.currentTarget.name
     record[targetName] = event.currentTarget.value
-    setRecord(record)
+    const newRecord = createModel(record._modelName,record.attributes)
+    setRecord(newRecord)
   }
 
   function changeSelectRecord(selectValue,metadata){
-    let targetName = metadata.name
-    record[targetName] = selectValue.value
-    setRecord(record)
+    record[metadata.optionLabel] = selectValue.label
+    record[metadata.name] = selectValue.value
+    const newRecord = createModel(record._modelName,record.attributes)
+    setRecord(newRecord)
   }
 
   function confirmDelete(result){
@@ -183,16 +186,16 @@ const UserForm = () => {
               {message}
             </CAlert>
             <CCol className='mb-4' md={4}>
-              <CFormInput readOnly={viewState} type="text" id="user-username" label='Username' invalid={error.username != null}  feedback={error.username} name='username' onChange={changeRecord} defaultValue={record.username}/>
+              <CFormInput readOnly={viewState} type="text" id="user-username" label='Username' invalid={error.username != null}  feedback={error.username} name='username' onChange={changeRecord} value={record.username}/>
             </CCol>
             <CCol className='mb-4' md={4}>
-              <CFormInput readOnly={viewState} type="email" id="user-email" label='Email' invalid={error.email != null}  feedback={error.email} name='email' onChange={changeRecord} defaultValue={record.email}/>
+              <CFormInput readOnly={viewState} type="email" id="user-email" label='Email' invalid={error.email != null}  feedback={error.email} name='email' onChange={changeRecord} value={record.email}/>
             </CCol>
             <CCol className='mb-4' md={4}>
-              <CFormInput readOnly={viewState} type="password" id="user-password" label='Password' invalid={error.password != null}  feedback={error.password} name='password' onChange={changeRecord} defaultValue={record.password}/>
+              <CFormInput readOnly={viewState} type="password" id="user-password" label='Password' invalid={error.password != null}  feedback={error.password} name='password' onChange={changeRecord} value={record.password}/>
             </CCol>
             <CCol className='mb-4' md={4}>
-              <CFormInput readOnly={viewState} type="password" id="user-passwordConfirmation" label='Konfirmasi Password' invalid={error.password_confirmation != null}  feedback={error.password_confirmation} name='password_confirmation' onChange={changeRecord} defaultValue={record.password_confirmation}/>
+              <CFormInput readOnly={viewState} type="password" id="user-passwordConfirmation" label='Konfirmasi Password' invalid={error.password_confirmation != null}  feedback={error.password_confirmation} name='password_confirmation' onChange={changeRecord} value={record.password_confirmation}/>
             </CCol>
             <CCol className='mb-4' md={4}>
               <CustomAsyncSelect readOnly={viewState} cacheOptions path='/roles.json' name='role_id' label="Jabatan" feedback={error.role} onChange={changeSelectRecord} defaultValue={{label: record.role_name,value: record.role_id}}  />

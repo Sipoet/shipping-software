@@ -15,6 +15,10 @@ if agent.present?
 end
 container_type = @record.container_type
 if container_type.present?
+  json.container_type do
+    json.label container_type.name
+    json.value container_type.id
+  end
   json.container_type_name container_type.name
   json.container_type_id container_type.id
   json.container_type_path container_type_path(container_type.id)

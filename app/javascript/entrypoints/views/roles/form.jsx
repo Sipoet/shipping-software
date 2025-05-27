@@ -4,6 +4,7 @@ import { FormHelper } from '~/lib/form_helper'
 import { useNavigate , useLoaderData, useOutletContext } from 'react-router'
 import { Eye, Pencil } from '@phosphor-icons/react'
 import { AuthContext } from '~/lib/context'
+import { createModel } from '~/lib/model'
 
 
 const RoleForm = () => {
@@ -70,9 +71,10 @@ const RoleForm = () => {
   }, [params.isViewState])
 
   function changeRecord(event){
-    let targetName = event.currentTarget.name
+    const targetName = event.currentTarget.name
     record[targetName] = event.currentTarget.value
-    setRecord(record)
+    const newRecord = createModel(record._modelName,record.attributes)
+    setRecord(newRecord)
   }
 
 
@@ -143,7 +145,7 @@ const RoleForm = () => {
               {message}
             </CAlert>
             <CCol md={4}>
-              <CFormInput readOnly={viewState} type="text" id="role-name" label='Nama Jabatan' invalid={error.name != null}  feedback={error.name} name='name' onChange={changeRecord} defaultValue={record.name} />
+              <CFormInput readOnly={viewState} type="text" id="role-name" label='Nama Jabatan' invalid={error.name != null}  feedback={error.name} name='name' onChange={changeRecord} value={record.name} />
             </CCol>
           </CCardBody>
           <CCardFooter hidden={viewState}>

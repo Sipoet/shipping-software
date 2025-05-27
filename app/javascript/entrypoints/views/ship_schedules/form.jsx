@@ -5,6 +5,7 @@ import { useNavigate , useLoaderData, useOutletContext } from 'react-router'
 import { Eye, Pencil } from '@phosphor-icons/react'
 import  {CustomAsyncSelect}  from '~/components/CustomAsyncSelect'
 import { AuthContext } from '~/lib/context'
+import { createModel } from '~/lib/model'
 const ShipScheduleForm = () => {
   const params = useLoaderData()
   const [record,setRecord] = React.useState(params.record)
@@ -68,15 +69,17 @@ const ShipScheduleForm = () => {
   }, [params.isViewState])
 
   function changeRecord(event){
-    let targetName = event.currentTarget.name
+    const targetName = event.currentTarget.name
     record[targetName] = event.currentTarget.value
-    setRecord(record)
+    const newRecord = createModel(record._modelName,record.attributes)
+    setRecord(newRecord)
   }
 
   function changeSelectRecord(selectValue,metadata){
-    let targetName = metadata.name
-    record[targetName] = selectValue.value
-    setRecord(record)
+    record[metadata.optionLabel] = selectValue.label
+    record[metadata.name] = selectValue.value
+    const newRecord = createModel(record._modelName,record.attributes)
+    setRecord(newRecord)
   }
 
   function confirmDelete(){
@@ -148,51 +151,51 @@ const ShipScheduleForm = () => {
             </CAlert>
 
               <CCol md={4} className='mb-3' hidden={record.isNewRecord}>
-                <CFormInput readOnly={true}  type="text" id="shipSchedule-status" label='Status' invalid={error.status != null}  feedback={error.status} name='status' onChange={changeRecord} defaultValue={record.status} placeholder="Status"/>
+                <CFormInput readOnly={true}  type="text" id="shipSchedule-status" label='Status' invalid={error.status != null}  feedback={error.status} name='status' onChange={changeRecord} value={record.status} placeholder="Status"/>
               </CCol>
 
               <CCol md={4} className='mb-3'>
-                <CustomAsyncSelect readOnly={viewState} cacheOptions path='/ships.json' name='ship_id' label="Kapal"feedback={error.ship} onChange={changeSelectRecord} defaultValue={{label: record.ship_name,value: record.ship_id}} placeholder="pilih kapal..." />
+                <CustomAsyncSelect readOnly={viewState} cacheOptions path='/ships.json' name='ship_id' label="Kapal"feedback={error.ship} onChange={changeSelectRecord} optionLabel="ship_name" value={{label: record.ship_name,value: record.ship_id}} placeholder="pilih kapal..." />
               </CCol>
               <CCol md={4} className='mb-3'>
-                <CFormInput readOnly={viewState}  type="text" id="shipSchedule-voyage" label='Voyage' invalid={error.voyage != null}  feedback={error.voyage} name='voyage' onChange={changeRecord} defaultValue={record.voyage} placeholder="Voyage..."/>
+                <CFormInput readOnly={viewState}  type="text" id="shipSchedule-voyage" label='Voyage' invalid={error.voyage != null}  feedback={error.voyage} name='voyage' onChange={changeRecord} value={record.voyage} placeholder="Voyage..."/>
               </CCol>
               <CCol md={4} className='mb-3'>
-                <CustomAsyncSelect readOnly={viewState} cacheOptions path='/ports.json' name='loading_port_id' label="Pelabuhan Muatan"feedback={error.loading_port} onChange={changeSelectRecord} defaultValue={{label: record.loading_port_name,value: record.loading_port_id}} placeholder="pilih Pelabuhan..." />
+                <CustomAsyncSelect readOnly={viewState} cacheOptions path='/ports.json' name='loading_port_id' label="Pelabuhan Muatan"feedback={error.loading_port} onChange={changeSelectRecord} getOptionLabel={(line)=> `${line.city}(${line.name})`} optionLabel="loading_port_detail" value={{label: record.loading_port_detail,value: record.loading_port_id}} placeholder="pilih Pelabuhan..." />
               </CCol>
               <CCol md={4} className='mb-3'>
-                <CustomAsyncSelect readOnly={viewState} cacheOptions path='/ports.json' name='destination_port_id' label="Pelabuhan Tujuan"feedback={error.destination_port} onChange={changeSelectRecord} defaultValue={{label: record.destination_port_name,value: record.destination_port_id}} placeholder="pilih Pelabuhan..." />
+                <CustomAsyncSelect readOnly={viewState} cacheOptions path='/ports.json' name='destination_port_id' label="Pelabuhan Tujuan"feedback={error.destination_port} onChange={changeSelectRecord} getOptionLabel={(line)=> `${line.city}(${line.name})`} optionLabel="destination_port_detail" value={{label: record.destination_port_detail,value: record.destination_port_id}} placeholder="pilih Pelabuhan..." />
               </CCol>
               <CRow>
                 <CCol md={4} className='mb-3'>
-                  <CFormInput readOnly={viewState}  type="datetime-local" id="shipSchedule-estimated_arrived_sour_at" label='Tanggal Estimasi Kapal Mendarat Muatan' invalid={error.estimated_arrived_sour_at != null}  feedback={error.estimated_arrived_sour_at} name='estimated_arrived_sour_at' onChange={changeRecord} defaultValue={record.estimated_arrived_sour_at} />
+                  <CFormInput readOnly={viewState}  type="datetime-local" id="shipSchedule-estimated_arrived_sour_at" label='Tanggal Estimasi Kapal Mendarat Muatan' invalid={error.estimated_arrived_sour_at != null}  feedback={error.estimated_arrived_sour_at} name='estimated_arrived_sour_at' onChange={changeRecord} value={record.estimated_arrived_sour_at} />
                 </CCol>
                 <CCol md={4} className='mb-3'>
-                  <CFormInput readOnly={viewState}  type="datetime-local" id="shipSchedule-arrived_sour_at" label='Tanggal Aktual Kapal Mendarat Muatan' invalid={error.arrived_sour_at != null}  feedback={error.arrived_sour_at} name='arrived_sour_at' onChange={changeRecord} defaultValue={record.arrived_sour_at} />
+                  <CFormInput readOnly={viewState}  type="datetime-local" id="shipSchedule-arrived_sour_at" label='Tanggal Aktual Kapal Mendarat Muatan' invalid={error.arrived_sour_at != null}  feedback={error.arrived_sour_at} name='arrived_sour_at' onChange={changeRecord} value={record.arrived_sour_at} />
                 </CCol>
               </CRow>
               <CRow>
                 <CCol md={4} className='mb-3'>
-                  <CFormInput readOnly={viewState}  type="datetime-local" id="shipSchedule-estimated_departure_sour_at" label='Tanggal Estimasi Berangkat' invalid={error.estimated_departure_sour_at != null}  feedback={error.estimated_departure_sour_at} name='estimated_departure_sour_at' onChange={changeRecord} defaultValue={record.estimated_departure_sour_at} />
+                  <CFormInput readOnly={viewState}  type="datetime-local" id="shipSchedule-estimated_departure_sour_at" label='Tanggal Estimasi Berangkat' invalid={error.estimated_departure_sour_at != null}  feedback={error.estimated_departure_sour_at} name='estimated_departure_sour_at' onChange={changeRecord} value={record.estimated_departure_sour_at} />
                 </CCol>
                 <CCol md={4} className='mb-3'>
-                  <CFormInput readOnly={viewState}  type="datetime-local" id="shipSchedule-departure_sour_at" label='Tanggal Aktual Berangkat' invalid={error.departure_sour_at != null}  feedback={error.departure_sour_at} name='departure_sour_at' onChange={changeRecord} defaultValue={record.departure_sour_at} />
+                  <CFormInput readOnly={viewState}  type="datetime-local" id="shipSchedule-departure_sour_at" label='Tanggal Aktual Berangkat' invalid={error.departure_sour_at != null}  feedback={error.departure_sour_at} name='departure_sour_at' onChange={changeRecord} value={record.departure_sour_at} />
                 </CCol>
               </CRow>
               <CRow>
                 <CCol md={4} className='mb-3'>
-                  <CFormInput readOnly={viewState}  type="datetime-local" id="shipSchedule-estimated_arrived_dest_at" label='Tanggal Estimasi Kapal Mendarat Tujuan' invalid={error.estimated_arrived_dest_at != null}  feedback={error.estimated_arrived_dest_at} name='estimated_arrived_dest_at' onChange={changeRecord} defaultValue={record.estimated_arrived_dest_at} />
+                  <CFormInput readOnly={viewState}  type="datetime-local" id="shipSchedule-estimated_arrived_dest_at" label='Tanggal Estimasi Kapal Mendarat Tujuan' invalid={error.estimated_arrived_dest_at != null}  feedback={error.estimated_arrived_dest_at} name='estimated_arrived_dest_at' onChange={changeRecord} value={record.estimated_arrived_dest_at} />
                 </CCol>
                 <CCol md={4} className='mb-3'>
-                  <CFormInput readOnly={viewState}  type="datetime-local" id="shipSchedule-arrived_dest_at" label='Tanggal Aktual Kapal Mendarat Tujuan' invalid={error.arrived_dest_at != null}  feedback={error.arrived_dest_at} name='arrived_dest_at' onChange={changeRecord} defaultValue={record.arrived_dest_at} />
+                  <CFormInput readOnly={viewState}  type="datetime-local" id="shipSchedule-arrived_dest_at" label='Tanggal Aktual Kapal Mendarat Tujuan' invalid={error.arrived_dest_at != null}  feedback={error.arrived_dest_at} name='arrived_dest_at' onChange={changeRecord} value={record.arrived_dest_at} />
                 </CCol>
               </CRow>
               <CCol md={4} className='mb-3'>
-                  <CFormInput readOnly={viewState}  type="datetime-local" id="shipSchedule-dorry_container_opened_at" label='Tanggal Kontainer dibongkar di Tujuan' invalid={error.dorry_container_opened_at != null}  feedback={error.dorry_container_opened_at} name='dorry_container_opened_at' onChange={changeRecord} defaultValue={record.dorry_container_opened_at} />
+                  <CFormInput readOnly={viewState}  type="datetime-local" id="shipSchedule-dorry_container_opened_at" label='Tanggal Kontainer dibongkar di Tujuan' invalid={error.dorry_container_opened_at != null}  feedback={error.dorry_container_opened_at} name='dorry_container_opened_at' onChange={changeRecord} value={record.dorry_container_opened_at} />
                 </CCol>
 
               <CCol md={4} className='mb-3'>
-                <CFormInput readOnly={viewState}  type="text" id="shipSchedule-booking_code" label='Kode Shipment Of Instruction' invalid={error.booking_code != null}  feedback={error.booking_code} name='booking_code' onChange={changeRecord} defaultValue={record.booking_code} />
+                <CFormInput readOnly={viewState}  type="text" id="shipSchedule-booking_code" label='Kode Shipment Of Instruction' invalid={error.booking_code != null}  feedback={error.booking_code} name='booking_code' onChange={changeRecord} value={record.booking_code} />
               </CCol>
 
           </CCardBody>

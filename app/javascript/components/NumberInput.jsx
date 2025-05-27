@@ -3,9 +3,7 @@ import { CCol,CFormInput,CInputGroup,CInputGroupText,CFormLabel, CFormSelect, CR
 import { IMaskMixin } from 'react-imask'
 import {moneyFormat} from '~/lib/text_formatter'
 // import IMask from 'imask';
-function onTextChange(event){
-  console.log(event)
-}
+
 const CFormInputWithMask =  IMaskMixin(({ inputRef, ...props }) => (
   <CFormInput
     {...props}

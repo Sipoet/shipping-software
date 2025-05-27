@@ -33,7 +33,7 @@ class PortsController < ApplicationController
   private
 
   def permit_params
-    params.required(:port).permit(:name,:city,:district,:country)
+    params.required(:port).permit(:name,:city,:country)
   end
 
   def find_record!

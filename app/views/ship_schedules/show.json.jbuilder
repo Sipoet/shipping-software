@@ -8,13 +8,13 @@ if ship.present?
 end
 loading_port = @record.loading_port
 if loading_port.present?
-  json.loading_port_name loading_port.name
+  json.loading_port_detail "#{loading_port.city.capitalize}(#{loading_port.name})"
   json.loading_port_id @record.loading_port_id
 end
 destination_port = @record.destination_port
 if destination_port.present?
   json.destination_port_id @record.destination_port_id
-  json.destination_port_name destination_port.name
+  json.destination_port_detail "#{destination_port.city.capitalize}(#{destination_port.name})"
 end
 json.estimated_arrived_sour_at @record.estimated_arrived_sour_at
 json.estimated_departure_sour_at @record.estimated_departure_sour_at
