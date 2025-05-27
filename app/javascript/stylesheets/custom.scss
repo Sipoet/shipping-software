@@ -17,6 +17,12 @@
 .width-50{
   width: 50px;
 }
-.unit-select{
+
+.uom-select{
   max-width: 85px;
+}
+.action-buttons-container{
+  .btn{
+    margin: 0.25rem 0.125rem;
+  }
 }
