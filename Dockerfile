@@ -20,6 +20,7 @@ RUN bundle exec bootsnap precompile --gemfile
 RUN npm install
 
 # Precompiling assets for production without requiring secret RAILS_MASTER_KEY
+RUN ./bin/rails assets:clobber
 RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 
 # Add a script to be executed every time the container starts.
