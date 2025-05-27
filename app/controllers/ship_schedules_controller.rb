@@ -35,10 +35,9 @@ class ShipSchedulesController < ApplicationController
       find_record!
       result = @record.send("#{key}!") rescue false
       if result == false
-        get_error_record
-        render :show
+        render_json_error(@record)
       else
-        redirect_to ship_schedule_path(id: @record.id)
+        render json: {message:'sukses ganti status'}, status: :ok
       end
     end
   end

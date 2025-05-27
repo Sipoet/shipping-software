@@ -3,14 +3,23 @@ import {CButton,CModal,CModalBody,CModalHeader,CModalTitle,CModalFooter} from '@
 function ConfirmModal(props){
   props.ref.current = {openModal:openModal,closeModal:closeModal}
   const [visibleConfirmation, setVisibleConfirmation] = React.useState(false)
-
-  function openModal(){
+  const [_title,setTitle] = React.useState(props.title)
+  const [_description,setDescription] = React.useState(props.description)
+  const [_resolving,setResolving] = React.useState(props.resolving)
+  const [_submitLabel,setSubmitLabel] = React.useState(props.submitLabel)
+  const [_submitColor,setSubmitColor] = React.useState(props.submitColor)
+  function openModal({title,description,resolving,submitLabel='Ya',submitColor= 'info'}){
+    setDescription(description)
+    setTitle(title)
+    setResolving((old)=> resolving)
     setVisibleConfirmation(true)
+    setSubmitLabel(submitLabel)
+    setSubmitColor(submitColor)
   }
 
   function closeModal(result){
     setVisibleConfirmation(false)
-    props.resolving(result)
+    _resolving(result)
   }
 
   // React.useEffect(()=>{
@@ -24,14 +33,14 @@ function ConfirmModal(props){
       aria-labelledby="deleteConfirmation"
     >
       <CModalHeader>
-        <CModalTitle id="deleteConfirmation">{props.title}</CModalTitle>
+        <CModalTitle id="deleteConfirmation">{_title}</CModalTitle>
       </CModalHeader>
-      <CModalBody>{props.description}</CModalBody>
+      <CModalBody>{_description}</CModalBody>
       <CModalFooter>
         <CButton color="secondary" onClick={() => closeModal(false)}>
           Batal
         </CButton>
-        <CButton color="danger" onClick={() => closeModal(true)}>{props.submitLabel ||'Ya'}</CButton>
+        <CButton color={_submitColor} onClick={() => closeModal(true)}>{_submitLabel ||'Ya'}</CButton>
       </CModalFooter>
     </CModal>
 

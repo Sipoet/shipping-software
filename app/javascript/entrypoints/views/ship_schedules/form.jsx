@@ -1,11 +1,12 @@
 import {CAlert, CCol,CForm,CButton,CModal,CModalBody,CCard,CCardHeader,CCardBody,CCardTitle,CCardFooter,CModalHeader,CModalTitle,CModalFooter,CFormInput,CToast, CToastBody, CToaster, CToastHeader, CRow } from '@coreui/react'
 import React  from 'react'
-import { FormHelper } from '~/lib/form_helper'
+import { FormHelper,changeCloneRecord } from '~/lib/form_helper'
 import { useNavigate , useLoaderData, useOutletContext } from 'react-router'
-import { Eye, Pencil } from '@phosphor-icons/react'
+import { ArrowClockwise, ArrowCounterClockwise, Eye, Pencil, Trash } from '@phosphor-icons/react'
 import  {CustomAsyncSelect}  from '~/components/CustomAsyncSelect'
 import { AuthContext } from '~/lib/context'
-import { createModel } from '~/lib/model'
+import RecordActions from '~/components/RecordActions'
+import ConfirmModal from '~/components/ConfirmModal'
 const ShipScheduleForm = () => {
   const params = useLoaderData()
   const [record,setRecord] = React.useState(params.record)
@@ -22,6 +23,7 @@ const ShipScheduleForm = () => {
   const navigate = useNavigate()
   const [auth,setAuth] = React.useContext(AuthContext)
   const formHelper = new FormHelper(auth)
+  const confirmModalRef = React.useRef(null)
 
   const handleSubmit = (event) => {
     const form = event.currentTarget
@@ -70,16 +72,12 @@ const ShipScheduleForm = () => {
 
   function changeRecord(event){
     const targetName = event.currentTarget.name
-    record[targetName] = event.currentTarget.value
-    const newRecord = createModel(record._modelName,record.attributes)
-    setRecord(newRecord)
+    const value = event.currentTarget.value
+    setRecord((record)=> changeCloneRecord(record,[targetName,value]) )
   }
 
   function changeSelectRecord(selectValue,metadata){
-    record[metadata.optionLabel] = selectValue.label
-    record[metadata.name] = selectValue.value
-    const newRecord = createModel(record._modelName,record.attributes)
-    setRecord(newRecord)
+    setRecord((record)=> changeCloneRecord(record,[metadata.optionLabel,selectValue.label,metadata.name,selectValue.value]) )
   }
 
   function confirmDelete(){
@@ -99,15 +97,264 @@ const ShipScheduleForm = () => {
   }
 
   function toggleNavigate(){
+    if(record.status !=='draft'){
+      setViewState(true)
+    }
     if(viewState){
       navigate(`/ship_schedules/${record.id}/edit`)
     }else{
       navigate(`/ship_schedules/${record.id}`)
     }
   }
+  function setConfirm(){
+    confirmModalRef.current.openModal({
+      title: "Konfirmasi Aksi",
+      description: `Apakah Yakin Konfirm voyage ${record.voyage} ?`,
+      submitColor:'info',
+      resolving:(result)=>{
+        if(result){
+          auth.request(`/ship_schedules/${record.id}/set_port_processed.json`,{method:'POST'}).then((response)=>{
+            if(response.status === 200){
+              setRecord((record)=> changeCloneRecord(record,['status','port_processed']) )
+
+              addToast(
+                (<CToast color='success' key={'toast-form'}>
+                  <CToastHeader closeButton>
+                    <div className="fw-bold me-auto">Sukses</div>
+                  </CToastHeader>
+                  <CToastBody>Sukses Konfirm</CToastBody>
+                </CToast>))
+            }else{
+              addToast(
+                (<CToast color='danger' key={'toast-form'}>
+                  <CToastHeader closeButton>
+                    <div className="fw-bold me-auto">Gagal</div>
+                  </CToastHeader>
+                  <CToastBody>Gagal Konfirm</CToastBody>
+                </CToast>))
+              refreshRecord()
+            }
+          })
+        }
+      }
+    })
+
+  }
+
+  function openSiForm(){
+
+  }
+
+  function openShipDepartForm(){
+
+  }
+  function openShipArrivedForm(){
+
+  }
+
+  function setComplete(){
+    confirmModalRef.current.openModal({
+      title: "Konfirmasi Aksi",
+      description: `Apakah Yakin Selesaikan voyage ${record.voyage} ?`,
+      submitColor:'success',
+      resolving:(result)=>{
+        if(result){
+          auth.request(`/ship_schedules/${record.id}/set_completed.json`,{method:'POST'}).then((response)=>{
+            if(response.status === 200){
+              setRecord((record)=> changeCloneRecord(record,['status','completed']) )
+
+              addToast(
+                (<CToast color='success' key={'toast-form'}>
+                  <CToastHeader closeButton>
+                    <div className="fw-bold me-auto">Sukses</div>
+                  </CToastHeader>
+                  <CToastBody>Sukses Selesaikan</CToastBody>
+                </CToast>))
+            }else{
+              addToast(
+                (<CToast color='danger' key={'toast-form'}>
+                  <CToastHeader closeButton>
+                    <div className="fw-bold me-auto">Gagal</div>
+                  </CToastHeader>
+                  <CToastBody>Gagal Selesaikan</CToastBody>
+                </CToast>))
+              refreshRecord()
+            }
+          })
+        }
+      }
+    })
+  }
+
+  function setCancel(){
+    confirmModalRef.current.openModal({
+      title: "Konfirmasi Aksi",
+      description: `Apakah Yakin Batalkan voyage ${record.voyage} ?`,
+      submitColor:'danger',
+      resolving:(result)=>{
+        if(result){
+          auth.request(`/ship_schedules/${record.id}/set_cancelled.json`,{method:'POST'}).then((response)=>{
+            if(response.status === 200){
+              setRecord((record)=> changeCloneRecord(record,['status','cancelled']) )
+
+              addToast(
+                (<CToast color='success' key={'toast-form'}>
+                  <CToastHeader closeButton>
+                    <div className="fw-bold me-auto">Sukses</div>
+                  </CToastHeader>
+                  <CToastBody>Sukses Batalkan</CToastBody>
+                </CToast>))
+            }else{
+              addToast(
+                (<CToast color='danger' key={'toast-form'}>
+                  <CToastHeader closeButton>
+                    <div className="fw-bold me-auto">Gagal</div>
+                  </CToastHeader>
+                  <CToastBody>Gagal Batalkan</CToastBody>
+                </CToast>))
+              refreshRecord()
+            }
+          })
+        }
+      }
+    })
+  }
+
+  function setDraft(){
+    confirmModalRef.current.openModal({
+      title: "Konfirmasi Aksi",
+      description: `Apakah Yakin Draftkan voyage ${record.voyage} ?`,
+      submitColor:'light',
+      resolving:(result)=>{
+        if(result){
+          auth.request(`/ship_schedules/${record.id}/set_draft.json`,{method:'POST'}).then((response)=>{
+            if(response.status === 200){
+              setRecord((record)=> changeCloneRecord(record,['status','draft']) )
+
+              addToast(
+                (<CToast color='success' key={'toast-form'}>
+                  <CToastHeader closeButton>
+                    <div className="fw-bold me-auto">Sukses</div>
+                  </CToastHeader>
+                  <CToastBody>Sukses Draftkan</CToastBody>
+                </CToast>))
+            }else{
+              addToast(
+                (<CToast color='danger' key={'toast-form'}>
+                  <CToastHeader closeButton>
+                    <div className="fw-bold me-auto">Gagal</div>
+                  </CToastHeader>
+                  <CToastBody>Gagal Draftkan</CToastBody>
+                </CToast>))
+              refreshRecord()
+            }
+          })
+        }
+      }
+    })
+  }
+
+  async function refreshRecord(){
+    const newRecord = await formHelper.findRecord(record._modelName,record.id)
+    setRecord(newRecord)
+  }
+
+  const recordActions = [
+    {
+      label: (<>Refresh <ArrowClockwise /></>),
+      props:{
+        color: 'secondary',
+        onClick: refreshRecord,
+        hidden: record.isNewRecord || !viewState,
+      }
+    },
+    {
+      label: (<>Edit <Pencil /></>),
+      props:{
+        color: 'info',
+        onClick: toggleNavigate,
+        hidden: record.isNewRecord || !viewState || record.status !== 'draft',
+      }
+    },
+    {
+      label: (<>Lihat <Eye /></>),
+      props:{
+        color: 'secondary',
+        onClick: toggleNavigate,
+        hidden: record.isNewRecord || viewState || record.status !== 'draft',
+      }
+    },
+    {
+      label: (<>Hapus <Trash /></>),
+      props:{
+        color: 'danger',
+        onClick: ()=> setVisibleConfirmationDelete(true),
+        hidden: record.isNewRecord || record.status !== 'draft',
+      }
+    },
+    {
+      label: (<>Kembali ke Draft <ArrowCounterClockwise /></>),
+      props:{
+        color: 'light',
+        onClick: setDraft,
+        hidden: record.isNewRecord || !(['port_processed','cancelled'].includes(record.status)),
+      }
+    },
+    {
+      label: 'Konfirm',
+      props:{
+        color: 'info',
+        onClick: setConfirm,
+        hidden: !viewState || record.isNewRecord || !(['draft','si_released'].includes(record.status)),
+      }
+    },
+    {
+      label: 'SI Keluar',
+      props:{
+        color: 'info',
+        onClick: openSiForm,
+        hidden: !viewState || !(['port_processed','ship_aboard'].includes(record.status)),
+      }
+    },
+    {
+      label: 'Kapal Berangkat',
+      props:{
+        color: 'info',
+        onClick: openShipDepartForm,
+        hidden: !viewState || !(['si_released','arrived_to_destination'].includes(record.status)),
+      }
+
+    },
+    {
+      label: 'Kapal Tiba di Tujuan',
+      props:{
+        color: 'info',
+        onClick: openShipArrivedForm,
+        hidden: !viewState || !(['ship_aboard','completed'].includes(record.status)),
+      }
+    },
+    {
+      label: 'Completed',
+      props:{
+        color: 'success',
+        onClick: setComplete,
+        hidden: !viewState || !(['arrived_to_destination'].includes(record.status)),
+      }
+    },
+    {
+      label: 'Batalkan',
+      props:{
+        color: 'danger',
+        onClick: setCancel,
+        hidden: !viewState || !(['port_processed','si_released'].includes(record.status)) || record.isNewRecord,
+      }
+    },
+
+  ]
 
   return (
     <>
+      <ConfirmModal ref={confirmModalRef}></ConfirmModal>
       <CModal
         visible={visibleConfirmationDelete}
         onClose={() => setVisibleConfirmationDelete(false)}
@@ -130,15 +377,7 @@ const ShipScheduleForm = () => {
 
       <CCard>
         <CCardHeader>Form Jadwal Kapal
-
-        <div className='float-end' hidden={record.isNewRecord}>
-          <CButton color={viewState ? 'secondary' : 'info'} type="button" className='me-3' onClick={toggleNavigate}>
-              {viewState ?  (<>Edit <Pencil /></>): (<>Lihat <Eye /></>) }
-          </CButton>
-          <CButton color="danger" type="button" onClick={()=> setVisibleConfirmationDelete(true)}>
-              Hapus
-          </CButton>
-        </div>
+        <RecordActions record={record} className='float-end' actions={recordActions} />
         </CCardHeader>
         <CForm
             className="row g-3 needs-validation"

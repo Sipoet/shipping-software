@@ -1,18 +1,22 @@
 import { CButton } from '@coreui/react'
 import React from 'react'
 
-function RecordActions({record,...props}){
-  props.actions ||= []
+function RecordActions({record,actions,...props}){
+  actions ||= []
 
   React.useEffect(()=>{
 
   },[record])
+
   return(
-    <div className='action-buttons-container'>
-      {props.actions.map((action)=>(
-        <CButton {...action.props}>{action.label}</CButton>
-      ))}
+    <div {...props}>
+      <div  className='action-buttons-container'>
+        {actions.map((action)=>(
+          <CButton key={actions.indexOf(action)} {...action.props}>{action.label}</CButton>
+        ))}
+      </div>
     </div>
+
   )
 }
 

@@ -4,7 +4,7 @@ Rails.application.routes.draw do
     resources :ports, except: [:new,:edit,:destroy]
     resources :products, except: [:new,:edit]
     resources :ship_schedules, except: [:new,:edit,:destroy] do
-      ShipSchedule.statuses.each do |key, int_value|
+      ShipSchedule.statuses.keys.each do |key|
         post "set_#{key}", on: :member
       end
     end

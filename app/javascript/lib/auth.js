@@ -33,7 +33,7 @@ class Auth{
   }
 
   async refreshToken(){
-    let response  = await fetch('/users/refresh_token',{
+    let response  = await fetch('/users/refresh_token.json',{
       method: 'POST',
       headers: this.defaultRequestHeader
     })

@@ -18,8 +18,8 @@ class ShipSchedule < ApplicationRecord
   validates :actual_arrived_sour_at, presence: true, if: :si_released?
   validates :actual_departure_sour_at, presence: true, if: :ship_aboard?
   validates :actual_arrived_dest_at, presence: true, if: :arrived_to_destination?
-  validates :loading_port, presence: true, if: :port_processed?
-  validates :destination_port, presence: true, if: :port_processed?
+  validates :loading_port, presence: true
+  validates :destination_port, presence: true
   validates :dorry_container_opened_at, presence: true, if: :completed?
   validates :booking_code, presence: true
 

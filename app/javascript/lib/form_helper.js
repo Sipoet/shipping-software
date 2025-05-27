@@ -1,4 +1,4 @@
-import {snakeCase} from 'lodash'
+import {snakeCase, cloneDeep} from 'lodash'
 import { createModel } from './model'
 import pluralize from 'pluralize'
 
@@ -173,4 +173,12 @@ class FormHelper {
   }
 }
 
-export { FormHelper}
+function changeCloneRecord(record,changeParams=[]) {
+  let newRecord = cloneDeep(record)
+  for(let index = 0;index <= changeParams.length;index+=2 ){
+    newRecord[changeParams[index]] = changeParams[index + 1]
+  }
+  return newRecord
+}
+
+export { FormHelper, changeCloneRecord}
