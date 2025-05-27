@@ -60,7 +60,7 @@ class Auth{
   get defaultRequestHeader(){
     return {
       'Content-Type':'application/json',
-      'Authorization': this.token,
+      'Authorization': this.token
     }
   }
 

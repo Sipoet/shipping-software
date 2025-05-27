@@ -10,6 +10,7 @@ ShipSchedule.create!(
   # actual_departure_sour_at: DateTime.now + 1.days,
   # actual_arrived_dest_at: DateTime.now + 5.days,
   status: 0,
+  voyage: SecureRandom.hex(7),
   loading_port_id: port_ids.sample,
   destination_port_id: port_ids.sample,
 )
@@ -25,6 +26,7 @@ ShipSchedule.create!(
   # actual_departure_sour_at: DateTime.now + 1.days,
   # actual_arrived_dest_at: DateTime.now + 5.days,
   status: 1,
+  voyage: SecureRandom.hex(7),
   loading_port_id: port_ids.sample,
   destination_port_id: port_ids.sample,
 )
@@ -39,6 +41,7 @@ ShipSchedule.create!(
   actual_departure_sour_at: DateTime.now + 1.days,
   # actual_arrived_dest_at: DateTime.now + 5.days,
   status: 3,
+  voyage: SecureRandom.hex(7),
   loading_port_id: port_ids.sample,
   destination_port_id: port_ids.sample,
 )

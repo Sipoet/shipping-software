@@ -114,7 +114,7 @@ function UnitInput({label,groupMeasurement,uom,measurementName,onChange,onMeasur
           mapToRadix= {['.']}
           aria-describedby="money-addon"
           radix='.' autofix={true} />
-        <CFormSelect readOnly={props.readOnly} className='unit-select' disabled={props.disabled} options={optionsOf(groupMeasurement)} name={measurementName} onChange={onMeasurementChange} defaultValue={uom} placeholder='Satuan...'></CFormSelect>
+        <CFormSelect readOnly={props.readOnly} className='uom-select' disabled={props.disabled} options={optionsOf(groupMeasurement)} name={measurementName} onChange={onMeasurementChange} defaultValue={uom} placeholder='Satuan...'></CFormSelect>
       </CInputGroup>
     </>
   )

@@ -31,7 +31,7 @@ Devise.setup do |config|
     jwt.request_formats = {
       user: [:json]
     }
-    jwt.expiration_time = 15.seconds.to_i
+    jwt.expiration_time = 10.minutes.to_i
   end
   # Configure the class responsible to send e-mails.
   # config.mailer = 'Devise::Mailer'

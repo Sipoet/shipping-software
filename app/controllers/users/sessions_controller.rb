@@ -41,16 +41,14 @@ class Users::SessionsController < Devise::SessionsController
 
     begin
       payload = JWT.decode(refresh_token, Rails.application.credentials.devise_jwt_secret_key, true)[0]
-
       current_user = User.find_by(id: payload["sub"], jti: payload["jti"])
-
       return render json: {message: "Token is invalid"}, status: :unauthorized if current_user.nil?
+      current_user.update!(jti: SecureRandom.uuid)
 
-      current_user.update(jti: SecureRandom.uuid)
+
       new_token = Warden::JWTAuth::UserEncoder.new.call(current_user, :user, nil).first
-
-      response.set_cookie("refresh_token", RefreshTokenGenerator.new(current_user).cookie)
       response.set_header("Authorization", "Bearer #{new_token}")
+      response.set_cookie("refresh_token", RefreshTokenGenerator.new(current_user).cookie)
       render json: {message: "Token refreshed"}, status: :ok
     rescue JWT::VerificationError
       render json: {message: "Token is invalid"}, status: :unauthorized

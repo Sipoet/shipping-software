@@ -85,7 +85,6 @@ function _tomSelectEditor(cell, onRendered, success, cancel, editorParams){
   return editor;
 }
 
-
 function AsyncReactTabulator({columns, ajaxURL,onRef}) {
   let el = React.createRef()
   let navigate = useNavigate()
@@ -108,124 +107,124 @@ function AsyncReactTabulator({columns, ajaxURL,onRef}) {
   }
 
   function _fieldType(column){
-  switch (column.fieldType) {
-    case 'link':
-      return {
-        formatter:'link',
-        formatterParams: {
-          labelField: column.field,
-          urlField: column.recordPath,
-          target:"_blank",
-        },
-        headerFilter: _tomSelectEditor,
-        headerFilterParams:{
-          path: column.link,
-          labelField: column.linkLabel,
-          field: column.filterField,
-          placeholderLoading: 'Dalam proses...',
-          placeholder: `pilih`,
-        },
-      }
-    case 'enum':
-      let data = column.enum
-      return {
-        formatter: _enumFormatter,
-        headerFilter: 'list',
-        headerFilterParams:{
-          multiselect: true,
-          clearable: true,
-          values: Object.assign(data, {"":""})
-        },
-        formatterParams:{
-          enum: data
+    switch (column.fieldType) {
+      case 'link':
+        return {
+          formatter:'link',
+          formatterParams: {
+            labelField: column.field,
+            urlField: column.recordPath,
+            target:"_blank",
+          },
+          headerFilter: _tomSelectEditor,
+          headerFilterParams:{
+            path: column.link,
+            labelField: column.linkLabel,
+            field: column.filterField,
+            placeholderLoading: 'Dalam proses...',
+            placeholder: `pilih`,
+          },
         }
-      }
-    case 'date':
-      return {
-        formatter: 'datetime',
-        formatterParams: {
-          inputFormat: "iso",
-          outputFormat:"dd/MM/yy",
-          invalidPlaceholder:"(invalid date)",
-          timezone: "Asia/Bangkok",
-        },
-        sorter: 'date',
-        sorterParams: {
-          format:"iso",
+      case 'enum':
+        let data = column.enum
+        return {
+          formatter: _enumFormatter,
+          headerFilter: 'list',
+          headerFilterParams:{
+            multiselect: true,
+            clearable: true,
+            values: Object.assign(data, {"":""})
+          },
+          formatterParams:{
+            enum: data
+          }
         }
-      }
-    case 'datetime':
-      return {
-        formatter: 'datetime',
-        formatterParams: {
-          inputFormat: "iso",
-          outputFormat:"dd/MM/yy HH:mm",
-          invalidPlaceholder:"(invalid datetime)",
-          timezone: "Asia/Bangkok",
-        },
-        sorter: 'datetime',
-        sorterParams: {
-          format:"iso",
-          locale:true,
-          alignEmptyValues:"top",
+      case 'date':
+        return {
+          formatter: 'datetime',
+          formatterParams: {
+            inputFormat: "iso",
+            outputFormat:"dd/MM/yy",
+            invalidPlaceholder:"(invalid date)",
+            timezone: "Asia/Bangkok",
+          },
+          sorter: 'date',
+          sorterParams: {
+            format:"iso",
+          }
         }
-      }
-    case 'money':
-      return {
-        formatter:"money",
-        formatterParams:{
-            decimal:".",
-            thousand:",",
-            symbol:"Rp",
-            negativeSign:true,
-        },
-        sorter: 'number',
-        sorterParams:{
-          thousandSeparator:",",
-          decimalSeparator:".",
-          alignEmptyValues:"top",
+      case 'datetime':
+        return {
+          formatter: 'datetime',
+          formatterParams: {
+            inputFormat: "iso",
+            outputFormat:"dd/MM/yy HH:mm",
+            invalidPlaceholder:"(invalid datetime)",
+            timezone: "Asia/Bangkok",
+          },
+          sorter: 'datetime',
+          sorterParams: {
+            format:"iso",
+            locale:true,
+            alignEmptyValues:"top",
+          }
         }
-      }
-    case 'action':
-      let listButtonDef = column.rowButtons
-      return {
-        formatter: (cell, formatterParams, onRendered)=>{
-            //cell - the cell component
-            //formatterParams - parameters set for the column
-            //onRendered - function to call when the formatter has been rendered
-            var row = cell.getData();
-            onRendered(()=>{
-              createRoot(cell.getElement()).render(
-                <>{listButtonDef.map((buttonDef)=> {
-              if(buttonDef == 'edit'){
-                return (<CButton key={`${row.id}-edit`} type='button' onClick={()=> navigate(`${row.view_path}/edit`) } color='primary'><Pencil /></CButton>)
-              }else if(buttonDef == 'view'){
-                return (<CButton key={`${row.id}-view`} type='button' onClick={()=> navigate(row.view_path) } color='secondary'><Eye /></CButton>)
-              }else if(buttonDef == 'delete'){
-                return (<CButton key={`${row.id}-delete`} type='button' onClick={()=> auth.request(pathname,{method: 'DELETE'}) }  color='danger'><X size={17} /></CButton>)
-              }
-            })}</>
-              )
-            })
-            // return buttonsStringElems.join('');
-        },
-        headerSort: false,
-        headerFilter: false,
-        frozen: true,
-      }
-    default:
-      return {
-        sorter: 'string',
-        formatter: column.formatter,
-        sorterParams: {
-          locale:true,
-          alignEmptyValues:"top",
-        },
-        headerSortStartingDir:"asc"
-      }
-  }
+      case 'money':
+        return {
+          formatter:"money",
+          formatterParams:{
+              decimal:".",
+              thousand:",",
+              symbol:"Rp",
+              negativeSign:true,
+          },
+          sorter: 'number',
+          sorterParams:{
+            thousandSeparator:",",
+            decimalSeparator:".",
+            alignEmptyValues:"top",
+          }
+        }
+      case 'action':
+        let listButtonDef = column.rowButtons
+        return {
+          formatter: (cell, formatterParams, onRendered)=>{
+              //cell - the cell component
+              //formatterParams - parameters set for the column
+              //onRendered - function to call when the formatter has been rendered
+              var row = cell.getData();
+              onRendered(()=>{
+                createRoot(cell.getElement()).render(
+                  <>{listButtonDef.map((buttonDef)=> {
+                if(buttonDef == 'edit'){
+                  return (<CButton key={`${row.id}-edit`} type='button' onClick={()=> navigate(`${row.view_path}/edit`) } color='primary'><Pencil /></CButton>)
+                }else if(buttonDef == 'view'){
+                  return (<CButton key={`${row.id}-view`} type='button' onClick={()=> navigate(row.view_path) } color='secondary'><Eye /></CButton>)
+                }else if(buttonDef == 'delete'){
+                  return (<CButton key={`${row.id}-delete`} type='button' onClick={()=> auth.request(pathname,{method: 'DELETE'}) }  color='danger'><X size={17} /></CButton>)
+                }
+              })}</>
+                )
+              })
+              // return buttonsStringElems.join('');
+          },
+          headerSort: false,
+          headerFilter: false,
+          frozen: true,
+        }
+      default:
+        return {
+          sorter: 'string',
+          formatter: column.formatter,
+          sorterParams: {
+            locale:true,
+            alignEmptyValues:"top",
+          },
+          headerSortStartingDir:"asc"
+        }
+    }
 
-}
+  }
 
   function _headerMenu(){
     return [
@@ -336,53 +335,64 @@ function AsyncReactTabulator({columns, ajaxURL,onRef}) {
     paginationInitialPage:1,
     paginationMode:"remote",
     paginationCounter:"rows",
+    ajaxRequestFunc: fetchData,
     ajaxConfig:{
       method:"GET", //set request type to Position
       headers: auth.defaultRequestHeader
     },
-    ajaxURLGenerator:function(path, config, params){
-      let newParam = {
-        page: params.page,
-        length: params.size,
-      }
-      if(params.filter.length > 0){
-        newParam.filter = _convertToNewFilter(params.filter)
-      }
-      if(params.sort.length > 0){
-        let sort = _convertToNewSort(params.sort)
-        newParam = Object.assign(newParam, sort)
-      }
-      return `${path}?params=${JSON.stringify(newParam)}`;
-    },
-
     dataReceiveParams:{
       "last_page":"total_pages",
     }
   }
 
+  function fetchData(path, config, params){
+    let newParam = {
+      page: params.page,
+      length: params.size,
+    }
+    if(params.filter.length > 0){
+      newParam.filter = _convertToNewFilter(params.filter)
+    }
+    if(params.sort.length > 0){
+      let sort = _convertToNewSort(params.sort)
+      newParam = Object.assign(newParam, sort)
+    }
+    return new Promise(function(resolve, reject){
+        auth.request(`${path}?params=${JSON.stringify(newParam)}`,{
+          method: config.method,
+          header: auth.defaultRequestHeader,
+          body: config.method ==='POST' ?  JSON.stringify(params) : null,
+        }).then((response)=>{
+          if(response.status === 200){
+            response.json().then((result)=>{
+              resolve(result)
+            })
+          }else{
+            reject()
+          }
+        })
+    })
+  }
   async function refreshTokenAndRefreh(tabulator){
-    let token = await auth.refreshToken()
-    if(token == null){
+    let newToken = await auth.refreshToken()
+    if(newToken == null){
       auth.navigate('/users/sign_in')
     }else{
-      console.log('same token',token === auth.token)
       tabulator.setData()
     }
-
-
   }
 
   React.useEffect(() => {
     let options = defaultOptions
     options = Object.assign(options,_deviceOption())
     let tabulator = new TabulatorFull(el, options)
-    tabulator.on("dataLoadError", function(error){
-      console.error('tabulator event error',error)
-      if(error.status ==401){
-        refreshTokenAndRefreh(tabulator)
-        auth.navigate('/users/sign_in')
-      }
-    });
+    // tabulator.on("dataLoadError", function(error){
+    //   console.error('tabulator event error',error)
+    //   if(error.status ==401){
+    //     refreshTokenAndRefreh(tabulator)
+    //     auth.navigate('/users/sign_in')
+    //   }
+    // });
     tabulator.on('tableDestroyed',()=> {
       Object.values(root).forEach((rootie)=>{rootie.unmount()})
     })
