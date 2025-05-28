@@ -27,7 +27,7 @@ Rails.application.routes.draw do
     post "users/refresh_token", to: "users/sessions#refresh_token"
   end
 
-  devise_for :users, controllers: {
+  devise_for :users,only:[:sessions], controllers: {
     sessions: 'users/sessions'
   }
 

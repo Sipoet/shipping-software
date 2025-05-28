@@ -1,5 +1,7 @@
+redis_host = ENV['REDIS_HOST'] || 'shipping_redis'
+redis_port = ENV['REDIS_PORT'] || '6369'
 Sidekiq.configure_server do |config|
-  config.redis = { url: 'redis://shipping_redis:6379/1' }
+  config.redis = { url: "redis://#{redis_host}:#{redis_port}/1" }
   config.logger.level = Rails.logger.level
   # config.on(:startup) do
   #   schedule_file = "#{Rails.root}/config/sidekiq_schedule.yml"
@@ -13,5 +15,5 @@ Sidekiq.configure_server do |config|
 end
 
 Sidekiq.configure_client do |config|
-  config.redis = { url: 'redis://shipping_redis:6379/1' }
+  config.redis = { url: "redis://#{redis_host}:#{redis_port}/1" }
 end
