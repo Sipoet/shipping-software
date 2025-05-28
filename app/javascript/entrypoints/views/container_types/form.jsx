@@ -3,7 +3,6 @@ import React  from 'react'
 import { FormHelper } from '~/lib/form_helper'
 import { useNavigate , useLoaderData, useOutletContext } from 'react-router'
 import { Eye, Pencil } from '@phosphor-icons/react'
-import { UnitInput } from '~/components/NumberInput'
 import { AuthContext } from '~/lib/context'
 import { createModel } from '~/lib/model'
 const ContainerTypeForm = () => {
@@ -66,6 +65,7 @@ const ContainerTypeForm = () => {
 
   React.useEffect(() =>  {
     setViewState(params.isViewState)
+    setRecord(params.record)
   }, [params.isViewState])
 
   function changeRecord(event){
@@ -96,10 +96,8 @@ const ContainerTypeForm = () => {
   function toggleNavigate(){
     if(viewState){
       navigate(`/container_types/${record.id}/edit` )
-      setViewState(false)
     }else{
       navigate(`/container_types/${record.id}`)
-      setViewState(true)
     }
   }
 
@@ -148,7 +146,7 @@ const ContainerTypeForm = () => {
               <CFormInput readOnly={viewState} type="text" id="containerType-name" label='Nama' invalid={error.name != null}  feedback={error.name} name='name' onChange={changeRecord} value={record.name}/>
             </CCol>
             <CCol className='mb-3' md={4}>
-              <CFormTextarea rows={3} readOnly={viewState}  id="containerType-description" label='Keterangan' invalid={error.description != null}  feedback={error.description} name='descrption' onChange={changeRecord} value={record.descrption} placeholder="keterangan tipe kontainer"/>
+              <CFormTextarea rows={3} readOnly={viewState}  id="containerType-description" label='Keterangan' invalid={error.description != null}  feedback={error.description} name='description' onChange={changeRecord} value={record.description} placeholder="keterangan tipe kontainer"/>
             </CCol>
           </CCardBody>
           <CCardFooter hidden={viewState}>

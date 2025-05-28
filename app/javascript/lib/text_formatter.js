@@ -5,7 +5,10 @@ import IMask from 'imask'
 const  DEFAULT_DATE_FORMAT = 'dd LLL yyyy'
 
 function phoneFormat(text){
-  return words(text,/\d+4/g).join(' ')
+  const phoneImask = IMask.createPipe({
+    mask: '+{62} 00 000 0000 0000',
+  })
+  return phoneImask(text)
 }
 
 function moneyFormat(money,currency='Rp.'){
@@ -25,7 +28,7 @@ function moneyFormat(money,currency='Rp.'){
 
 function numberFormat(number){
   number ||= '0'
-  const moneyImask = IMask.createPipe({
+  const numberImask = IMask.createPipe({
     mask: Number,
     scale: 5,
     thousandsSeparator: ',',
@@ -35,7 +38,7 @@ function numberFormat(number){
     mapToRadix: ['.'],
     autofix: true,
   })
-  return `${currency} ${moneyImask(number.toString())}`
+  return numberImask(number.toString())
 }
 
 function dateFormat(dateIso){

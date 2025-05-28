@@ -68,7 +68,7 @@ const ContainerForm = () => {
 
   React.useEffect(() =>  {
     setViewState(params.isViewState)
-    setRecord(record)
+    setRecord(params.record)
   }, [params.isViewState])
 
   function changeRecord(event){

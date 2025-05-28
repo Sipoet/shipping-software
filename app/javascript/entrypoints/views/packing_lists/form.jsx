@@ -80,6 +80,7 @@ const PackingListForm = () => {
 
   React.useEffect(() =>  {
     setViewState(params.isViewState)
+    setRecord(params.record)
   }, [params.isViewState])
 
 

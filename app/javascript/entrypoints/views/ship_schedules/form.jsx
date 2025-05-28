@@ -69,6 +69,7 @@ const ShipScheduleForm = () => {
 
   React.useEffect(() =>  {
     setViewState(params.isViewState)
+    setRecord(params.record)
   }, [params.isViewState])
 
   function changeRecord(event){
