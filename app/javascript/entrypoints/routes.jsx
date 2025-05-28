@@ -9,8 +9,6 @@ import { CSpinner } from '@coreui/react'
 const Dashboard = React.lazy(() => import('./views/home/Dashboard'))
 const CustomerData = React.lazy(() => import('./views/customers/index'))
 const CustomerForm = React.lazy(() => import('./views/customers/form'))
-const SupplierData = React.lazy(() => import('./views/suppliers/index'))
-const SupplierForm = React.lazy(() => import('./views/suppliers/form'))
 const AgentData = React.lazy(() => import('./views/agents/index'))
 const AgentForm = React.lazy(() => import('./views/agents/form'))
 const ShipData = React.lazy(() => import('./views/ships/index'))
@@ -116,10 +114,6 @@ const routerDef = createBrowserRouter( [
       { path: '/customers/new', loader: newLoader('Customer'), name: 'Buat Pelanggan', Component: CustomerForm, exact: true },
       { path: '/customers/:id', loader: viewLoader('Customer'), name: 'Detail Pelanggan', Component: CustomerForm },
       { path: '/customers/:id/edit',loader: editLoader('Customer'), name: 'Ubah Pelanggan', Component: CustomerForm },
-      { path: '/suppliers', name: 'Supplier', Component: SupplierData, exact: true },
-      { path: '/suppliers/new', loader: newLoader('Supplier'), name: 'Buat Supplier', Component: SupplierForm, exact: true },
-      { path: '/suppliers/:id', loader: viewLoader('Supplier'), name: 'Detail Supplier', Component: SupplierForm },
-      { path: '/suppliers/:id/edit',loader: editLoader('Supplier'), name: 'Ubah Supplier', Component: SupplierForm },
       { path: '/agents', name: 'Agen', Component: AgentData, exact: true },
       { path: '/agents/new', loader: newLoader('Agent'), name: 'Buat Agen', Component: AgentForm, exact: true },
       { path: '/agents/:id', loader: viewLoader('Agent'), name: 'Detail Agen', Component: AgentForm },

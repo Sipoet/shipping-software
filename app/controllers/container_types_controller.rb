@@ -35,7 +35,7 @@ class ContainerTypesController < ApplicationController
 
   def permit_params
     params.required(:container_type)
-          .permit(:name,:weight,:dimension_p,:dimension_l,:dimension_t)
+          .permit(:name,:description)
   end
 
   def find_record!
@@ -49,7 +49,9 @@ class ContainerTypesController < ApplicationController
       @records = @records.where(query_filter)
     end
     if result.search_text.present?
-      @records = @records.where('name ilike ?',"%#{result.search_text}%")
+      columns = ['name', 'description']
+      query = columns.map{|column|"#{column} ilike ?"}.join(' OR ')
+      @records = @records.where(query,*Array.new(columns.length){"%#{result.search_text}%"})
     end
     @records = @records.page(result.page)
                    .per(result.limit)

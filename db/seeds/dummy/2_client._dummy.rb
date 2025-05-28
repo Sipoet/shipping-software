@@ -20,14 +20,3 @@ end
     tax_account:SecureRandom.random_number(99999999999999).to_s,
     contact_number:'6284584048')
 end
-
-5.times do |index|
-  Supplier.find_or_create_by!(
-    name:"Supplier #{index + 1}",
-    address:'Jalan ',
-    bank:['bca','mandiri','bri'].sample,
-    bank_account:'12356',
-    bank_register_name:"Supplier #{Supplier.all.count + 1}",
-    tax_account:SecureRandom.random_number(99999999999999).to_s,
-    contact_number:'6284584048')
-end

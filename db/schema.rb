@@ -30,10 +30,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_25_031556) do
 
   create_table "container_types", force: :cascade do |t|
     t.string "name", null: false
-    t.decimal "weight", default: "0.0"
-    t.decimal "dimension_p", default: "0.0"
-    t.decimal "dimension_l", default: "0.0"
-    t.decimal "dimension_t", default: "0.0"
+    t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -83,13 +80,13 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_25_031556) do
     t.date "transaction_date", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["code"], name: "index_packing_lists_on_code", unique: true
   end
 
   create_table "ports", force: :cascade do |t|
     t.string "name", null: false
     t.string "city", null: false
     t.string "country", null: false
-    t.string "district"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

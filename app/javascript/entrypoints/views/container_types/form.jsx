@@ -1,4 +1,4 @@
-import {CAlert, CCol,CForm,CButton,CModal,CModalBody,CCard,CCardHeader,CCardBody,CRow,CCardFooter,CModalHeader,CModalTitle,CModalFooter,CFormInput,CToast, CToastBody, CToaster, CToastHeader } from '@coreui/react'
+import {CAlert, CCol,CForm,CButton,CModal,CModalBody,CCard,CCardHeader,CCardBody,CRow,CCardFooter,CModalHeader,CModalTitle,CModalFooter,CFormInput,CToast, CToastBody, CToaster, CToastHeader, CFormTextarea } from '@coreui/react'
 import React  from 'react'
 import { FormHelper } from '~/lib/form_helper'
 import { useNavigate , useLoaderData, useOutletContext } from 'react-router'
@@ -145,19 +145,11 @@ const ContainerTypeForm = () => {
               {message}
             </CAlert>
             <CCol className='mb-3' md={4}>
-              <CFormInput readOnly={viewState} type="text" id="containerType-name" label='Nama Kapal' invalid={error.name != null}  feedback={error.name} name='name' onChange={changeRecord} value={record.name} placeholder="nama kapal"/>
+              <CFormInput readOnly={viewState} type="text" id="containerType-name" label='Nama' invalid={error.name != null}  feedback={error.name} name='name' onChange={changeRecord} value={record.name}/>
             </CCol>
-            <CRow>
-              <CCol md={4}>
-                <UnitInput readOnly={viewState} groupMeasurement='length' type="text" id="containerType-dimension_p" label='Panjang' invalid={error.dimension_p != null}  feedback={error.dimension_p} name='dimension_p' onChange={changeRecord} value={record.dimension_p}/>
-              </CCol>
-              <CCol md={4}>
-                <UnitInput readOnly={viewState} groupMeasurement='length' type="text" id="containerType-dimension_l" label='Lebar' invalid={error.dimension_l != null}  feedback={error.dimension_l} name='dimension_l' onChange={changeRecord} value={record.dimension_l}/>
-              </CCol>
-              <CCol md={4}>
-                <UnitInput readOnly={viewState} groupMeasurement='length' type="text" id="containerType-dimension_t" label='Tinggi' invalid={error.dimension_t != null}  feedback={error.dimension_t} name='dimension_t' onChange={changeRecord} value={record.dimension_t}/>
-              </CCol>
-            </CRow>
+            <CCol className='mb-3' md={4}>
+              <CFormTextarea rows={3} readOnly={viewState}  id="containerType-description" label='Keterangan' invalid={error.description != null}  feedback={error.description} name='descrption' onChange={changeRecord} value={record.descrption} placeholder="keterangan tipe kontainer"/>
+            </CCol>
           </CCardBody>
           <CCardFooter hidden={viewState}>
             <CButton color="primary" type="submit">
