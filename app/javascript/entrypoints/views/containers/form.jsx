@@ -178,7 +178,7 @@ const ContainerForm = () => {
               <CustomAsyncSelect readOnly={viewState} cacheOptions path='/container_types.json' name='container_type_id' label="Tipe Kontainer" feedback={error.container_type} onChange={changeSelectRecord} optionLabel='container_type_name' value={{label: record.container_type_name,value: record.container_type_id}} placeholder="pilih Tipe Kontainer..." />
             </CCol>
             <CCol md={4}>
-              <CustomAsyncSelect readOnly={viewState} cacheOptions path='/ship_schedules.json' getOptionLabel={shipScheduleDetail} name='ship_schedule_id' label="Jadwal Kapal" feedback={error.ship_schedule} optionLabel='ship_schedule_detail' onChange={changeSelectRecord} value={{label: record.ship_schedule_detail,value: record.ship_schedule_id}} placeholder="pilih Jadwal kapal..." />
+              <CustomAsyncSelect isClearable readOnly={viewState} cacheOptions path='/ship_schedules.json' getOptionLabel={shipScheduleDetail} name='ship_schedule_id' label="Jadwal Kapal" feedback={error.ship_schedule} optionLabel='ship_schedule_detail' onChange={changeSelectRecord} value={{label: record.ship_schedule_detail,value: record.ship_schedule_id}} placeholder="pilih Jadwal kapal..." />
             </CCol>
             <CCol md={4}>
               <CustomAsyncSelect readOnly={viewState} cacheOptions path='/agents.json' name='agent_id' label="Agen Lorry" feedback={error.agent} onChange={changeSelectRecord} optionLabel='agent_name' value={{label: record.agent_name,value: record.agent_id}} placeholder="pilih Agen Lorry..." />

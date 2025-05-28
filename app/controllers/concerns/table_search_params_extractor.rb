@@ -29,7 +29,7 @@ module TableSearchParamsExtractor
       next if value.blank?
       if filter[:type] == 'like'
         query_filter << ApplicationRecord.sanitize_sql_array(["#{filter[:field]} ilike ?","%#{value.strip}%"])
-      elsif filter[:type] == 'eq'
+      elsif filter[:type] == '='
         query_filter << {filter[:field] => value}
       elsif filter[:type] == 'gt'
         query_filter << ApplicationRecord.sanitize_sql_array(["#{filter[:field]} > ?",value.strip])

@@ -9,6 +9,7 @@ function phoneFormat(text){
 }
 
 function moneyFormat(money,currency='Rp.'){
+  money ||= '0'
   const moneyImask = IMask.createPipe({
     mask: Number,
     scale: 2,
@@ -19,7 +20,22 @@ function moneyFormat(money,currency='Rp.'){
     mapToRadix: ['.'],
     autofix: true,
   })
-  return `${currency} ${moneyImask(money)}`
+  return `${currency} ${moneyImask(money.toString())}`
+}
+
+function numberFormat(number){
+  number ||= '0'
+  const moneyImask = IMask.createPipe({
+    mask: Number,
+    scale: 5,
+    thousandsSeparator: ',',
+    padFractionalZeros: false,
+    normalizeZeros: true,
+    radix: '.',
+    mapToRadix: ['.'],
+    autofix: true,
+  })
+  return `${currency} ${moneyImask(number.toString())}`
 }
 
 function dateFormat(dateIso){
@@ -34,4 +50,4 @@ function numberToWord(number){
   return indonesianNumInWords(toString(number))
 }
 
-export {phoneFormat, dateFormat,datetimeFormat,numberToWord, moneyFormat, DEFAULT_DATE_FORMAT}
+export {phoneFormat,numberFormat, dateFormat,datetimeFormat,numberToWord, moneyFormat, DEFAULT_DATE_FORMAT}

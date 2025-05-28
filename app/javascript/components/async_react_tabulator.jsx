@@ -128,7 +128,7 @@ function AsyncReactTabulator({columns, ajaxURL,onRef}) {
       case 'enum':
         let data = column.enum
         return {
-          formatter: _enumFormatter,
+          formatter: column.formatter || _enumFormatter,
           headerFilter: 'list',
           headerFilterParams:{
             multiselect: true,

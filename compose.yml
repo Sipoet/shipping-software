@@ -3,9 +3,9 @@ services:
     build: .
     image: shipping-app
     restart: on-failure
-    # command: bash -c "rm -f tmp/pids/server.pid && bin/dev"
+    command: bash -c "rm -f tmp/pids/server.pid && bin/dev"
     # command: bash -c "rm -f tmp/pids/server.pid && bin/rails s -b 0.0.0.0 -p 3000"
-    command: sleep 3600
+    # command: sleep 3600
     container_name: shipping-app
     volumes:
       # - .:/shipping-software
@@ -22,7 +22,7 @@ services:
       - ./package-lock.json:/shipping-software/package-lock.json
       - ./Gemfile:/shipping-software/Gemfile
       - ./Gemfile.lock:/shipping-software/Gemfile.lock
-      - ./Procfile.dev:/shipping-software/Procfile.dev
+      # - ./Procfile.dev:/shipping-software/Procfile.dev
     ports:
       - "${SERVER_PORT}:3000"
       - "3036:3036"
@@ -40,8 +40,10 @@ services:
         - PRODUCTION_DATABASE_PASSWORD=${PRODUCTION_DATABASE_PASSWORD}
         - RAILS_ENV=${RAILS_ENV}
         - PRODUCTION_DATABASE_HOST=${PRODUCTION_DATABASE_HOST}
-        - NODE_ENV = development
+        - NODE_ENV=${RAILS_ENV}
         - FAST_REFRESH=false
+        - REDIS_HOST=${REDIS_HOST}
+        - REDIS_PORT=${REDIS_PORT}
   background:
     image: shipping-app
     container_name: shipping-background
@@ -66,6 +68,8 @@ services:
         - PRODUCTION_DATABASE_PASSWORD=${PRODUCTION_DATABASE_PASSWORD}
         - RAILS_ENV=${RAILS_ENV}
         - PRODUCTION_DATABASE_HOST=${PRODUCTION_DATABASE_HOST}
+        - REDIS_HOST=${REDIS_HOST}
+        - REDIS_PORT=${REDIS_PORT}
   shipping_db:
     image: postgres:16.4-alpine3.20
     restart: always
@@ -82,6 +86,7 @@ services:
         - PRODUCTION_DATABASE_PASSWORD=${PRODUCTION_DATABASE_PASSWORD}
   shipping_redis:
     image: redis:7.2.3-alpine
+    command: /bin/sh -c "redis-server --port ${REDIS_PORT}"
     restart: always
     volumes:
       - D:\shipping_redis\:/data

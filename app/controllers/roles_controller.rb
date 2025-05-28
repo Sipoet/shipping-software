@@ -31,6 +31,10 @@ class RolesController < ApplicationController
     end
   end
 
+  def list_authorizations
+    send_file Rail.root.join('app','assets','json','authorizations.json')
+  end
+
   private
 
   def permit_params

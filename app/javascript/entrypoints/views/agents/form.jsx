@@ -1,12 +1,12 @@
 import {CAlert, CCol,CForm,CButton,CModal,CModalBody,CCard,CCardHeader,CCardBody,CCardFooter,CModalHeader,CModalTitle,CModalFooter,CFormInput,CToast, CToastBody, CToaster, CToastHeader, CFormTextarea } from '@coreui/react'
 import React  from 'react'
-import { FormHelper } from '~/lib/form_helper'
+import { FormHelper, changeCloneRecord } from '~/lib/form_helper'
 import { useNavigate , useLoaderData, useOutletContext } from 'react-router'
 import { Eye, Pencil } from '@phosphor-icons/react'
 import { PhoneInput } from '~/components/NumberInput'
 import {CustomAsyncSelect} from '~/components/CustomAsyncSelect'
 import { AuthContext } from '~/lib/context'
-import { createModel } from '~/lib/model'
+
 const AgentForm = () => {
   const params = useLoaderData()
   const [record,setRecord] = React.useState(params.record)
@@ -65,10 +65,7 @@ const AgentForm = () => {
   }
 
   function changeSelectRecord(selectValue,metadata){
-    record[metadata.optionLabel] = selectValue.label
-    record[metadata.name] = selectValue.value
-    const newRecord = createModel(record._modelName,record.attributes)
-    setRecord(newRecord)
+    setRecord((record)=> changeCloneRecord(record,[metadata.optionLabel,selectValue.label,metadata.name,selectValue.value]) )
   }
 
   React.useEffect(() =>  {
@@ -77,18 +74,13 @@ const AgentForm = () => {
 
   function changeRecord(event){
     const targetName = event.currentTarget.name
-    record[targetName] = event.currentTarget.value
-    const newRecord = createModel(record._modelName,record.attributes)
-    setRecord(newRecord)
+    const value = event.currentTarget.value
+    setRecord((record)=> changeCloneRecord(record,[targetName,value]) )
   }
 
   function changePhoneRecord(maskedValue,imask,event){
-    console.log(maskedValue,imask,event)
-    let targetName = event.currentTarget.name
-    record[targetName] = imask.unmaskedValue
-    const newRecord = createModel(record._modelName,record.attributes)
-    setRecord(newRecord)
-    console.log(record[targetName])
+    const targetName = event.currentTarget.name
+    setRecord((record)=> changeCloneRecord(record,[targetName,imask.unmaskedValue]) )
   }
 
   function confirmDelete(){

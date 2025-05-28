@@ -12,7 +12,6 @@ Rails.application.routes.draw do
     resources :packing_lists, except: [:new,:edit,:destroy]
     resources :roles, except: [:new,:edit,:destroy]
     resources :container_types, except: [:new,:edit,:destroy]
-    resources :suppliers, except: [:new,:edit,:destroy]
     resources :customers, except: [:new,:edit,:destroy]
     resources :agents, except: [:new,:edit,:destroy]
     resources :packing_details, except: [:new,:edit]

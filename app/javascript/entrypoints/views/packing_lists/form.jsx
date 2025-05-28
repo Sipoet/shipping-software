@@ -1,6 +1,6 @@
 import {CAlert,CTableCaption,CCol,CForm,CButton,CTableHead,CTableRow,CTableBody,CTableDataCell,CTableHeaderCell,CModal,CModalBody,CCard,CCardHeader,CCardBody,CCardFooter,CModalHeader,CModalTitle,CModalFooter,CFormInput,CToast, CToastBody, CToaster, CToastHeader, CRow, CFormTextarea, CTable } from '@coreui/react'
 import React  from 'react'
-import { FormHelper } from '~/lib/form_helper'
+import { FormHelper,changeCloneRecord } from '~/lib/form_helper'
 import { useNavigate , useLoaderData, useOutletContext } from 'react-router'
 import { Eye, Pencil, Plus, Printer, X } from '@phosphor-icons/react'
 import  {CustomAsyncSelect}  from '~/components/CustomAsyncSelect'
@@ -8,7 +8,7 @@ import { UnitInput,NumberInput,MoneyInput } from '~/components/NumberInput'
 import { useReactToPrint } from "react-to-print";
 import InvoicePrint from './invoice_print'
 import { AuthContext } from '~/lib/context'
-import { createModel } from '~/lib/model'
+import {createModel} from '~/lib/model'
 
 const PackingListForm = () => {
   const printContentRef = React.useRef(null);
@@ -18,6 +18,7 @@ const PackingListForm = () => {
   });
   const company = {name: 'PT. Cipta Karya',city: 'Surabaya',address:'Jl Kalianget',contact_numbers:['021 32322','6282148473']}
   const params = useLoaderData()
+  params.record.packing_details ||= []
   const [record,setRecord] = React.useState(params.record)
   const [packingDetails,setPackingDetails] = React.useState(record.packing_details)
   const [visible, setVisible] = React.useState(false)
@@ -81,24 +82,21 @@ const PackingListForm = () => {
     setViewState(params.isViewState)
   }, [params.isViewState])
 
-  function changeRecord(event){
-    const targetName = event.currentTarget.name
-    record[targetName] = event.currentTarget.value
-    const newRecord = createModel(record._modelName,record.attributes)
-    setRecord(newRecord)
-  }
 
   function changeNumberRecord(maskedValue,imask,event){
-    let targetName = event.currentTarget.name
-    record[targetName] = parseFloat(imask.unmaskedValue)
-    setRecord(record)
+    const targetName = event.currentTarget.name
+    const value = parseFloat(imask.unmaskedValue)
+    setRecord((record)=> changeCloneRecord(record,[targetName,value]) )
+  }
+
+  function changeRecord(event){
+    const targetName = event.currentTarget.name
+    const value = event.currentTarget.value
+    setRecord((record)=> changeCloneRecord(record,[targetName,value]) )
   }
 
   function changeSelectRecord(selectValue,metadata){
-    record[metadata.optionLabel] = selectValue.label
-    record[metadata.name] = selectValue.value
-    const newRecord = createModel(record._modelName,record.attributes)
-    setRecord(newRecord)
+    setRecord((record)=> changeCloneRecord(record,[metadata.optionLabel,selectValue.label,metadata.name,selectValue.value]) )
   }
 
   function confirmDelete(){
@@ -125,7 +123,7 @@ const PackingListForm = () => {
     }
   }
   function addDetail(){
-    let packingDetail = createModel('PackingList',{
+    let packingDetail = createModel('PackingDetail',{
       packing_list_id: record.id,_rowIndex: packingDetails.length,
       weight_uom:'kg',
       volume_uom:'m3',
@@ -205,7 +203,7 @@ const PackingListForm = () => {
               <CustomAsyncSelect readOnly={viewState} cacheOptions path='/customers.json' name='receiver_id' label="Penerima" feedback={error.receiver} onChange={changeSelectRecord} defaultValue={{label: record.receiver_name,value: record.receiver_id}}  />
             </CCol>
             <CCol className='mb-3' md={4}>
-              <CustomAsyncSelect readOnly={viewState} cacheOptions path='/containers.json' name='container_id' label="Kontainer" feedback={error.container} onChange={changeSelectRecord} defaultValue={{label: record.container_number,value: record.container_id}}  />
+              <CustomAsyncSelect readOnly={viewState} isClearable cacheOptions path='/containers.json' name='container_id' label="Kontainer" feedback={error.container} onChange={changeSelectRecord} defaultValue={{label: record.container_number,value: record.container_id}}  />
             </CCol>
             <CCol className='mb-3' md={4}>
               <CFormTextarea readOnly={viewState} id="packingList-description" label='Deskripsi' invalid={error.description != null}  feedback={error.description} name='description' onChange={changeRecord} value={record.description} />
@@ -271,47 +269,23 @@ const PackingListForm = () => {
 
 function PackingDetailRowForm(props){
   const [record,setRecord] = React.useState(props.record)
-  const [error, setError] = React.useState({})
-  const [auth,setAuth] = React.useContext(AuthContext)
-  const formHelper = new FormHelper(auth)
-  function toggleNavigate(){
-    setViewState(!viewState)
-  }
-  function handleSubmit(event) {
+  const [error, setError] = React.useState(props.error||{})
 
-    event.preventDefault()
-    event.stopPropagation()
-    let isNewRecord = record.isNewRecord
-    formHelper.saveRecord(record,progressOptions).then((result)=>{
-      if(result.isSuccess){
-        setError({})
-        setRecord(result.record)
-        props.showSuccessNotif(result.message)
-      }else{
-        setError(result.error)
-        props.showErrorNotif(result.message)
-      }
-    })
+
+  function changeNumberRecord(maskedValue,imask,event){
+    const targetName = event.currentTarget.name
+    const value = parseFloat(imask.unmaskedValue)
+    setRecord((record)=> changeCloneRecord(record,[targetName,value]) )
   }
 
   function changeRecord(event){
     const targetName = event.currentTarget.name
-    record[targetName] = event.currentTarget.value
-    const newRecord = createModel(record._modelName,record.attributes)
-    setRecord(newRecord)
-  }
-
-  function changeNumberRecord(maskedValue,imask,event){
-    let targetName = event.currentTarget.name
-    record[targetName] = parseFloat(imask.unmaskedValue)
-    setRecord(record)
+    const value = event.currentTarget.value
+    setRecord((record)=> changeCloneRecord(record,[targetName,value]) )
   }
 
   function changeSelectRecord(selectValue,metadata){
-    const targetName = metadata.name
-    record[targetName] = selectValue.value
-    const newRecord = createModel('Container',record.attributes)
-    setRecord(newRecord)
+    setRecord((record)=> changeCloneRecord(record,[metadata.optionLabel,selectValue.label,metadata.name,selectValue.value]) )
   }
 
   return (

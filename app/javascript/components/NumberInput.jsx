@@ -29,7 +29,6 @@ function NumberInput({onChange,...props}){
 function MoneyInput({onChange,label,...props}){
 
   if(props.plainText && props.readOnly){
-    console.log(label)
     return (<>
         <CRow>
           <CFormLabel hidden={label == null} htmlFor={props.id} className="col-sm-3 col-form-label">{label}:</CFormLabel>
@@ -97,25 +96,43 @@ function UnitInput({label,groupMeasurement,uom,measurementName,onChange,onMeasur
         return dimensionOptions
     }
   }
+  function uomFormat(){
+    const options = optionsOf(groupMeasurement)
+    return options.find((e)=> e.value === uom)?.value
+  }
 
-  return(
-    <>
-      <CFormLabel hidden={label == null} htmlFor="basic-url">{label}</CFormLabel>
-      <CInputGroup className="mb-3">
-        <CFormInputWithMask
-          {...props}
-          mask={Number}
-          scale="2"
-          onAccept={onChange}
-          thousandsSeparator=','
-          normalizeZeros={true}
-          mapToRadix= {['.']}
-          aria-describedby="money-addon"
-          radix='.' autofix={true} />
-        <CFormSelect readOnly={props.readOnly} className='uom-select' disabled={props.disabled} options={optionsOf(groupMeasurement)} name={measurementName} onChange={onMeasurementChange} defaultValue={uom} placeholder='Satuan...'></CFormSelect>
-      </CInputGroup>
-    </>
-  )
+  if(props.plainText && props.readOnly){
+    return (<>
+        <CRow>
+          <CFormLabel hidden={label == null} htmlFor={props.id} className="col-sm-3 col-form-label">{label}:</CFormLabel>
+          <CCol sm={9} className='pt-2'>
+            {numberFormat(props.value || props.defaultValue)} {uomFormat()}
+          </CCol>
+        </CRow>
+    </>)
+  }
+  else{
+    return(
+      <>
+        <CFormLabel hidden={label == null} htmlFor="basic-url">{label}</CFormLabel>
+        <CInputGroup className="mb-3">
+          <CFormInputWithMask
+            {...props}
+            mask={Number}
+            scale="2"
+            onAccept={onChange}
+            thousandsSeparator=','
+            normalizeZeros={true}
+            mapToRadix= {['.']}
+            aria-describedby="money-addon"
+            radix='.' autofix={true} />
+          <CFormSelect readOnly={props.readOnly} className='uom-select' disabled={props.disabled} options={optionsOf(groupMeasurement)} name={measurementName} onChange={onMeasurementChange} defaultValue={uom} placeholder='Satuan...'></CFormSelect>
+        </CInputGroup>
+      </>
+    )
+  }
+
+
 }
 
 function PhoneInput({onChange,...props}){

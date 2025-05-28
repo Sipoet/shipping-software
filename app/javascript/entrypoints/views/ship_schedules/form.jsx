@@ -1,4 +1,4 @@
-import {CAlert, CCol,CForm,CButton,CModal,CModalBody,CCard,CCardHeader,CCardBody,CCardTitle,CCardFooter,CModalHeader,CModalTitle,CModalFooter,CFormInput,CToast, CToastBody, CToaster, CToastHeader, CRow } from '@coreui/react'
+import {CAlert,CFormLabel,CCol,CForm,CButton,CModal,CModalBody,CCard,CCardHeader,CCardBody,CCardTitle,CCardFooter,CModalHeader,CModalTitle,CModalFooter,CFormInput,CToast, CToastBody, CToaster, CToastHeader, CRow } from '@coreui/react'
 import React  from 'react'
 import { FormHelper,changeCloneRecord } from '~/lib/form_helper'
 import { useNavigate , useLoaderData, useOutletContext } from 'react-router'
@@ -7,6 +7,7 @@ import  {CustomAsyncSelect}  from '~/components/CustomAsyncSelect'
 import { AuthContext } from '~/lib/context'
 import RecordActions from '~/components/RecordActions'
 import ConfirmModal from '~/components/ConfirmModal'
+import ShipScheduleStatusBadge from './status_badge'
 const ShipScheduleForm = () => {
   const params = useLoaderData()
   const [record,setRecord] = React.useState(params.record)
@@ -390,7 +391,14 @@ const ShipScheduleForm = () => {
             </CAlert>
 
               <CCol md={4} className='mb-3' hidden={record.isNewRecord}>
-                <CFormInput readOnly={true}  type="text" id="shipSchedule-status" label='Status' invalid={error.status != null}  feedback={error.status} name='status' onChange={changeRecord} value={record.status} placeholder="Status"/>
+                <CRow>
+                  <CFormLabel htmlFor="status" className="col-form-label">
+                    Status:
+                  </CFormLabel>
+                  {/* <CCol lg={8}> */}
+                    <ShipScheduleStatusBadge value={record.status} id="inputEmail3" />
+                  {/* </CCol> */}
+                </CRow>
               </CCol>
 
               <CCol md={4} className='mb-3'>

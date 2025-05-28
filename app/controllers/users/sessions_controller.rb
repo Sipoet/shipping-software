@@ -9,7 +9,6 @@ class Users::SessionsController < Devise::SessionsController
 
   # GET /resource/sign_in
   def new
-    # super
     render_home
   end
 
@@ -17,18 +16,15 @@ class Users::SessionsController < Devise::SessionsController
   def create
     permitted_params = params.required(:user).permit(:username,:password)
     user = User.find_for_authentication(username: permitted_params[:username])
-    if user.blank?
-      render_invalid_username_or_password
-      return
-    end
-    if !user.active?
-      render_user_not_active
-      return
-    end
+
+    return render_invalid_username_or_password if user.blank?
+
+    return render_user_not_active if !user.active?
+
     if user.valid_password?(permitted_params[:password])
       sign_in user, store: false
       response.set_cookie("refresh_token", RefreshTokenGenerator.new(user).cookie)
-      render json: {token: user.jti, location: after_sign_in_path_for(user)}
+      render json: {message: 'Success Masuk', location: after_sign_in_path_for(user)}
     else
       render_invalid_username_or_password
     end
@@ -36,7 +32,6 @@ class Users::SessionsController < Devise::SessionsController
 
   def refresh_token
     refresh_token = request.cookies["refresh_token"]
-
     return render json: {message: "Token is required"}, status: :unauthorized if refresh_token.nil?
 
     begin
@@ -44,8 +39,6 @@ class Users::SessionsController < Devise::SessionsController
       current_user = User.find_by(id: payload["sub"], jti: payload["jti"])
       return render json: {message: "Token is invalid"}, status: :unauthorized if current_user.nil?
       current_user.update!(jti: SecureRandom.uuid)
-
-
       new_token = Warden::JWTAuth::UserEncoder.new.call(current_user, :user, nil).first
       response.set_header("Authorization", "Bearer #{new_token}")
       response.set_cookie("refresh_token", RefreshTokenGenerator.new(current_user).cookie)
