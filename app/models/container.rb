@@ -11,5 +11,6 @@ class Container < ApplicationRecord
   belongs_to :agent, class_name: 'Client'
   belongs_to :container_type, optional: true
   belongs_to :ship_schedule, inverse_of: :containers, optional: true
+  has_many :packing_lists, inverse_of: :container
   has_one :ship, through: :ship_schedule
 end

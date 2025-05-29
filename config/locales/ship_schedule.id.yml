@@ -21,7 +21,7 @@ id:
           cancelled: 'DiBatalkan'
           port_processed: 'Diproses Pelabuhan'
           si_released: 'Shipment of Instruction keluar'
-          ship_aboard: 'Kapal Berangkat'
+          ship_depart: 'Kapal Berangkat'
           arrived_to_destination: 'Kapal Sampai Tujuan'
           completed: 'Selesai'
         dorry_container_opened_at: 'Tanggal Bongkar Kontainer di Tujuan'

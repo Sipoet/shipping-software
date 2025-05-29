@@ -30,15 +30,67 @@ class ShipSchedulesController < ApplicationController
     end
   end
 
-  ShipSchedule.statuses.each do |key, int_value|
+  [:draft,:cancelled,:port_processed].each do |key|
     define_method("set_#{key}") do
       find_record!
       result = @record.send("#{key}!") rescue false
-      if result == false
-        render_json_error(@record)
+      if result
+        render json: {message:"sukses ganti status ke #{key}"}, status: :ok
       else
-        render json: {message:'sukses ganti status'}, status: :ok
+        render_json_error(@record)
       end
+    end
+  end
+
+  def set_si_released
+    find_record!
+    permitted_params = params
+                        .required(:ship_schedule)
+                        .permit(:actual_arrived_sour_at, :booking_code)
+    @record.attributes = permitted_params
+    if (@record.si_released! rescue false)
+      render json: {message:'sukses ganti status ke SI Released'}, status: :ok
+    else
+      render_json_error(@record)
+    end
+  end
+
+  def set_ship_depart
+    find_record!
+    permitted_params = params
+                        .required(:ship_schedule)
+                        .permit(:actual_departure_sour_at)
+    @record.attributes = permitted_params
+    if (@record.ship_depart! rescue false)
+      render json: {message:'sukses ganti status ke Kapal Berangkat'}, status: :ok
+    else
+      render_json_error(@record)
+    end
+  end
+
+  def set_arrived_to_destination
+    find_record!
+    permitted_params = params
+                        .required(:ship_schedule)
+                        .permit(:actual_arrived_dest_at)
+    @record.attributes = permitted_params
+    if (@record.arrived_to_destination! rescue false)
+      render json: {message:'sukses ganti status ke Kapal Sampai di Tujuan'}, status: :ok
+    else
+      render_json_error(@record)
+    end
+  end
+
+  def set_completed
+    find_record!
+    permitted_params = params
+                        .required(:ship_schedule)
+                        .permit(:dorry_container_opened_at)
+    @record.attributes = permitted_params
+    if (@record.completed! rescue false)
+      render json: {message:'sukses ganti status ke Selesai'}, status: :ok
+    else
+      render_json_error(@record)
     end
   end
 

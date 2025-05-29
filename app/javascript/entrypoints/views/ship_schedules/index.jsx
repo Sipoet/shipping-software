@@ -25,10 +25,10 @@ const ShipScheduleIndex = () => {
 
   const columns = [
     {title:'Kapal',field:'ship_name',width:170,fieldType:'link',linkLabel:'name',sortKey:'ships.name',recordPath: 'ship_path',filterField:'ship_id'},
-    {title:'Status',field:'status',width:150,fieldType:'enum',formatter:statusFormat,enum:[{label:'draft',value:'draft'},{label:'completed',value:'completed'},{label:'cancelled',value:'cancelled'},{label:'port_processed',value:'port_processed'},{label:'ship_aboard',value:'ship_aboard'},{label:'si_released',value:'si_released'},{label:'arrived_to_destination',value:'arrived_to_destination'}]},
+    {title:'Status',field:'status',width:150,fieldType:'enum',formatter:statusFormat,enum:[{label:'draft',value:'draft'},{label:'completed',value:'completed'},{label:'cancelled',value:'cancelled'},{label:'port_processed',value:'port_processed'},{label:'ship_depart',value:'ship_depart'},{label:'si_released',value:'si_released'},{label:'arrived_to_destination',value:'arrived_to_destination'}]},
     {title:'Voyage',field:'voyage',width:170},
-    {title:'Pelabuhan Muatan',field:'loading_port_detail',width:170, fieldType:'link',linkLabel:'name',sortKey:'loading_ports.name',recordPath: 'loading_port_path',filterField:'loading_port_id'},
-    {title:'Pelabuhan Tujuan',field:'destination_port_detail',width:170, fieldType:'link',linkLabel:'name',sortKey:'destination_ports.name',recordPath: 'destination_port_path',filterField:'destination_port_id'},
+    {title:'Pelabuhan Muatan',field:'loading_port_detail',width:200, fieldType:'link',linkLabel:'name',sortKey:'loading_ports.name',recordPath: 'loading_port_path',filterField:'loading_port_id'},
+    {title:'Pelabuhan Tujuan',field:'destination_port_detail',width:200, fieldType:'link',linkLabel:'name',sortKey:'destination_ports.name',recordPath: 'destination_port_path',filterField:'destination_port_id'},
     {title:'Tgl Estimasi Mendarat Muatan', field:'estimated_arrived_sour_at', fieldType:'datetime', width:150},
     {title:'Tgl Estimasi Berangkat', field:'estimated_departure_sour_at', fieldType:'datetime', width:150},
     {title:'Tgl Estimasi Mendarat Tujuan', field:'estimated_arrived_dest_at', fieldType:'datetime', width:150},

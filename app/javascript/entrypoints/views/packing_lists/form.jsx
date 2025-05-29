@@ -9,6 +9,7 @@ import { useReactToPrint } from "react-to-print";
 import InvoicePrint from './invoice_print'
 import { AuthContext } from '~/lib/context'
 import {createModel} from '~/lib/model'
+import { KDatePicker } from '~/components/KDatePicker'
 
 const PackingListForm = () => {
   const printContentRef = React.useRef(null);
@@ -88,6 +89,10 @@ const PackingListForm = () => {
     const targetName = event.currentTarget.name
     const value = parseFloat(imask.unmaskedValue)
     setRecord((record)=> changeCloneRecord(record,[targetName,value]) )
+  }
+
+  function changeDateRecord(date,name){
+    setRecord((record)=> changeCloneRecord(record,[name,date]) )
   }
 
   function changeRecord(event){
@@ -195,7 +200,7 @@ const PackingListForm = () => {
               <CFormInput readOnly={viewState} id="packingList-code" label='Nota Transaksi' invalid={error.code != null}  feedback={error.code} name='code' onChange={changeRecord} value={record.code}   />
             </CCol>
             <CCol className='mb-3' md={4}>
-              <CFormInput readOnly={viewState} type='datetime-local' id="packingList-transactionDate" label='Tanggal Transaksi' invalid={error.transaction_date != null}  feedback={error.transaction_date} name='transaction_date' onChange={changeRecord} value={record.transaction_date}   />
+              <KDatePicker readOnly={viewState} id="packingList-transactionDate" label='Tanggal Transaksi' invalid={error.transaction_date != null}  feedback={error.transaction_date} name='transaction_date' onChange={changeDateRecord} value={record.transaction_date}   />
             </CCol>
             <CCol className='mb-3' md={4}>
               <CustomAsyncSelect readOnly={viewState} cacheOptions path='/customers.json' name='sender_id' label="Pengirim" feedback={error.sender} onChange={changeSelectRecord} defaultValue={{label: record.sender_name,value: record.sender_id}}  />

@@ -58,7 +58,7 @@ function CustomAsyncSelect({path,filter,onChange,optionLabel,feedback,limit = 10
         additional={1}
         loadOptions={selectLoader}
         onChange={onSelectChange}
-        className={feedback != null ? 'is-invalid':null}
+        className={feedback != null ? 'is-invalid custom-react-select':'custom-react-select'}
         debounceTimeout={300}
         {...props} />
       <CFormFeedback invalid>{feedback}</CFormFeedback>

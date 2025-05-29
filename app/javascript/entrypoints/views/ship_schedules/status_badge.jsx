@@ -7,7 +7,7 @@ function ShipScheduleStatusBadge({value}){
     cancelled: 'danger',
     port_processed: 'info',
     si_released: 'info',
-    ship_aboard: 'info',
+    ship_depart: 'info',
     arrived_to_destination: 'info',
     completed: 'success'
   }
@@ -16,7 +16,7 @@ function ShipScheduleStatusBadge({value}){
     cancelled: 'Batal',
     port_processed: 'Konfirm',
     si_released: 'Shipment of Instruction keluar',
-    ship_aboard: 'Kapal Berangkat',
+    ship_depart: 'Kapal Berangkat',
     arrived_to_destination: 'Kapal sampai di Tujuan',
     completed: 'Selesai'
   }

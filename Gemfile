@@ -43,11 +43,12 @@ gem 'devise-jwt'
 gem 'kaminari', '~> 1.2.2'
 gem 'vite_rails','~> 3.0.19'
 gem 'foreman','~> 0.88.1'
+gem 'validates_timeliness', '~> 7.0.0'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
-
+  # gem 'ffaker'
   # Static analysis for security vulnerabilities [https://brakemanscanner.org/]
   gem "brakeman", require: false
 

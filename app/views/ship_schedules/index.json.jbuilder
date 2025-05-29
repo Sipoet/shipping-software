@@ -12,14 +12,14 @@ json.data do
     end
     loading_port = record.loading_port
     if loading_port.present?
-      json.loading_port_detail "#{loading_port.try(:name)} - #{loading_port.try(:city)}"
+      json.loading_port_detail "#{loading_port.city} (#{loading_port.name})"
       json.loading_port_id record.loading_port_id
       json.loading_port_path port_path(record.loading_port_id)
     end
     destination_port = record.destination_port
     if destination_port.present?
       json.destination_port_id record.destination_port_id
-      json.destination_port_detail "#{destination_port.try(:name)} - #{destination_port.try(:city)}"
+      json.destination_port_detail "#{destination_port.city} (#{destination_port.name})"
       json.destination_port_path port_path(record.destination_port_id)
     end
     json.estimated_arrived_sour_at record.estimated_arrived_sour_at

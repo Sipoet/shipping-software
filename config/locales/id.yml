@@ -138,6 +138,14 @@ id:
       wrong_length:
         one: jumlah karakter salah (seharusnya %{count} karakter)
         other: jumlah karakter salah (seharusnya %{count} karakter)
+      invalid_date: "Tanggal tidak valid"
+      invalid_time: "Waktu tidak valid"
+      invalid_datetime: "Tanggal dan waktu tidak valid"
+      is_at: "Harus tanggal %{restriction}"
+      before: "Harus sebelum %{restriction}"
+      on_or_before: "Harus sebelum atau sama dengan %{restriction}"
+      after: "Harus Setelah %{restriction}"
+      on_or_after: "Harus setelah atau sama dengan %{restriction}"
     template:
       body: 'Ada masalah dengan field berikut:'
       header:
@@ -216,3 +224,8 @@ id:
         created_at: "Tanggal Dibuat"
         updated_at: "Tanggal Diubah"
         id: "ID"
+  validates_timeliness:
+    error_value_formats:
+      date: '%d %b %Y'
+      time: '%H:%M'
+      datetime: '%d %b %Y %H:%M'

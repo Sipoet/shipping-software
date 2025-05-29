@@ -26,3 +26,17 @@
     margin: 0.25rem 0.125rem;
   }
 }
+
+:root {
+  .bg-light, .bg-success, .bg-warning{
+    --cui-badge-color: black;
+  }
+}
+
+.react-datepicker-popper{
+  z-index: 1036 !important;
+}
+
+.is-invalid.custom-react-select div{
+  border-color: var(--cui-form-invalid-border-color);
+}

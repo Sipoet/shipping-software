@@ -114,7 +114,7 @@ function UnitInput({label,groupMeasurement,uom,measurementName,onChange,onMeasur
   else{
     return(
       <>
-        <CFormLabel hidden={label == null} htmlFor="basic-url">{label}</CFormLabel>
+        <CFormLabel hidden={label == null} htmlFor={props.id}>{label}</CFormLabel>
         <CInputGroup className="mb-3">
           <CFormInputWithMask
             {...props}
@@ -126,7 +126,7 @@ function UnitInput({label,groupMeasurement,uom,measurementName,onChange,onMeasur
             mapToRadix= {['.']}
             aria-describedby="money-addon"
             radix='.' autofix={true} />
-          <CFormSelect readOnly={props.readOnly} className='uom-select' disabled={props.disabled} options={optionsOf(groupMeasurement)} name={measurementName} onChange={onMeasurementChange} defaultValue={uom} placeholder='Satuan...'></CFormSelect>
+          <CFormSelect readOnly={props.readOnly} id={props.id} className='uom-select' disabled={props.disabled} options={optionsOf(groupMeasurement)} name={measurementName} onChange={onMeasurementChange} defaultValue={uom} placeholder='Satuan...'></CFormSelect>
         </CInputGroup>
       </>
     )

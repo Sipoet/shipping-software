@@ -141,6 +141,14 @@ en:
       wrong_length:
         one: is the wrong length (should be %{count} character)
         other: is the wrong length (should be %{count} characters)
+      invalid_date: "is not a valid date"
+      invalid_time: "is not a valid time"
+      invalid_datetime: "is not a valid datetime"
+      is_at: "must be at %{restriction}"
+      before: "must be before %{restriction}"
+      on_or_before: "must be on or before %{restriction}"
+      after: "must be after %{restriction}"
+      on_or_after: "must be on or after %{restriction}"
     template:
       body: 'There were problems with the following fields:'
       header:
@@ -224,3 +232,8 @@ en:
         created_at: "Created At"
         updated_at: "Updated At"
         id: "ID"
+  validates_timeliness:
+    error_value_formats:
+      date: '%m/%d/%Y'
+      time: '%H:%M:%S'
+      datetime: '%m/%d/%Y %H:%M:%S'
