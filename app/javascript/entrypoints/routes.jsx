@@ -1,36 +1,36 @@
 import React from 'react'
 import { createBrowserRouter,data,isRouteErrorResponse,useNavigate,useRouteError } from 'react-router'
-import DefaultLayout from './views/layouts/default_layout'
+import DefaultLayout from '~/views/layouts/default_layout'
 import { FormHelper } from '~/lib/form_helper'
 import { createModel } from '~/lib/model'
 import {Auth} from '~/lib/auth'
 import { CSpinner } from '@coreui/react'
 
-const Dashboard = React.lazy(() => import('./views/home/Dashboard'))
-const CustomerData = React.lazy(() => import('./views/customers/index'))
-const CustomerForm = React.lazy(() => import('./views/customers/form'))
-const AgentData = React.lazy(() => import('./views/agents/index'))
-const AgentForm = React.lazy(() => import('./views/agents/form'))
-const ShipData = React.lazy(() => import('./views/ships/index'))
-const ShipForm = React.lazy(() => import('./views/ships/form'))
-const PortData = React.lazy(() => import('./views/ports/index'))
-const PortForm = React.lazy(() => import('./views/ports/form'))
-const ContainerData = React.lazy(() => import('./views/containers/index'))
-const ContainerForm = React.lazy(() => import('./views/containers/form'))
-const ContainerTypeData = React.lazy(() => import('./views/container_types/index'))
-const ContainerTypeForm = React.lazy(() => import('./views/container_types/form'))
-const ShipScheduleData = React.lazy(() => import('./views/ship_schedules/index'))
-const ShipScheduleForm = React.lazy(() => import('./views/ship_schedules/form'))
-const PackingListData = React.lazy(() => import('./views/packing_lists/index'))
-const PackingListForm = React.lazy(() => import('./views/packing_lists/form'))
-const ProductData = React.lazy(() => import('./views/products/index'))
-const ProductForm = React.lazy(() => import('./views/products/form'))
-const UserData = React.lazy(() => import('./views/users/index'))
-const UserForm = React.lazy(() => import('./views/users/form'))
-const RoleData = React.lazy(() => import('./views/roles/index'))
-const RoleForm = React.lazy(() => import('./views/roles/form'))
-const LoginForm = React.lazy(() => import('./views/user_sessions/form'))
-
+const Dashboard = React.lazy(() => import('~/views/home/Dashboard'))
+const CustomerData = React.lazy(() => import('~/views/customers/index'))
+const CustomerForm = React.lazy(() => import('~/views/customers/form'))
+const AgentData = React.lazy(() => import('~/views/agents/index'))
+const AgentForm = React.lazy(() => import('~/views/agents/form'))
+const ShipData = React.lazy(() => import('~/views/ships/index'))
+const ShipForm = React.lazy(() => import('~/views/ships/form'))
+const PortData = React.lazy(() => import('~/views/ports/index'))
+const PortForm = React.lazy(() => import('~/views/ports/form'))
+const ContainerData = React.lazy(() => import('~/views/containers/index'))
+const ContainerForm = React.lazy(() => import('~/views/containers/form'))
+const ContainerTypeData = React.lazy(() => import('~/views/container_types/index'))
+const ContainerTypeForm = React.lazy(() => import('~/views/container_types/form'))
+const ShipScheduleData = React.lazy(() => import('~/views/ship_schedules/index'))
+const ShipScheduleForm = React.lazy(() => import('~/views/ship_schedules/form'))
+const PackingListData = React.lazy(() => import('~/views/packing_lists/index'))
+const PackingListForm = React.lazy(() => import('~/views/packing_lists/form'))
+const ProductData = React.lazy(() => import('~/views/products/index'))
+const ProductForm = React.lazy(() => import('~/views/products/form'))
+const UserData = React.lazy(() => import('~/views/users/index'))
+const UserForm = React.lazy(() => import('~/views/users/form'))
+const RoleData = React.lazy(() => import('~/views/roles/index'))
+const RoleForm = React.lazy(() => import('~/views/roles/form'))
+const LoginForm = React.lazy(() => import('~/views/user_sessions/form'))
+const CompanyForm = React.lazy(() => import('~/views/company/form'))
 function newLoader(modelName){
   return async (route)=>{
     let record = createModel(modelName,{id: null})
@@ -40,7 +40,7 @@ function newLoader(modelName){
 
 function viewLoader(modelName){
   return async (route)=>{
-    const auth = new Auth({setToken:()=>{}})
+    const auth = new Auth()
     const formHelper = new FormHelper(auth)
     let record = await formHelper.findRecord(modelName,route.params.id)
     if(!record){
@@ -52,7 +52,7 @@ function viewLoader(modelName){
 
 function editLoader(modelName){
   return async (route)=>{
-    const auth = new Auth({setToken:()=>{}})
+    const auth = new Auth()
     const formHelper = new FormHelper(auth)
     let record = await formHelper.findRecord(modelName,route.params.id)
     if(!record){
@@ -163,6 +163,7 @@ const routerDef = createBrowserRouter( [
       { path: '/roles/new', loader: newLoader('Role'), name: 'Buat Jabatan', Component: RoleForm, exact: true },
       { path: '/roles/:id', loader: viewLoader('Role'), name: 'Detail Jabatan', Component: RoleForm },
       { path: '/roles/:id/edit',loader: editLoader('Role'), name: 'Ubah Jabatan', Component: RoleForm },
+      { path: '/system_settings/company', name: 'Perusahaan', Component: CompanyForm, exact: true},
     ]
   },
   {

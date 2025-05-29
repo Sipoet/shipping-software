@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get "companies/show"
+  get "companies/update"
   constraints(lambda { |req| req.format == :json })  do
     resources :ships, except: [:new,:edit,:destroy]
     resources :ports, except: [:new,:edit,:destroy]
@@ -18,6 +20,13 @@ Rails.application.routes.draw do
     resources :users, except: [:new,:edit] do
       post :activate, on: :member
       post :deactivate, on: :member
+    end
+
+    resources :system_settings, only: [:index,:show,:update]
+
+    scope :system_settings do
+      get 'company' => 'companies#show'
+      put 'company' => 'companies#update'
     end
 
   end
