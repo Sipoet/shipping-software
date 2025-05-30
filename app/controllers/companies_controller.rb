@@ -30,6 +30,8 @@ class CompaniesController < ApplicationController
     else
       send_file Rails.root.join('app','assets','images',@record['company_image_name'] || '')
     end
+  rescue
+    head :no_content
   end
 
   private
