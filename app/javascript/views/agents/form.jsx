@@ -48,6 +48,7 @@ const AgentForm = () => {
   }
 
   function showSuccessNotif(message){
+    setVisible(false)
     addToast(
     (<CToast color='success' key={'toast-form'}>
       <CToastHeader closeButton>

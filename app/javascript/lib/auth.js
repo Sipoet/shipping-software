@@ -6,7 +6,11 @@ class Auth{
   }
 
   async request(path,options){
-    const newOptions = {...this.defaultOption,...options}
+    let newOptions = {...this.defaultOption,...options}
+    if(newOptions.noContentType){
+      delete newOptions.headers['Content-Type']
+      console.log(newOptions)
+    }
     let response = null
     try{
       response = await fetch(path,newOptions)

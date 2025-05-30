@@ -1,4 +1,6 @@
 class SystemSettingsController < ApplicationController
+  before_action :authenticate_user!
+  skip_before_action :verify_authenticity_token
 
   def index
     search_json
@@ -47,7 +49,7 @@ class SystemSettingsController < ApplicationController
       .permit(:keyname, :user_id, :value)
   end
 
-  def find_customer!
+  def find_record!
     @record = SystemSetting.find(params[:id])
   end
 

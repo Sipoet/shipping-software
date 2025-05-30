@@ -1,0 +1,590 @@
+[
+  {
+    "resource": "ship",
+    "label": "Kapal",
+    "actions":[
+      {
+        "name": "read",
+        "label": "Baca"
+      },
+      {
+        "name": "create",
+        "label": "Buat",
+        "required":[
+          {
+            "resource": "ship",
+            "name": "read"
+          }
+        ]
+      },
+      {
+        "name": "update",
+        "label": "Ubah",
+        "required":[
+          {
+            "resource": "ship",
+            "name": "read"
+          }
+        ]
+      },
+      {
+        "name": "delete",
+        "label": "Hapus",
+        "required":[
+          {
+            "resource": "ship",
+            "name": "read"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "resource": "port",
+    "label": "Pelabuhan",
+    "actions":[
+      {
+        "name": "read",
+        "label": "Baca"
+      },
+      {
+        "name": "create",
+        "label": "Buat",
+        "required":[
+          {
+            "resource": "port",
+            "name": "read"
+          }
+        ]
+      },
+      {
+        "name": "update",
+        "label": "Ubah",
+        "required":[
+          {
+            "resource": "port",
+            "name": "read"
+          }
+        ]
+      },
+      {
+        "name": "delete",
+        "label": "Hapus",
+        "required":[
+          {
+            "resource": "port",
+            "name": "read"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "resource": "customer",
+    "label": "Pelanggan",
+    "actions":[
+      {
+        "name": "read",
+        "label": "Baca"
+      },
+      {
+        "name": "create",
+        "label": "Buat",
+        "required":[
+          {
+            "resource": "customer",
+            "name": "read"
+          }
+        ]
+      },
+      {
+        "name": "update",
+        "label": "Ubah",
+        "required":[
+          {
+            "resource": "customer",
+            "name": "read"
+          }
+        ]
+      },
+      {
+        "name": "delete",
+        "label": "Hapus",
+        "required":[
+          {
+            "resource": "customer",
+            "name": "read"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "resource": "agent",
+    "label": "Agen Lorry",
+    "actions":[
+      {
+        "name": "read",
+        "label": "Baca"
+      },
+      {
+        "name": "create",
+        "label": "Buat",
+        "required":[
+          {
+            "resource": "agent",
+            "name": "read"
+          }
+        ]
+      },
+      {
+        "name": "update",
+        "label": "Ubah",
+        "required":[
+          {
+            "resource": "agent",
+            "name": "read"
+          }
+        ]
+      },
+      {
+        "name": "delete",
+        "label": "Hapus",
+        "required":[
+          {
+            "resource": "agent",
+            "name": "read"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "resource": "user",
+    "label": "User",
+    "actions":[
+      {
+        "name": "read",
+        "label": "Baca"
+      },
+      {
+        "name": "create",
+        "label": "Buat",
+        "required":[
+          {
+            "resource": "user",
+            "name": "read"
+          }
+        ]
+      },
+      {
+        "name": "update",
+        "label": "Ubah",
+        "required":[
+          {
+            "resource": "user",
+            "name": "read"
+          }
+        ]
+      },
+      {
+        "name": "delete",
+        "label": "Hapus",
+        "required":[
+          {
+            "resource": "user",
+            "name": "read"
+          }
+        ]
+      },
+      {
+        "name": "set_active",
+        "label": "Aktifkan",
+        "required":[
+          {
+            "resource": "user",
+            "name": "read"
+          }
+        ]
+      },
+      {
+        "name": "set_inactive",
+        "label": "Non Aktifkan",
+        "required":[
+          {
+            "resource": "user",
+            "name": "read"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "resource": "role",
+    "label": "Jabatan",
+    "actions":[
+      {
+        "name": "read",
+        "label": "Baca"
+      },
+      {
+        "name": "create",
+        "label": "Buat",
+        "required":[
+          {
+            "resource": "role",
+            "name": "read"
+          }
+        ]
+      },
+      {
+        "name": "update",
+        "label": "Ubah",
+        "required":[
+          {
+            "resource": "role",
+            "name": "read"
+          }
+        ]
+      },
+      {
+        "name": "delete",
+        "label": "Hapus",
+        "required":[
+          {
+            "resource": "role",
+            "name": "read"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "resource": "product",
+    "label": "Produk",
+    "actions":[
+      {
+        "name": "read",
+        "label": "Baca"
+      },
+      {
+        "name": "create",
+        "label": "Buat",
+        "required":[
+          {
+            "resource": "product",
+            "name": "read"
+          }
+        ]
+      },
+      {
+        "name": "update",
+        "label": "Ubah",
+        "required":[
+          {
+            "resource": "product",
+            "name": "read"
+          }
+        ]
+      },
+      {
+        "name": "delete",
+        "label": "Hapus",
+        "required":[
+          {
+            "resource": "product",
+            "name": "read"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "resource": "packing_list",
+    "label": "Packing List",
+    "actions":[
+      {
+        "name": "read",
+        "label": "Baca"
+      },
+      {
+        "name": "create",
+        "label": "Buat",
+        "required":[
+          {
+            "resource": "packing_list",
+            "name": "read"
+          },
+          {
+            "resource": "customer",
+            "name": "select_read"
+          },
+          {
+            "resource": "container",
+            "name": "select_read"
+          },
+          {
+            "resource": "product",
+            "name": "select_read"
+          }
+        ]
+      },
+      {
+        "name": "update",
+        "label": "Ubah",
+        "required":[
+          {
+            "resource": "packing_list",
+            "name": "read"
+          },
+          {
+            "resource": "customer",
+            "name": "select_read"
+          },
+          {
+            "resource": "container",
+            "name": "select_read"
+          },
+          {
+            "resource": "product",
+            "name": "select_read"
+          }
+        ]
+      },
+      {
+        "name": "delete",
+        "label": "Hapus",
+        "required":[
+          {
+            "resource": "packing_list",
+            "name": "read"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "resource": "container",
+    "label": "Kontainer",
+    "actions":[
+      {
+        "name": "read",
+        "label": "Baca"
+      },
+      {
+        "name": "create",
+        "label": "Buat",
+        "required":[
+          {
+            "resource": "container",
+            "name": "read"
+          },
+          {
+            "resource": "ship_schedule",
+            "name": "select_read"
+          },
+          {
+            "resource": "packing_list",
+            "name": "select_read"
+          },
+          {
+            "resource": "agent",
+            "name": "select_read"
+          },
+          {
+            "resource": "container_type",
+            "name": "select_read"
+          }
+        ]
+      },
+      {
+        "name": "update",
+        "label": "Ubah",
+        "required":[
+          {
+            "resource": "container",
+            "name": "read"
+          },
+          {
+            "resource": "ship_schedule",
+            "name": "select_read"
+          },
+          {
+            "resource": "packing_list",
+            "name": "select_read"
+          },
+          {
+            "resource": "agent",
+            "name": "select_read"
+          },
+          {
+            "resource": "container_type",
+            "name": "select_read"
+          }
+        ]
+      },
+      {
+        "name": "delete",
+        "label": "Hapus",
+        "required":[
+          {
+            "resource": "container",
+            "name": "read"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "resource": "company",
+    "label": "Perusahaan",
+    "actions":[
+      {
+        "name": "read",
+        "label": "Baca"
+      },
+      {
+        "name": "update",
+        "label": "Ubah",
+        "required":[
+          {
+            "resource": "company",
+            "name": "read"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "resource": "ship_schedule",
+    "label": "Jadwal Kapal",
+    "actions":[
+      {
+        "name": "read",
+        "label": "Baca"
+      },
+      {
+        "name": "create",
+        "label": "Buat",
+        "required":[
+          {
+            "resource": "ship_schedule",
+            "name": "read"
+          },
+          {
+            "resource": "ship",
+            "name": "select_read"
+          },
+          {
+            "resource": "container",
+            "name": "select_read"
+          },
+          {
+            "resource": "port",
+            "name": "select_read"
+          }
+        ]
+      },
+      {
+        "name": "update",
+        "label": "Ubah",
+        "required":[
+          {
+            "resource": "ship_schedule",
+            "name": "read"
+          }
+        ]
+      },
+      {
+        "name": "delete",
+        "label": "Hapus",
+        "required":[
+          {
+            "resource": "ship_schedule",
+            "name": "read"
+          }
+        ]
+      },
+      {
+        "name": "delete",
+        "label": "Hapus",
+        "required":[
+          {
+            "resource": "ship_schedule",
+            "name": "read"
+          }
+        ]
+      },
+      {
+        "name": "set_draft",
+        "label": "Draftkan",
+        "required":[
+          {
+            "resource": "ship_schedule",
+            "name": "read"
+          }
+        ]
+      },
+      {
+        "name": "set_cancelled",
+        "label": "Batalkan",
+        "required":[
+          {
+            "resource": "ship_schedule",
+            "name": "read"
+          }
+        ]
+      },
+      {
+        "name": "set_port_processed",
+        "label": "Konfirm",
+        "required":[
+          {
+            "resource": "ship_schedule",
+            "name": "read"
+          }
+        ]
+      },
+      {
+        "name": "set_si_released",
+        "label": "SI Keluar",
+        "required":[
+          {
+            "resource": "ship_schedule",
+            "name": "read"
+          }
+        ]
+      },
+      {
+        "name": "set_ship_depart",
+        "label": "Kapal Berangkat",
+        "required":[
+          {
+            "resource": "ship_schedule",
+            "name": "read"
+          }
+        ]
+      },
+      {
+        "name": "set_arrived_to_destination",
+        "label": "Kapal Sampai di Tujuan",
+        "required":[
+          {
+            "resource": "ship_schedule",
+            "name": "read"
+          }
+        ]
+      },
+      {
+        "name": "set_completed",
+        "label": "Selesaikan",
+        "required":[
+          {
+            "resource": "ship_schedule",
+            "name": "read"
+          }
+        ]
+      }
+    ]
+  }
+]

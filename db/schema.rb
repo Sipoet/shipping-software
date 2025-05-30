@@ -108,9 +108,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_25_031556) do
     t.integer "role_id", null: false
     t.string "auth_controller", null: false
     t.string "auth_action", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.index ["role_id", "auth_controller", "auth_action"], name: "role_auth_idx"
+    t.index ["role_id"], name: "index_role_auths_on_role_id"
   end
 
   create_table "roles", force: :cascade do |t|

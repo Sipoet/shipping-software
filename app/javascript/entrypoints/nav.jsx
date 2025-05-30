@@ -1,6 +1,6 @@
 import React from 'react'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
-import {ShippingContainer,Boat,Lighthouse,User, UserList, Calendar, ArchiveBox, Speedometer, BoxArrowDown} from "@phosphor-icons/react"
+import {ShippingContainer,Boat,Lighthouse,User, UserList, Calendar, ArchiveBox, Speedometer, BoxArrowDown, BuildingOffice} from "@phosphor-icons/react"
 
 const _nav = [
   {
@@ -98,6 +98,12 @@ const _nav = [
     name: 'Jabatan',
     to: '/roles',
     icon: <UserList className="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Perusahaan',
+    to: '/system_settings/company',
+    icon: <BuildingOffice className="nav-icon" />,
   },
 ]
 

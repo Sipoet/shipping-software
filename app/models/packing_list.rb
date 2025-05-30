@@ -19,6 +19,7 @@ class PackingList < ApplicationRecord
 
   has_many :packing_details, dependent: :destroy, inverse_of: :packing_list
   has_one :ship, through: :container
+  has_one :destination_port, through: :container
 
   accepts_nested_attributes_for :packing_details, allow_destroy: true
 

@@ -13,4 +13,5 @@ class Container < ApplicationRecord
   belongs_to :ship_schedule, inverse_of: :containers, optional: true
   has_many :packing_lists, inverse_of: :container
   has_one :ship, through: :ship_schedule
+  has_one :destination_port, through: :ship_schedule
 end

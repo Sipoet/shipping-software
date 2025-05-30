@@ -1,9 +1,3 @@
-
-
-
-role = Role.find_or_create_by!(name: 'superadmin')
-
-I18n.locale = :id
 admin_password = ENV['ADMIN_PASSWORD']
 if admin_password.present?
   user = User.find_or_initialize_by(username: 'superadmin')

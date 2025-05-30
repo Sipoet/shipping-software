@@ -63,6 +63,7 @@ const PackingListForm = () => {
   }
 
   function showSuccessNotif(message){
+    setVisible(false)
     addToast(
     (<CToast color='success' key={'toast-form'}>
       <CToastHeader closeButton>
@@ -178,7 +179,7 @@ const PackingListForm = () => {
       <CCard className='mb-3'>
         <CCardHeader>Form Packing List
         <div className='float-end' hidden={record.isNewRecord}>
-          <CButton hidden={!viewState} color='secondary' type='buttom' className='me-3' onClick={reactToPrintFn}>print Invoice <Printer /></CButton>
+          <CButton hidden={!viewState || record.ship_name == null} color='secondary' type='buttom' className='me-3' onClick={reactToPrintFn}>print Invoice <Printer /></CButton>
           <CButton color={viewState ? 'secondary' : 'info'} type="button" className='me-3' onClick={toggleNavigate}>
               {viewState ?  (<>Edit <Pencil /></>): (<>Lihat <Eye /></>) }
           </CButton>
@@ -264,11 +265,6 @@ const PackingListForm = () => {
           </CCardFooter>
         </CForm>
       </CCard>
-
-
-
-
-
     </>
   )
 }
@@ -281,16 +277,20 @@ function PackingDetailRowForm(props){
   function changeNumberRecord(maskedValue,imask,event){
     const targetName = event.currentTarget.name
     const value = parseFloat(imask.unmaskedValue)
+    props.record[targetName] = value
     setRecord((record)=> changeCloneRecord(record,[targetName,value]) )
   }
 
   function changeRecord(event){
     const targetName = event.currentTarget.name
     const value = event.currentTarget.value
+    props.record[targetName] = value
     setRecord((record)=> changeCloneRecord(record,[targetName,value]) )
   }
 
   function changeSelectRecord(selectValue,metadata){
+    props.record[metadata.optionLabel] = selectValue.label
+    props.record[metadata.name] = selectValue.value
     setRecord((record)=> changeCloneRecord(record,[metadata.optionLabel,selectValue.label,metadata.name,selectValue.value]) )
   }
 

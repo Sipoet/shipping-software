@@ -4,8 +4,4 @@ class HomeController < ApplicationController
     render :dashboard
   end
 
-  def company_image
-    company = SystemSetting.get('company')
-    send_file Rails.root.join(company[:company_image_path])
-  end
 end

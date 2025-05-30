@@ -2,7 +2,7 @@ import React, { Suspense } from 'react'
 import {DateTime}  from 'luxon'
 import { useNavigate } from 'react-router'
 import{createModel} from '~/lib/model'
-import {AuthContext} from '~/lib/context'
+import {AuthContext, CompanyContext} from '~/lib/context'
 import {isEmpty} from 'lodash'
 import {
   CButton,
@@ -20,12 +20,17 @@ import {
   CFormCheck,
   CFooter,
   CAlert,
+  CHeader,
+  CImage,
+  CHeaderBrand,
+  CHeaderText,
 } from '@coreui/react'
 import { User,LockKey } from '@phosphor-icons/react'
 function LoginForm(){
   const [error,setError] = React.useState({})
   const [message,setMessage] = React.useState('')
   const [auth,setAuth] = React.useContext(AuthContext)
+  const [company,setCompany] = React.useContext(CompanyContext)
   const todayYear = DateTime.now().year
   const [user,setUser] = React.useState(createModel('User',{username: '',password:''}))
   const navigate = useNavigate();
@@ -66,13 +71,19 @@ function LoginForm(){
     setUser(user)
   }
   return(
-    <>
+    <Suspense fallback={
+      <div className="pt-3 text-center">
+        <CSpinner color="primary" variant="grow" />
+      </div>
+    }>
+      <CHeader>
+        <CHeaderBrand>
+
+          <CImage src={company.company_icon_path} width={60} />
+        </CHeaderBrand>
+        <CHeaderText>{company.name}</CHeaderText>
+      </CHeader>
       <div className="bg-body-tertiary min-vh-90 d-flex flex-row align-items-center">
-        <Suspense fallback={
-                        <div className="pt-3 text-center">
-                          <CSpinner color="primary" variant="grow" />
-                        </div>
-                      }>
           <CContainer>
              <CAlert color='danger' dismissible visible={!isEmpty(message)} onClose={() => setMessage('')}>
               {message}
@@ -131,12 +142,12 @@ function LoginForm(){
               </CCol>
             </CRow>
           </CContainer>
-        </Suspense>
+
       </div>
       <CFooter className="px-4">
-        <div> &#169; {todayYear} Cipta Karya Agung Sejahtera.</div>
+        <div> &#169; {todayYear} {company.name}</div>
       </CFooter>
-    </>
+    </Suspense>
   )
 }
 

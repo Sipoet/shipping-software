@@ -22,12 +22,14 @@ Rails.application.routes.draw do
       post :deactivate, on: :member
     end
 
-    resources :system_settings, only: [:index,:show,:update]
-
     scope :system_settings do
       get 'company' => 'companies#show'
       put 'company' => 'companies#update'
     end
+
+    resources :system_settings, only: [:index,:show,:update]
+
+
 
   end
 
@@ -48,7 +50,7 @@ Rails.application.routes.draw do
   # Render dynamic PWA files from app/views/pwa/*
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-  get 'company_image'=> 'home#company_image'
+  get 'company_image'=> 'companies#image'
   # Defines the root path route ("/")
   root 'home#dashboard'
 

@@ -1,17 +1,18 @@
 import { CCol, CRow } from "@coreui/react"
 import React from "react"
 import {DateTime} from 'luxon'
-import {dateFormat,numberToWord, DEFAULT_DATE_FORMAT} from '~/lib/text_formatter'
+import {dateFormat,numberToWord,phoneFormat, DEFAULT_DATE_FORMAT} from '~/lib/text_formatter'
+import { CompanyContext } from "~/lib/context"
 function CompanyHeader({company}){
   return(
     <CRow>
       <CCol lg={2}>
-        <img href='/company_image' alt="icon company" className="company-image small"/>
+        <img href='/company_image?type=icon' alt="icon company" className="company-image small"/>
       </CCol>
       <CCol lg={10}>
         <h1>{company.name}</h1>
         <p>{company.address}<br/>
-        Telp. {company.contact_numbers.join(' / ')}<br/>
+        {company.contact_numbers.map(cn=> `${cn.contact_type}:${phoneFormat(cn.value)}`).join('/')}<br/>
         {company.city}</p>
       </CCol>
     </CRow>
@@ -34,10 +35,11 @@ const InvoicePrint = React.forwardRef((props, ref)=>{
   const {record} = props
   const canvasEl = React.useRef(null);
   const today = DateTime.now().toFormat(DEFAULT_DATE_FORMAT)
+  const [company,setCompany] = React.useContext(CompanyContext)
   return(
   <div className="print-only a5-landscape" ref={ref}>
     <CRow>
-      <CCol lg={8}><CompanyHeader company={props.company}></CompanyHeader></CCol>
+      <CCol lg={8}><CompanyHeader company={company}></CompanyHeader></CCol>
       <CCol lg={4} className="align-self-end">
         <h3 className="text-center">Kwitansi</h3>
         <p>No: {record.code}</p>
@@ -49,7 +51,7 @@ const InvoicePrint = React.forwardRef((props, ref)=>{
         <h4>Sudah Terima dari: </h4>
       </CCol>
       <CCol lg={8}>
-        {record.customer_name}
+        {record.receiver_name}
       </CCol>
     </CRow>
     <CRow>
@@ -62,7 +64,7 @@ const InvoicePrint = React.forwardRef((props, ref)=>{
     </CRow>
     <CRow>
       <CCol lg={3}>
-        <span className="h4">Merk: </span><span>{record.supplier_name}</span>
+        <span className="h4">Merk: </span><span>{record.sender_name}</span>
       </CCol>
       <CCol lg={3}>
         <span className="h4">KM: </span><span>{record.ship_name}</span>
@@ -108,8 +110,8 @@ const InvoicePrint = React.forwardRef((props, ref)=>{
       <CCol lg={10}><div className="box-trapezium">{numberToWord(record.grandtotal)} rupiah</div></CCol>
     </CRow>
     <CRow>
-      <CCol lg={6}><CompanyFooter company={props.company}/></CCol>
-      <CCol lg={6}><div className="text-end">{props.company.city}, {today}</div></CCol>
+      <CCol lg={6}><CompanyFooter company={company}/></CCol>
+      <CCol lg={6}><div className="text-end">{company.city}, {today}</div></CCol>
     </CRow>
   </div>)
 })

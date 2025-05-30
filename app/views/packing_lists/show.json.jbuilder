@@ -17,6 +17,18 @@ if container.present?
   json.container_id @record.container_id
   json.container_path container_path(@record.container_id)
 end
+destination_port = @record.destination_port
+if destination_port.present?
+  json.destination_port_name destination_port.name
+  json.destination_port_id destination_port.id
+  json.destination_port_path port_path(destination_port.id)
+end
+ship = @record.ship
+if ship.present?
+  json.ship_name ship.name
+  json.ship_id ship.id
+  json.ship_path ship_path(ship.id)
+end
 json.total_item @record.total_item
 json.total_weight @record.total_weight
 json.weight_uom @record.weight_uom

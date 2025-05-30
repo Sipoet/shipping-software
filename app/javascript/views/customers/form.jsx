@@ -49,6 +49,7 @@ const CustomerForm = () => {
   }
 
   function showSuccessNotif(message){
+    setVisible(false)
     addToast(
     (<CToast color='success' key={'toast-form'}>
       <CToastHeader closeButton>
@@ -100,10 +101,8 @@ const CustomerForm = () => {
   function toggleNavigate(){
     if(viewState){
       navigate(`/customers/${record.id}/edit` )
-      setViewState(false)
     }else{
       navigate(`/customers/${record.id}`)
-      setViewState(true)
     }
   }
 
