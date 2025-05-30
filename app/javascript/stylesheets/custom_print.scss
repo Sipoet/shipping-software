@@ -17,17 +17,17 @@
   .company-image {
     object-fit: contain;
     .small{
+      height: 33;
       width: 100;
-      height: 100;
     }
     .medium{
+      height: 54;
       width: 160;
-      height: 160;
     }
 
     .big{
+      height: 83;
       width: 250;
-      height: 250;
     }
   }
   .box-trapezium{
