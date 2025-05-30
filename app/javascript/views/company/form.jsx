@@ -200,12 +200,12 @@ const CompanyForm = () => {
               <CButton onClick={addContactNumber} color='secondary'>Tambah Kontak <Plus/></CButton>
             </CCol>
             <CCol md={4} className='mb-4'>
-               <CImage thumbnail hidden={record.company_image_name == null} src={record.company_image_path} width={200} height={100} />
-              <CFormInput accept="image/*" type="file" id="company-companyImage" onChange={changeImageRecord} label="Gambar Perusahaan" name='company_image' invalid={error.company_image != null}  feedback={error.company_image} defaultValue={record.company_image_name} value={record.company_image}  />
+               <CImage thumbnail hidden={record.company_image_name == null} src={record.company_image_path} className='company-image small' />
+              <CFormInput accept="image/*" type="file" id="company-companyImage" onChange={changeImageRecord} label="Gambar Perusahaan" name='company_image' invalid={error.company_image != null}  feedback={error.company_image} value={record.company_image}  />
             </CCol>
             <CCol md={4} className='mb-4'>
-               <CImage thumbnail hidden={record.company_icon_name == null} src={record.company_icon_path} width={100} height={100} />
-              <CFormInput accept="image/*" type="file" id="company-companyImage" onChange={changeImageRecord} label="Logo Perusahaan" name='company_icon' invalid={error.company_icon != null}  feedback={error.company_icon} defaultValue={record.company_icon_name} value={record.company_icon}  />
+               <CImage thumbnail hidden={record.company_icon_name == null} src={record.company_icon_path} width={50} height={50} />
+              <CFormInput accept="image/*" type="file" id="company-companyImage" onChange={changeImageRecord} label="Logo Perusahaan" name='company_icon' invalid={error.company_icon != null}  feedback={error.company_icon} value={record.company_icon}  />
             </CCol>
           </CCardBody>
           <CCardFooter>
