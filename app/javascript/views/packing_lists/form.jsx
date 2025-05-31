@@ -19,9 +19,9 @@ const PackingListForm = () => {
   });
   const company = {name: 'PT. Cipta Karya',city: 'Surabaya',address:'Jl Kalianget',contact_numbers:['021 32322','6282148473']}
   const params = useLoaderData()
-  params.record.packing_details ||= []
+  params.record.packing_details_attributes ||= []
   const [record,setRecord] = React.useState(params.record)
-  const [packingDetails,setPackingDetails] = React.useState(record.packing_details)
+  const [packingDetails,setPackingDetails] = React.useState(record.packing_details_attributes)
   const [visible, setVisible] = React.useState(false)
   const [visibleConfirmationDelete, setVisibleConfirmationDelete] = React.useState(false)
   const [viewState, setViewState] = React.useState(params.isViewState)
@@ -83,8 +83,17 @@ const PackingListForm = () => {
   React.useEffect(() =>  {
     setViewState(params.isViewState)
     setRecord(params.record)
-  }, [params.isViewState])
+    calculateRecord()
+    console.log('test')
+  }, [params.isViewState,packingDetails])
 
+  function calculateRecord(){
+    record.subtotal = 0
+    for(let packingDetail of packingDetails){
+      record.subtotal += (packingDetail.send_cost || 0)
+    }
+    record.grandtotal = record.subtotal + record.tax_amount
+  }
 
   function changeNumberRecord(maskedValue,imask,event){
     const targetName = event.currentTarget.name
@@ -137,6 +146,7 @@ const PackingListForm = () => {
       p_uom: 'm',
       l_uom: 'm',
       t_uom: 'm',
+      send_cost: 0,
     })
     setPackingDetails([
       ...packingDetails,
@@ -150,7 +160,13 @@ const PackingListForm = () => {
         packingDetails.filter(a => a._rowIndex != record._rowIndex)
       )
     }else{
-      record._destroy= true
+      const newPack = packingDetails.map(e=>{
+        if(e.id === record.id){
+          e._destroy = true
+        }
+        return e
+      })
+      setPackingDetails(newPack)
     }
 
   }
@@ -210,18 +226,11 @@ const PackingListForm = () => {
               <CustomAsyncSelect readOnly={viewState} cacheOptions path='/customers.json' name='receiver_id' label="Penerima" feedback={error.receiver} onChange={changeSelectRecord} defaultValue={{label: record.receiver_name,value: record.receiver_id}}  />
             </CCol>
             <CCol className='mb-3' md={4}>
-              <CustomAsyncSelect readOnly={viewState} isClearable cacheOptions path='/containers.json' name='container_id' label="Kontainer" feedback={error.container} onChange={changeSelectRecord} defaultValue={{label: record.container_number,value: record.container_id}}  />
+              <CustomAsyncSelect readOnly={viewState} isClearable cacheOptions path='/containers.json' name='container_id' label="Kontainer" feedback={error.container} getOptionLabel={(e)=>e.container_number} onChange={changeSelectRecord} defaultValue={{label: record.container_number,value: record.container_id}}  />
             </CCol>
             <CCol className='mb-3' md={4}>
               <CFormTextarea readOnly={viewState} id="packingList-description" label='Deskripsi' invalid={error.description != null}  feedback={error.description} name='description' onChange={changeRecord} value={record.description} />
             </CCol>
-
-            <CRow className='mb-3'>
-              <CCol md={4}>
-                <CButton color='secondary' onClick={addDetail}>Tambah Detail <Plus/></CButton>
-              </CCol>
-            </CRow>
-
             <CTable caption="top" striped hover color='light' responsive>
               <CTableCaption>Packing details</CTableCaption>
               <CTableHead>
@@ -241,14 +250,19 @@ const PackingListForm = () => {
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {packingDetails.map((line)=>{
+                {packingDetails.filter(e=> !e._destroy).map((line)=>{
                   return(
                     <PackingDetailRowForm removeRecord={removePackingDetail} key={line.id ||`new ${line._rowIndex}`} showErrorNotif={showErrorNotif} showSuccessNotif={showSuccessNotif}  record={line} />
                   )
                 })}
               </CTableBody>
             </CTable>
-            <CCol className='mb-3  mt-4' md={12}>
+            <CRow className='mb-3 mt-3'>
+              <CCol md={4}>
+                <CButton color='secondary' onClick={addDetail}>Tambah Detail <Plus/></CButton>
+              </CCol>
+            </CRow>
+            <CCol className='mb-3' md={12}>
               <MoneyInput plainText readOnly={true} id="packingList-subtotal" label='Subtotal' invalid={error.subtotal != null}  feedback={error.subtotal} name='subtotal' onChange={changeNumberRecord} defaultValue={record.subtotal} />
             </CCol>
             <CCol className='mb-3' md={4}>
@@ -310,7 +324,7 @@ function PackingDetailRowForm(props){
         <MoneyInput invalid={error.send_cost != null}  feedback={error.send_cost} name='send_cost' onChange={changeNumberRecord} defaultValue={record.send_cost} />
       </CTableDataCell>
       <CTableDataCell>
-        <CButton type='button' className='me-4' onClick={()=> props.removeRecord(record)} color='danger'><X /></CButton>
+        <CButton type='button' className='me-4' onClick={()=> props.removeRecord(record)}><X /></CButton>
       </CTableDataCell>
     </CTableRow>
   )

@@ -21,7 +21,7 @@ const AgentIndex = () => {
 
   const columns = [
     {title:'Nama',field:'name',width:150},
-    {title:'Kontak',field:'contact_number',formatter: (cell)=> phoneFormat(cell.getData()),width:170},
+    {title:'Kontak',field:'contact_number',formatter: (cell)=> phoneFormat(cell.getValue()),width:170},
     {title:'NPWP',field:'tax_account',width:170},
     {title:'Pelabuhan Default',field:'default_port',fieldType:'link',width:170,linkLabel:'name',sortKey:'default_ports.name',recordPath: 'default_port_path',filterField:'default_port_id'},
     {title:'Tanggal Dibuat', field:'created_at', fieldType:'datetime', width:150},

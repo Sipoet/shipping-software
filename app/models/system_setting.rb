@@ -5,8 +5,8 @@ class SystemSetting < ApplicationRecord
 
   belongs_to :user, optional: true
 
-  before_save :remove_cache
-  before_destroy :remove_cache
+  after_save :remove_cache
+  after_destroy :remove_cache
 
   def self.get(keyname,user_id: nil)
     cache = $redis.get(generate_cache_name(keyname, user_id: user_id))

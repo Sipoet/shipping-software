@@ -8,13 +8,17 @@ import {isFunction} from 'lodash'
 function defaultOptionLabel(line){
   return line.name
 }
-function CustomAsyncSelect({path,filter,onChange,optionLabel,feedback,limit = 10,getOptionLabel,label,...props}){
+function defaultOptionValue(line){
+  return line.id
+}
+function CustomAsyncSelect({path,filter,localTextFilter,onChange,optionLabel,getOptionValue,feedback,limit = 10,getOptionLabel,label,...props}){
 
   const selectRef = React.useRef(null)
   const [auth,setAuth] = React.useContext(AuthContext)
   const [inputId,setInputId] = React.useState('')
 
   getOptionLabel ||= defaultOptionLabel
+  getOptionValue ||= defaultOptionValue
   async function selectLoader(searchText,loadedOptions,page) {
     const params = new URLSearchParams()
     params.append("term", searchText)
@@ -25,11 +29,10 @@ function CustomAsyncSelect({path,filter,onChange,optionLabel,feedback,limit = 10
     const response = await auth.request(`${path}?${params}`)
     if(response.status == 200){
       const jsonData = await response.json()
+      const hasMore = jsonData.total_pages !== null ? jsonData.total_pages > page : false
       return {
-        options: jsonData.data.map((line)=>{
-          return {label: getOptionLabel(line), value: line.id}
-        }),
-        hasMore: jsonData.total_pages > page,
+        options: getOptions(jsonData.data,searchText),
+        hasMore: hasMore,
         additional: page + 1,
       }
     }else {
@@ -41,6 +44,17 @@ function CustomAsyncSelect({path,filter,onChange,optionLabel,feedback,limit = 10
     setInputId(selectRef.current.inputRef.id)
   }, []);
 
+  function getOptions(data,searchText){
+    if(localTextFilter){
+      const regex = new RegExp(searchText,'i')
+      data = data.filter((line)=>{
+        return regex.test(getOptionLabel(line))
+      })
+    }
+    return data.map((line)=>{
+      return {label: getOptionLabel(line),data: line, value: getOptionValue(line)}
+    })
+  }
   function onSelectChange(selectValue,metadata){
     if(isFunction(onChange)){
       metadata.optionLabel = optionLabel

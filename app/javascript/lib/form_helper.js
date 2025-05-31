@@ -144,6 +144,14 @@ class FormHelper {
         response.text().then((error)=> {
           throw `error update record. ${error}`
         })
+      }).finally(()=>{
+         if(options.showProgress){
+          setTimeout(()=>{
+            options.setProgressBar(0)
+            options.setProgressColor('info')
+          },1000)
+
+        }
       })
   }
 

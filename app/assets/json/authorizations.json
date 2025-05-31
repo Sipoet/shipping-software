@@ -506,16 +506,6 @@
         ]
       },
       {
-        "name": "delete",
-        "label": "Hapus",
-        "required":[
-          {
-            "resource": "ship_schedule",
-            "name": "read"
-          }
-        ]
-      },
-      {
         "name": "set_draft",
         "label": "Draftkan",
         "required":[

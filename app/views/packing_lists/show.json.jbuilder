@@ -13,7 +13,7 @@ if receiver.present?
 end
 container = @record.container
 if container.present?
-  json.container_detail container.container_number
+  json.container_number container.container_number
   json.container_id @record.container_id
   json.container_path container_path(@record.container_id)
 end
@@ -42,7 +42,7 @@ json.code @record.code
 json.created_at @record.created_at
 json.updated_at @record.updated_at
 json.transaction_date @record.transaction_date
-json.packing_details do
+json.packing_details_attributes do
   index = 0
   json.array! @record.packing_details do |line|
     product = line.product

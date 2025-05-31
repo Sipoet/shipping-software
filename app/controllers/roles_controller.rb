@@ -1,5 +1,5 @@
 class RolesController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authorize_user_based_action!
   skip_before_action :verify_authenticity_token
 
   def index
@@ -15,7 +15,7 @@ class RolesController < ApplicationController
     permitted_params = permit_params
     @record = Role.new(permitted_params)
     if @record.save
-      render json: {message: 'sukses simpan',data: @record}, status: :created
+      render json: {message: 'sukses simpan',data: decorate_record(@record)}, status: :created
     else
       render_json_error(@record)
     end
@@ -25,20 +25,22 @@ class RolesController < ApplicationController
     find_record!
     permitted_params = permit_params
     if @record.update(permitted_params)
-      render json: {message: 'sukses simpan',data: @record}, status: :ok
+      render json: {message: 'sukses simpan',data: decorate_record(@record)}, status: :ok
     else
       render_json_error(@record)
     end
   end
 
   def list_authorizations
-    send_file Rail.root.join('app','assets','json','authorizations.json')
+    send_file Rails.root.join('app','assets','json','authorizations.json')
   end
 
   private
 
   def permit_params
-    params.required(:role).permit(:name)
+    params
+      .required(:role)
+      .permit(:name,role_auths_attributes:[:role_id,:id,:auth_action,:auth_controller,:_destroy])
   end
 
   def find_record!
@@ -56,5 +58,11 @@ class RolesController < ApplicationController
     end
     @records = @records.page(result.page)
                    .per(result.limit)
+  end
+
+  def decorate_record(record)
+    attributes = record.attributes
+    attributes[:role_auths] = record.role_auths
+    attributes
   end
 end

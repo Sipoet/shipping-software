@@ -35,6 +35,7 @@ class PackingList < ApplicationRecord
     self.volume_uom ||= DEFAULT_VOLUME_UOM
     self.weight_uom ||= DEFAULT_WEIGHT_UOM
     packing_details.each do |line|
+      next unless line.valid?
       self.total_item += line.quantity
       self.total_volume += line.total_volume
       self.total_weight += line.total_weight

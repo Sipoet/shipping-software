@@ -8,7 +8,7 @@ function phoneFormat(text){
   const phoneImask = IMask.createPipe({
     mask: '+{62} 00 000 0000 0000',
   })
-  return phoneImask(text)
+  return phoneImask(text || '')
 }
 
 function moneyFormat(money,currency='Rp.'){

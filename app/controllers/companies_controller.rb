@@ -1,5 +1,5 @@
 class CompaniesController < ApplicationController
-  before_action :authenticate_user!, except:[:show,:image]
+  before_action :authorize_user_based_action!, except:[:show,:image]
   skip_before_action :verify_authenticity_token
 
   def show

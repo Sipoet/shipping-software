@@ -81,7 +81,7 @@ const InvoicePrint = React.forwardRef((props, ref)=>{
         <h4>Dengan perincian sbb: </h4>
       </CCol>
       <CCol lg={9}>
-        {record.packing_details.map(line =>{
+        {record.packing_details_attributes.map(line =>{
           return (
             <CRow key={line.id}>
               <CCol lg={8}>{line.description}</CCol>
