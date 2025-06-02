@@ -1,12 +1,13 @@
 import {CAlert, CCol,CForm,CButton,CCard,CCardHeader,CCardBody,CCardFooter,CFormInput,CToast, CToastBody, CToaster, CToastHeader, CFormSelect, CRow } from '@coreui/react'
 import React  from 'react'
-import { FormHelper } from '~/lib/form_helper'
+import { FormHelper,changeCloneRecord } from '~/lib/form_helper'
 import { useNavigate , useLoaderData, useOutletContext } from 'react-router'
-import { Eye, Pencil } from '@phosphor-icons/react'
+import { Eye, Pencil, Plus } from '@phosphor-icons/react'
 import ConfirmModal from '~/components/ConfirmModal'
 import { UnitInput } from '~/components/NumberInput'
 import { AuthContext } from '~/lib/context'
 import { createModel } from '~/lib/model'
+import RecordActions from '~/components/RecordActions'
 
 const ProductForm = () => {
   const params = useLoaderData()
@@ -79,7 +80,11 @@ const ProductForm = () => {
     setRecord(newRecord)
   }
 
-
+  function changeNumberRecord(maskedValue,imask,event){
+    const targetName = imask.el.input.name
+    const value = parseFloat(imask.unmaskedValue)
+    setRecord((record)=> changeCloneRecord(record,[targetName,value]) )
+  }
 
   function confirmDelete(result){
     if(result !== true){
@@ -97,8 +102,6 @@ const ProductForm = () => {
         navigate('/products')
       }
     })
-
-
   }
 
   function toggleNavigate(){
@@ -109,6 +112,42 @@ const ProductForm = () => {
     }
   }
 
+  const recordActions = [
+    {
+      label: (<>Tambah <Plus /></>),
+      props:{
+        color: 'primary',
+        variant: 'outline',
+        onClick: () => navigate('/products/new'),
+        hidden: !auth.isAuthorize('product','create') || record.isNewRecord || !viewState,
+      }
+    },
+    {
+      label: (<>Edit <Pencil /></>),
+      props:{
+        color: 'info',
+        onClick: toggleNavigate,
+        hidden: !auth.isAuthorize('product','update') || record.isNewRecord || !viewState,
+      }
+    },
+    {
+      label: (<>Lihat <Eye /></>),
+      props:{
+        color: 'secondary',
+        onClick: toggleNavigate,
+        hidden: !auth.isAuthorize('product','read') || record.isNewRecord || viewState,
+      }
+    },
+    {
+      label: (<>Hapus <Trash /></>),
+      props:{
+        color: 'danger',
+        onClick: ()=> confirmDelete,
+        hidden: !auth.isAuthorize('product','delete') || record.isNewRecord,
+      }
+    },
+  ]
+
   return (
     <>
       <ConfirmModal title="Konfirmasi Hapus" description="Apakah anda yakin hapus?" submitLabel="Submit" ref={modalRef} resolving={confirmDelete} />
@@ -116,15 +155,7 @@ const ProductForm = () => {
 
       <CCard>
         <CCardHeader>Form Produk
-
-        <div className='float-end' hidden={record.isNewRecord}>
-          <CButton color={viewState ? 'secondary' : 'info'} type="button" className='me-3' onClick={toggleNavigate}>
-              {viewState ?  (<>Edit <Pencil /></>): (<>Lihat <Eye /></>) }
-          </CButton>
-          <CButton color="danger" type="button" onClick={()=> modalRef.current.openModal()}>
-              Hapus
-          </CButton>
-        </div>
+          <RecordActions record={record} className='float-end' actions={recordActions} />
         </CCardHeader>
         <CForm
             className="row g-3 needs-validation"
@@ -151,17 +182,17 @@ const ProductForm = () => {
               </CFormSelect>
             </CCol>
             <CCol className='mb-4' md={4}>
-              <UnitInput readOnly={viewState} groupMeasurement='weight' type="text" id="product-weight" label='Berat' invalid={error.weight != null}  feedback={error.weight} name='weight' onChange={changeRecord} value={record.weight}/>
+              <UnitInput readOnly={viewState} groupMeasurement='weight' type="text" id="product-weight" label='Berat' invalid={error.weight != null}  feedback={error.weight} name='weight' onChange={changeNumberRecord} value={record.weight}/>
             </CCol>
             <CRow>
               <CCol md={4}>
-                <UnitInput readOnly={viewState} groupMeasurement='length' type="text" id="product-dimension_p" label='Panjang' invalid={error.dimension_p != null}  feedback={error.dimension_p} name='dimension_p' onChange={changeRecord} value={record.dimension_p}/>
+                <UnitInput readOnly={viewState} groupMeasurement='length' type="text" id="product-dimension_p" label='Panjang' invalid={error.dimension_p != null}  feedback={error.dimension_p} name='dimension_p' onChange={changeNumberRecord} value={record.dimension_p}/>
               </CCol>
               <CCol md={4}>
-                <UnitInput readOnly={viewState} groupMeasurement='length' type="text" id="product-dimension_l" label='Lebar' invalid={error.dimension_l != null}  feedback={error.dimension_l} name='dimension_l' onChange={changeRecord} value={record.dimension_l}/>
+                <UnitInput readOnly={viewState} groupMeasurement='length' type="text" id="product-dimension_l" label='Lebar' invalid={error.dimension_l != null}  feedback={error.dimension_l} name='dimension_l' onChange={changeNumberRecord} value={record.dimension_l}/>
               </CCol>
               <CCol md={4}>
-                <UnitInput readOnly={viewState} groupMeasurement='length' type="text" id="product-dimension_t" label='Tinggi' invalid={error.dimension_t != null}  feedback={error.dimension_t} name='dimension_t' onChange={changeRecord} value={record.dimension_t}/>
+                <UnitInput readOnly={viewState} groupMeasurement='length' type="text" id="product-dimension_t" label='Tinggi' invalid={error.dimension_t != null}  feedback={error.dimension_t} name='dimension_t' onChange={changeNumberRecord} value={record.dimension_t}/>
               </CCol>
             </CRow>
           </CCardBody>

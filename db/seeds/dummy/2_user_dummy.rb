@@ -1,4 +1,4 @@
-superadmin_role = Role.find_or_create_by!(name: 'superadmin')
+superadmin_role = Role.find_by(name: 'superadmin')
 [
   {username:'reidy',password:'masuk123'},
   {username:'eddy',password:'eddy123456789'},
@@ -10,5 +10,5 @@ superadmin_role = Role.find_or_create_by!(name: 'superadmin')
   user.password_confirmation = data[:password]
   user.email = "#{user.username}@ciptakarya.com"
   user.role = superadmin_role
-  user.save!
+  user.save
 end

@@ -33,7 +33,7 @@ class ProductsController < ApplicationController
   def destroy
     find_record!
     if @record.destroy
-      render json: {message: 'sukses simpan',data: @record}, status: :ok
+      render json: {message: 'sukses hapus'}, status: :ok
     else
       render_json_error(@record)
     end

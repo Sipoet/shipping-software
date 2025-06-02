@@ -5,6 +5,8 @@ import { useNavigate , useLoaderData, useOutletContext } from 'react-router'
 import { Eye, Pencil } from '@phosphor-icons/react'
 import { AuthContext } from '~/lib/context'
 import { createModel } from '~/lib/model'
+import RecordActions from '~/components/RecordActions'
+
 const ContainerTypeForm = () => {
   const params = useLoaderData()
   const [record,setRecord] = React.useState(params.record)
@@ -102,6 +104,33 @@ const ContainerTypeForm = () => {
     }
   }
 
+  const recordActions = [
+    {
+      label: (<>Tambah <Plus /></>),
+      props:{
+        color: 'primary',
+        variant: 'outline',
+        onClick: () => navigate('/container_types/new'),
+        hidden: !auth.isAuthorize('container_type','create') || record.isNewRecord || !viewState,
+      }
+    },
+    {
+      label: (<>Edit <Pencil /></>),
+      props:{
+        color: 'info',
+        onClick: toggleNavigate,
+        hidden: !auth.isAuthorize('container_type','update') || record.isNewRecord || !viewState,
+      }
+    },
+    {
+      label: (<>Lihat <Eye /></>),
+      props:{
+        color: 'secondary',
+        onClick: toggleNavigate,
+        hidden: !auth.isAuthorize('container_type','read') || record.isNewRecord || viewState,
+      }
+    },
+  ]
   return (
     <>
       <CModal
@@ -124,15 +153,7 @@ const ContainerTypeForm = () => {
 
       <CCard>
         <CCardHeader>Form Tipe Kontainer
-
-        <div className='float-end' hidden={record.isNewRecord}>
-          <CButton color={viewState ? 'secondary' : 'info'} type="button" className='me-3' onClick={toggleNavigate}>
-              {viewState ?  (<>Edit <Pencil /></>): (<>Lihat <Eye /></>) }
-          </CButton>
-          <CButton color="danger" type="button" onClick={()=> setVisibleConfirmationDelete(true)}>
-              Hapus
-          </CButton>
-        </div>
+          <RecordActions record={record} className='float-end' actions={recordActions} />
         </CCardHeader>
         <CForm
             className="row g-3 needs-validation"

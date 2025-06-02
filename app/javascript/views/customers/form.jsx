@@ -5,6 +5,7 @@ import { useNavigate , useLoaderData, useOutletContext } from 'react-router'
 import { Eye, Pencil } from '@phosphor-icons/react'
 import { PhoneInput } from '~/components/NumberInput'
 import { AuthContext } from '~/lib/context'
+import RecordActions from '~/components/RecordActions'
 
 const CustomerForm = () => {
   const params = useLoaderData()
@@ -106,6 +107,34 @@ const CustomerForm = () => {
     }
   }
 
+  const recordActions = [
+    {
+      label: (<>Tambah <Plus /></>),
+      props:{
+        color: 'primary',
+        variant: 'outline',
+        onClick: () => navigate('/customers/new'),
+        hidden: !auth.isAuthorize('customer','create') || record.isNewRecord || !viewState,
+      }
+    },
+    {
+      label: (<>Edit <Pencil /></>),
+      props:{
+        color: 'info',
+        onClick: toggleNavigate,
+        hidden: !auth.isAuthorize('customer','update') || record.isNewRecord || !viewState,
+      }
+    },
+    {
+      label: (<>Lihat <Eye /></>),
+      props:{
+        color: 'secondary',
+        onClick: toggleNavigate,
+        hidden: !auth.isAuthorize('customer','read') || record.isNewRecord || viewState,
+      }
+    },
+  ]
+
   return (
     <>
       <CModal
@@ -128,15 +157,7 @@ const CustomerForm = () => {
 
       <CCard>
         <CCardHeader>Form Pelanggan
-
-        <div className='float-end' hidden={record.isNewRecord}>
-          <CButton color={viewState ? 'secondary' : 'info'} type="button" className='me-3' onClick={toggleNavigate}>
-              {viewState ?  (<>Edit <Pencil /></>): (<>Lihat <Eye /></>) }
-          </CButton>
-          <CButton color="danger" type="button" onClick={()=> setVisibleConfirmationDelete(true)}>
-              Delete
-          </CButton>
-        </div>
+          <RecordActions record={record} className='float-end' actions={recordActions} />
         </CCardHeader>
         <CForm
             className="row g-3 needs-validation"

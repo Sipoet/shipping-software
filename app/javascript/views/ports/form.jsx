@@ -5,6 +5,7 @@ import { useNavigate , useLoaderData, useOutletContext } from 'react-router'
 import { Eye, Pencil } from '@phosphor-icons/react'
 import { AuthContext } from '~/lib/context'
 import { createModel } from '~/lib/model'
+import RecordActions from '~/components/RecordActions'
 
 const PortForm = () => {
   const params = useLoaderData()
@@ -110,6 +111,35 @@ const PortForm = () => {
       navigate(`/ports/${record.id}`)
     }
   }
+
+  const recordActions = [
+    {
+      label: (<>Tambah <Plus /></>),
+      props:{
+        color: 'primary',
+        variant: 'outline',
+        onClick: () => navigate('/ports/new'),
+        hidden: !auth.isAuthorize('port','create') || record.isNewRecord || !viewState,
+      }
+    },
+    {
+      label: (<>Edit <Pencil /></>),
+      props:{
+        color: 'info',
+        onClick: toggleNavigate,
+        hidden: !auth.isAuthorize('port','update') || record.isNewRecord || !viewState,
+      }
+    },
+    {
+      label: (<>Lihat <Eye /></>),
+      props:{
+        color: 'secondary',
+        onClick: toggleNavigate,
+        hidden: !auth.isAuthorize('port','read') || record.isNewRecord || viewState,
+      }
+    },
+  ]
+
   return (
     <>
       <CModal
@@ -132,15 +162,7 @@ const PortForm = () => {
 
       <CCard>
         <CCardHeader>Form Pelabuhan
-
-        <div className='float-end' hidden={record.isNewRecord}>
-          <CButton color={viewState ? 'secondary' : 'info'} type="button" className='me-3' onClick={toggleNavigate}>
-              {viewState ?  (<>Edit <Pencil /></>): (<>Lihat <Eye /></>) }
-          </CButton>
-          <CButton color="danger" type="button" onClick={()=> setVisibleConfirmationDelete(true)}>
-              Hapus
-          </CButton>
-        </div>
+          <RecordActions record={record} className='float-end' actions={recordActions} />
         </CCardHeader>
         <CForm
             className="row g-3 needs-validation"

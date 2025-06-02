@@ -7,6 +7,7 @@ import  {CustomAsyncSelect}  from '~/components/CustomAsyncSelect'
 import { dateFormat } from '~/lib/text_formatter'
 import { AuthContext } from '~/lib/context'
 import { createModel } from '~/lib/model'
+import RecordActions from '~/components/RecordActions'
 
 const ContainerForm = () => {
   const params = useLoaderData()
@@ -114,6 +115,34 @@ const ContainerForm = () => {
     return `${data.ship_name}, ${dateFormat(data.estimated_departure_sour_at)}-${dateFormat(data.estimated_arrived_dest_at)}`
   }
 
+  const recordActions = [
+    {
+      label: (<>Tambah <Plus /></>),
+      props:{
+        color: 'primary',
+        variant: 'outline',
+        onClick: () => navigate('/containers/new'),
+        hidden: !auth.isAuthorize('container','create') || record.isNewRecord || !viewState,
+      }
+    },
+    {
+      label: (<>Edit <Pencil /></>),
+      props:{
+        color: 'info',
+        onClick: toggleNavigate,
+        hidden: !auth.isAuthorize('container','update') || record.isNewRecord || !viewState,
+      }
+    },
+    {
+      label: (<>Lihat <Eye /></>),
+      props:{
+        color: 'secondary',
+        onClick: toggleNavigate,
+        hidden: !auth.isAuthorize('container','read') || record.isNewRecord || viewState,
+      }
+    },
+  ]
+
   return (
     <>
       <CModal
@@ -137,14 +166,7 @@ const ContainerForm = () => {
       <CCard>
         <CCardHeader>Form Kontainer
 
-        <div className='float-end' hidden={record.isNewRecord}>
-          <CButton color={viewState ? 'secondary' : 'info'} type="button" className='me-3' onClick={toggleNavigate}>
-              {viewState ?  (<>Edit <Pencil /></>): (<>Lihat <Eye /></>) }
-          </CButton>
-          <CButton color="danger" type="button" onClick={()=> setVisibleConfirmationDelete(true)}>
-              Hapus
-          </CButton>
-        </div>
+        <RecordActions record={record} className='float-end' actions={recordActions} />
         </CCardHeader>
         <CForm
             className="row g-3 needs-validation"

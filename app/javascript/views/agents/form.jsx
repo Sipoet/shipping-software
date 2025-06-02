@@ -6,6 +6,7 @@ import { Eye, Pencil } from '@phosphor-icons/react'
 import { PhoneInput } from '~/components/NumberInput'
 import {CustomAsyncSelect} from '~/components/CustomAsyncSelect'
 import { AuthContext } from '~/lib/context'
+import RecordActions from '~/components/RecordActions'
 
 const AgentForm = () => {
   const params = useLoaderData()
@@ -109,6 +110,34 @@ const AgentForm = () => {
     }
   }
 
+  const recordActions = [
+    {
+      label: (<>Tambah <Plus /></>),
+      props:{
+        color: 'primary',
+        variant: 'outline',
+        onClick: () => navigate('/agents/new'),
+        hidden: !auth.isAuthorize('agent','create') || record.isNewRecord || !viewState,
+      }
+    },
+    {
+      label: (<>Edit <Pencil /></>),
+      props:{
+        color: 'info',
+        onClick: toggleNavigate,
+        hidden: !auth.isAuthorize('agent','update') || record.isNewRecord || !viewState,
+      }
+    },
+    {
+      label: (<>Lihat <Eye /></>),
+      props:{
+        color: 'secondary',
+        onClick: toggleNavigate,
+        hidden: !auth.isAuthorize('agent','read') || record.isNewRecord || viewState,
+      }
+    },
+  ]
+
   return (
     <>
       <CModal
@@ -131,15 +160,7 @@ const AgentForm = () => {
 
       <CCard>
         <CCardHeader>Form Agent
-
-        <div className='float-end' hidden={record.isNewRecord}>
-          <CButton color={viewState ? 'secondary' : 'info'} type="button" className='me-3' onClick={toggleNavigate}>
-              {viewState ?  (<>Edit <Pencil /></>): (<>Lihat <Eye /></>) }
-          </CButton>
-          <CButton color="danger" type="button" onClick={()=> setVisibleConfirmationDelete(true)}>
-              Delete
-          </CButton>
-        </div>
+        <RecordActions record={record} className='float-end' actions={recordActions} />
         </CCardHeader>
         <CForm
             className="row g-3 needs-validation"

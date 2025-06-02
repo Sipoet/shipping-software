@@ -262,7 +262,7 @@ const ShipScheduleForm = () => {
       props:{
         color: 'secondary',
         onClick: refreshRecord,
-        hidden: record.isNewRecord || !viewState,
+        hidden: !auth.isAuthorize('ship_schedule','read') || record.isNewRecord || !viewState,
       }
     },
     {
@@ -270,7 +270,7 @@ const ShipScheduleForm = () => {
       props:{
         color: 'info',
         onClick: toggleNavigate,
-        hidden: record.isNewRecord || !viewState || record.status !== 'draft',
+        hidden: !auth.isAuthorize('ship_schedule','update') || record.isNewRecord || !viewState || record.status !== 'draft',
       }
     },
     {
@@ -278,7 +278,7 @@ const ShipScheduleForm = () => {
       props:{
         color: 'secondary',
         onClick: toggleNavigate,
-        hidden: record.isNewRecord || viewState || record.status !== 'draft',
+        hidden: !auth.isAuthorize('ship_schedule','read') || record.isNewRecord || viewState || record.status !== 'draft',
       }
     },
     {
@@ -286,7 +286,7 @@ const ShipScheduleForm = () => {
       props:{
         color: 'danger',
         onClick: ()=> confirmDelete,
-        hidden: record.isNewRecord || record.status !== 'draft',
+        hidden: !auth.isAuthorize('ship_schedule','delete') || record.isNewRecord || record.status !== 'draft',
       }
     },
     {
@@ -294,7 +294,7 @@ const ShipScheduleForm = () => {
       props:{
         color: 'light',
         onClick: setDraft,
-        hidden: record.isNewRecord || !(['port_processed','cancelled'].includes(record.status)),
+        hidden: !auth.isAuthorize('ship_schedule','set_draft') || record.isNewRecord || !(['port_processed','cancelled'].includes(record.status)),
       }
     },
     {
@@ -302,7 +302,7 @@ const ShipScheduleForm = () => {
       props:{
         color: 'info',
         onClick: setConfirm,
-        hidden: !viewState || record.isNewRecord || !(['draft','si_released'].includes(record.status)),
+        hidden: !auth.isAuthorize('ship_schedule','set_port_processed') || !viewState || record.isNewRecord || !(['draft','si_released'].includes(record.status)),
       }
     },
     {
@@ -310,7 +310,7 @@ const ShipScheduleForm = () => {
       props:{
         color: 'info',
         onClick: openSiForm,
-        hidden: !viewState || !(['port_processed','ship_depart'].includes(record.status)),
+        hidden: !auth.isAuthorize('ship_schedule','set_si_released') || !viewState || !(['port_processed','ship_depart'].includes(record.status)),
       }
     },
     {
@@ -318,7 +318,7 @@ const ShipScheduleForm = () => {
       props:{
         color: 'info',
         onClick: openShipDepartForm,
-        hidden: !viewState || !(['si_released','arrived_to_destination'].includes(record.status)),
+        hidden: !auth.isAuthorize('ship_schedule','set_ship_depart') || !viewState || !(['si_released','arrived_to_destination'].includes(record.status)),
       }
 
     },
@@ -327,7 +327,7 @@ const ShipScheduleForm = () => {
       props:{
         color: 'info',
         onClick: openShipArrivedForm,
-        hidden: !viewState || !(['ship_depart','completed'].includes(record.status)),
+        hidden: !auth.isAuthorize('ship_schedule','set_arrived_to_destination') || !viewState || !(['ship_depart','completed'].includes(record.status)),
       }
     },
     {
@@ -335,7 +335,7 @@ const ShipScheduleForm = () => {
       props:{
         color: 'success',
         onClick: setComplete,
-        hidden: !viewState || !(['arrived_to_destination'].includes(record.status)),
+        hidden: !auth.isAuthorize('ship_schedule','set_completed') || !viewState || !(['arrived_to_destination'].includes(record.status)),
       }
     },
     {
@@ -343,7 +343,7 @@ const ShipScheduleForm = () => {
       props:{
         color: 'danger',
         onClick: setCancel,
-        hidden: !viewState || !(['port_processed','si_released'].includes(record.status)) || record.isNewRecord,
+        hidden: !auth.isAuthorize('ship_schedule','set_cancelled') || !viewState || !(['port_processed','si_released'].includes(record.status)) || record.isNewRecord,
       }
     },
 

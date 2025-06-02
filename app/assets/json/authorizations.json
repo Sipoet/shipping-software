@@ -308,6 +308,16 @@
         "label": "Baca"
       },
       {
+        "name": "print_invoice",
+        "label": "Print Invoice",
+        "required":[
+          {
+            "resource": "packing_list",
+            "name": "read"
+          }
+        ]
+      },
+      {
         "name": "create",
         "label": "Buat",
         "required":[

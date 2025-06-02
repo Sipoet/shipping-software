@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :authorize_user_based_action!
+  before_action :authorize_user_based_action!, except:[:profile,:update]
   skip_before_action :verify_authenticity_token
   def index
     search_json
@@ -8,6 +8,11 @@ class UsersController < ApplicationController
   def show
     find_record!
     @record
+  end
+
+  def profile
+    authenticate_user!
+    @record = current_user
   end
 
   def create
@@ -21,7 +26,13 @@ class UsersController < ApplicationController
   end
 
   def update
-    find_record!
+    authenticate_user!
+    if params[:id] == 'profile'
+      @record = current_user
+    else
+      authorize_user_based_action!
+      find_record!
+    end
     permitted_params = permit_params
     if @record.update(permitted_params)
       render json: {message: 'sukses simpan',data: @record}, status: :ok
@@ -30,7 +41,7 @@ class UsersController < ApplicationController
     end
   end
 
-  def activate
+  def set_active
     find_record!
     if @record.update(is_active: true)
       render json: {message: 'sukses aktivasi',data: @record}, status: :ok
@@ -39,18 +50,13 @@ class UsersController < ApplicationController
     end
   end
 
-  def deactivate
+  def set_inactive
     find_record!
     if @record.update(is_active: false)
       render json: {message: 'sukses deaktivasi',data: @record}, status: :ok
     else
       render_json_error(@record)
     end
-  end
-
-  def profile
-    @record = current_user
-    json.partial! "/users/show.json.jbuilder", record: @record
   end
 
   def force_sign_out

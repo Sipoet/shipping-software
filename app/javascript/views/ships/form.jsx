@@ -2,10 +2,10 @@ import {CAlert, CCol,CForm,CButton,CModal,CModalBody,CCard,CCardHeader,CCardBody
 import React  from 'react'
 import { FormHelper } from '~/lib/form_helper'
 import { useNavigate , useLoaderData, useOutletContext } from 'react-router'
-import { Eye, Pencil } from '@phosphor-icons/react'
+import { Eye, Pencil, Plus } from '@phosphor-icons/react'
 import { AuthContext } from '~/lib/context'
 import { createModel } from '~/lib/model'
-
+import RecordActions from '~/components/RecordActions'
 
 const ShipForm = () => {
   const params = useLoaderData()
@@ -68,8 +68,8 @@ const ShipForm = () => {
 
   React.useEffect(() =>  {
     setViewState(params.isViewState)
-    setRecord(params.record)
-  }, [params.isViewState])
+    params.record.name ||= ''
+  }, [params.isViewState,params.record.isNewRecord])
 
   function changeRecord(event){
     const targetName = event.currentTarget.name
@@ -102,6 +102,34 @@ const ShipForm = () => {
     }
   }
 
+  const recordActions = [
+    {
+      label: (<>Tambah <Plus /></>),
+      props:{
+        color: 'primary',
+        variant: 'outline',
+        onClick: () => navigate('/ships/new'),
+        hidden: !auth.isAuthorize('ship','create') || record.isNewRecord || !viewState,
+      }
+    },
+    {
+      label: (<>Edit <Pencil /></>),
+      props:{
+        color: 'info',
+        onClick: toggleNavigate,
+        hidden: !auth.isAuthorize('ship','update') || record.isNewRecord || !viewState,
+      }
+    },
+    {
+      label: (<>Lihat <Eye /></>),
+      props:{
+        color: 'secondary',
+        onClick: toggleNavigate,
+        hidden: !auth.isAuthorize('ship','read') || record.isNewRecord || viewState,
+      }
+    },
+  ]
+
   return (
     <>
       <CModal
@@ -124,15 +152,7 @@ const ShipForm = () => {
 
       <CCard>
         <CCardHeader>Form Kapal
-
-        <div className='float-end' hidden={record.isNewRecord}>
-          <CButton color={viewState ? 'secondary' : 'info'} type="button" className='me-3' onClick={toggleNavigate}>
-              {viewState ?  (<>Edit <Pencil /></>): (<>Lihat <Eye /></>) }
-          </CButton>
-          <CButton color="danger" type="button" onClick={()=> setVisibleConfirmationDelete(true)}>
-              Delete
-          </CButton>
-        </div>
+          <RecordActions record={record} className='float-end' actions={recordActions} />
         </CCardHeader>
         <CForm
             className="row g-3 needs-validation"

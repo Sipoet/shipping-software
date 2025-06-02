@@ -11,7 +11,7 @@ Rails.application.routes.draw do
       end
     end
     resources :containers, except: [:new,:edit,:destroy]
-    resources :packing_lists, except: [:new,:edit,:destroy]
+    resources :packing_lists, except: [:new,:edit]
     resources :roles, except: [:new,:edit,:destroy] do
       get :list_authorizations, on: :collection
     end
@@ -20,8 +20,9 @@ Rails.application.routes.draw do
     resources :agents, except: [:new,:edit,:destroy]
     resources :packing_details, except: [:new,:edit]
     resources :users, except: [:new,:edit] do
-      post :activate, on: :member
-      post :deactivate, on: :member
+      post :set_active, on: :member
+      post :set_inactive, on: :member
+      get :profile, on: :collection
     end
 
     scope :system_settings do

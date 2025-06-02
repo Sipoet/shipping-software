@@ -155,7 +155,7 @@ class FormHelper {
       })
   }
 
-  deleteRecord(model){
+  deleteRecord(model,options){
     this._initProgress(options)
     let pathNamespace = this.pathFromModelName(model._modelName)
     return this.auth.request(`/${pathNamespace}/${model.id}.json`,

@@ -7,10 +7,23 @@ class User < ApplicationRecord
          :jwt_authenticatable, jwt_revocation_strategy: self
 
   validates :username, presence: true
+  validate :username_valid
+
 
   belongs_to :role
 
   def active?
     is_active
+  end
+
+  private
+  def username_valid
+    if username&.strip&.downcase == 'profile'
+      errors.add(:username,:invalid)
+    end
+
+    if username =~ /[^\d\w]/
+      errors.add(:username,'tidak boleh ada spesial character & spasi')
+    end
   end
 end

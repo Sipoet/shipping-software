@@ -31,6 +31,15 @@ class PackingListsController < ApplicationController
     end
   end
 
+  def destroy
+    find_record!
+    if @record.destroy
+      render json: {message: 'sukses hapus'}, status: :ok
+    else
+      render_json_error(@record)
+    end
+  end
+
   private
 
   def permit_params

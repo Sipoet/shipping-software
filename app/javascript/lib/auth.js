@@ -1,11 +1,20 @@
 import {isEmpty,isFunction} from 'lodash'
 const KEY_TOKEN = 'jwtToken'
+const KEY_AUTH= 'authList'
 class Auth{
   constructor(){
     this.navigate = null
   }
 
-  async request(path,options){
+  set authList(value){
+    localStorage.setItem(KEY_AUTH,JSON.stringify(value))
+  }
+
+  get authList(){
+    return JSON.parse(localStorage.getItem(KEY_AUTH) || '{}')
+  }
+
+  async request(path,options = {}){
     let newOptions = {...this.defaultOption,...options}
     if(newOptions.noContentType){
       delete newOptions.headers['Content-Type']
@@ -14,26 +23,60 @@ class Auth{
     let response = null
     try{
       response = await fetch(path,newOptions)
-      if(response.status == 401){
+      if(response.status === 401){
+        if(options.hashRefreshTokenBefore){
+          options.hashRefreshTokenBefore = false
+          throw {status: 401}
+        }
         let newToken = await this.refreshToken()
         if(newToken == null){
           throw {status: 401}
         }
+        options.hashRefreshTokenBefore = true
         return this.request(path,options)
       }
       return response
     }catch(error){
-      if(error.status !== 401){
-        throw error
+      if(error.status === 401){
+        if(isFunction(this.navigate)){
+          this.navigate('/users/sign_in')
+        }else{
+          location.href ="/users/sign_in"
+        }
+      }else if(error.status === 403){
+        if(isFunction(this.navigate)){
+          this.navigate('/403')
+        }else{
+          location.href ="/403"
+        }
+      }else if(error.status === 404){
+        if(isFunction(this.navigate)){
+          this.navigate('/404')
+        }else{
+          location.href ="/404"
+        }
+      }else if([500,503].includes(error.status)){
+        if(isFunction(this.navigate)){
+          this.navigate('/500')
+        }else{
+          location.href ="/500"
+        }
       }
-      if(isFunction(this.navigate)){
-        this.navigate('/users/sign_in')
-      }else{
-        location.href ="/users/sign_in"
-      }
+
       return response
     }
 
+  }
+
+  isAuthorize(resource,action) {
+    if(this.authList['all']?.['all'] === true){
+      return true
+    }
+    if(this.authList[resource]?.['all'] === true){
+      return true
+    }
+    // debugger
+    return this.authList[resource]?.[action] === true
   }
 
   async refreshToken(){
@@ -45,6 +88,8 @@ class Auth{
     if(response.status !== 200){
       return null
     }
+    const result = await response.json()
+    this.authList = result.authorization_list
     if(!isEmpty(newToken)){
       this.saveToken(newToken)
       return newToken
@@ -79,6 +124,7 @@ class Auth{
     }).then((response)=>{
       if(response.status == 200){
         return response.json().then(result=> {
+          this.authList = result.authorization_list
           this.saveToken(response.headers.get('Authorization'))
           return {...result,isSuccess: true}
         })
@@ -111,7 +157,9 @@ class Auth{
     return !this.isNotSignedIn
   }
   removeToken(){
-    localStorage.removeItem(KEY_TOKEN)
+    localStorage.clear()
+    // localStorage.removeItem(KEY_TOKEN)
+    // localStorage.removeItem(KEY_AUTH)
   }
 
  async logout(){

@@ -7,6 +7,8 @@ import ConfirmModal from '~/components/ConfirmModal'
 import { AuthContext } from '~/lib/context'
 import { createModel } from '~/lib/model'
 import {CustomAsyncSelect} from '~/components/CustomAsyncSelect'
+import RecordActions from '~/components/RecordActions'
+
 const UserForm = () => {
   const params = useLoaderData()
   const [record,setRecord] = React.useState(params.record)
@@ -113,7 +115,7 @@ const UserForm = () => {
     }
   }
   function activate(){
-    auth.request(`/users/${record.id}/activate.json`,{method: 'POST'}).then((response)=>{
+    auth.request(`/users/${record.id}/set_active.json`,{method: 'POST'}).then((response)=>{
       if(response.status == 200){
         setRecord({...record,is_active: true})
         addToast(
@@ -136,7 +138,7 @@ const UserForm = () => {
   }
 
   function deactivate(){
-    auth.request(`/users/${record.id}/deactivate.json`,{method: 'POST'}).then((response)=>{
+    auth.request(`/users/${record.id}/set_inactive.json`,{method: 'POST'}).then((response)=>{
       if(response.status == 200){
         setRecord({...record,is_active: false})
         addToast(
@@ -158,6 +160,50 @@ const UserForm = () => {
     })
   }
 
+  const recordActions = [
+    {
+      label: (<>Tambah <Plus /></>),
+      props:{
+        color: 'primary',
+        variant: 'outline',
+        onClick: () => navigate('/packing_lists/new'),
+        hidden: !auth.isAuthorize('packing_list','create') || record.isNewRecord || !viewState,
+      }
+    },
+    {
+      label: (<>Edit <Pencil /></>),
+      props:{
+        color: 'info',
+        onClick: toggleNavigate,
+        hidden: !auth.isAuthorize('packing_list','update') || record.isNewRecord || !viewState,
+      }
+    },
+    {
+      label: (<>Lihat <Eye /></>),
+      props:{
+        color: 'secondary',
+        onClick: toggleNavigate,
+        hidden: !auth.isAuthorize('packing_list','read') || record.isNewRecord || viewState,
+      }
+    },
+    {
+      label: 'Aktifkan',
+      props:{
+        color: 'success',
+        onClick: activate,
+        hidden: !auth.isAuthorize('user','set_active') || record.is_active || !viewState,
+      }
+    },
+    {
+      label: 'Non Aktifkan',
+      props:{
+        color: 'warning',
+        onClick: deactivate,
+        hidden: !auth.isAuthorize('user','set_inactive') || !record.is_active || !viewState,
+      }
+    },
+  ]
+
   return (
     <>
       <ConfirmModal title="Konfirmasi Hapus" description={`Apakah anda yakin hapus User ${record.username}`} submitLabel="Submit" ref={modalRef} resolving={confirmDelete} />
@@ -165,18 +211,7 @@ const UserForm = () => {
 
       <CCard>
         <CCardHeader>Form User
-
-        <div className='float-end'>
-          <CButton color={viewState ? 'secondary' : 'info'} type="button" className='me-3' onClick={toggleNavigate}>
-              {viewState ?  (<>Edit <Pencil /></>): (<>Batal</>) }
-          </CButton>
-          <CButton color="success" hidden={record.is_active || !viewState} type="button" onClick={activate}>
-              Aktifkan
-          </CButton>
-          <CButton color="warning" hidden={!record.is_active || !viewState} type="button" onClick={deactivate}>
-              Non Aktifkan
-          </CButton>
-        </div>
+          <RecordActions record={record} className='float-end' actions={recordActions} />
         </CCardHeader>
         <CForm
             className="row g-3 needs-validation"

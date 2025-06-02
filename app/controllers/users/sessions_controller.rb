@@ -24,7 +24,11 @@ class Users::SessionsController < Devise::SessionsController
     if user.valid_password?(permitted_params[:password])
       sign_in user, store: false
       response.set_cookie("refresh_token", RefreshTokenGenerator.new(user).cookie)
-      render json: {message: 'Success Masuk', location: after_sign_in_path_for(user)}
+      render json: {
+        message: 'Success Masuk',
+        authorization_list: get_authorize_list(user.role_id),
+        location: after_sign_in_path_for(user)
+      }, status: :ok
     else
       render_invalid_username_or_password
     end
@@ -42,7 +46,7 @@ class Users::SessionsController < Devise::SessionsController
       new_token = Warden::JWTAuth::UserEncoder.new.call(current_user, :user, nil).first
       response.set_header("Authorization", "Bearer #{new_token}")
       response.set_cookie("refresh_token", RefreshTokenGenerator.new(current_user).cookie)
-      render json: {message: "Token refreshed"}, status: :ok
+      render json: {message: "Token refreshed", authorization_list: get_authorize_list(current_user.role_id)}, status: :ok
     rescue JWT::VerificationError
       render json: {message: "Token is invalid"}, status: :unauthorized
     end

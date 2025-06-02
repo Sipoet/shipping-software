@@ -59,6 +59,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_25_031556) do
     t.decimal "total_dimension_p"
     t.decimal "total_dimension_l"
     t.decimal "total_dimension_t"
+    t.string "p_uom"
+    t.string "l_uom"
+    t.string "t_uom"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -98,6 +101,11 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_25_031556) do
     t.decimal "dimension_p", default: "0.0", null: false
     t.decimal "dimension_l", default: "0.0", null: false
     t.decimal "dimension_t", default: "0.0", null: false
+    t.integer "customer_id"
+    t.string "weight_uom", default: "kg", null: false
+    t.string "p_uom", default: "m", null: false
+    t.string "l_uom", default: "m", null: false
+    t.string "t_uom", default: "m", null: false
     t.integer "product_type", default: 0, null: false
     t.boolean "is_dangerous_goods", default: false, null: false
     t.datetime "created_at", null: false
@@ -219,6 +227,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_25_031556) do
   add_foreign_key "packing_lists", "clients", column: "receiver_id"
   add_foreign_key "packing_lists", "clients", column: "sender_id"
   add_foreign_key "packing_lists", "containers"
+  add_foreign_key "products", "clients", column: "customer_id"
   add_foreign_key "role_auths", "roles"
   add_foreign_key "sales_invoice_details", "packing_lists"
   add_foreign_key "sales_invoice_details", "products"

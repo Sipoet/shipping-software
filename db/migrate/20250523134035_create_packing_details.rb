@@ -13,6 +13,9 @@ class CreatePackingDetails < ActiveRecord::Migration[7.2]
       t.decimal :total_dimension_p
       t.decimal :total_dimension_l
       t.decimal :total_dimension_t
+      t.string :p_uom
+      t.string :l_uom
+      t.string :t_uom
       t.timestamps
     end
     add_foreign_key :packing_details, :products

@@ -1,5 +1,6 @@
 def load_dummy
   Dir[File.join(Rails.root, 'db', 'seeds','dummy', '*.rb')].sort.each do |seed|
+    puts "seed #{seed}"
     load seed
   end
 end

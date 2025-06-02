@@ -17,4 +17,5 @@ class Product < ApplicationRecord
   validates :dimension_t, numericality: true
   validates :product_type, presence: true
 
+  belongs_to :product, optional: true
 end

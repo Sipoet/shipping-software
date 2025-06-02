@@ -6,6 +6,7 @@ import { Eye, Pencil } from '@phosphor-icons/react'
 import { AuthContext } from '~/lib/context'
 import { createModel } from '~/lib/model'
 import  {cloneDeep}  from 'lodash'
+import RecordActions from '~/components/RecordActions'
 
 const RoleForm = () => {
   const params = useLoaderData()
@@ -223,6 +224,34 @@ const RoleForm = () => {
     }
   }
 
+  const recordActions = [
+    {
+      label: (<>Tambah <Plus /></>),
+      props:{
+        color: 'primary',
+        variant: 'outline',
+        onClick: () => navigate('/products/new'),
+        hidden: !auth.isAuthorize('product','create') || record.isNewRecord || !viewState,
+      }
+    },
+    {
+      label: (<>Edit <Pencil /></>),
+      props:{
+        color: 'info',
+        onClick: toggleNavigate,
+        hidden: !auth.isAuthorize('product','update') || record.isNewRecord || !viewState,
+      }
+    },
+    {
+      label: (<>Lihat <Eye /></>),
+      props:{
+        color: 'secondary',
+        onClick: toggleNavigate,
+        hidden: !auth.isAuthorize('product','read') || record.isNewRecord || viewState,
+      }
+    },
+  ]
+
   return (
     <>
       <CModal
@@ -245,14 +274,7 @@ const RoleForm = () => {
 
       <CCard>
         <CCardHeader>Form Jabatan
-          <div className='float-end' hidden={record.isNewRecord}>
-            <CButton color={viewState ? 'secondary' : 'info'} type="button" className='me-3' onClick={toggleNavigate}>
-                {viewState ?  (<>Edit <Pencil /></>): (<>Lihat <Eye /></>) }
-            </CButton>
-            <CButton color="danger" type="button" onClick={()=> setVisibleConfirmationDelete(true)}>
-                Delete
-            </CButton>
-          </div>
+          <RecordActions record={record} className='float-end' actions={recordActions} />
         </CCardHeader>
         <CForm
             className="row g-3 needs-validation"

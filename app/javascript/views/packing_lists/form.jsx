@@ -2,7 +2,7 @@ import {CAlert,CTableCaption,CCol,CForm,CButton,CTableHead,CTableRow,CTableBody,
 import React  from 'react'
 import { FormHelper,changeCloneRecord } from '~/lib/form_helper'
 import { useNavigate , useLoaderData, useOutletContext } from 'react-router'
-import { Eye, Pencil, Plus, Printer, X } from '@phosphor-icons/react'
+import { Eye, Pencil, Plus, Printer, Trash, X } from '@phosphor-icons/react'
 import  {CustomAsyncSelect}  from '~/components/CustomAsyncSelect'
 import { UnitInput,NumberInput,MoneyInput } from '~/components/NumberInput'
 import { useReactToPrint } from "react-to-print";
@@ -10,6 +10,7 @@ import InvoicePrint from './invoice_print'
 import { AuthContext } from '~/lib/context'
 import {createModel} from '~/lib/model'
 import { KDatePicker } from '~/components/KDatePicker'
+import RecordActions from '~/components/RecordActions'
 
 const PackingListForm = () => {
   const printContentRef = React.useRef(null);
@@ -96,7 +97,7 @@ const PackingListForm = () => {
   }
 
   function changeNumberRecord(maskedValue,imask,event){
-    const targetName = event.currentTarget.name
+    const targetName = imask.el.input.name
     const value = parseFloat(imask.unmaskedValue)
     setRecord((record)=> changeCloneRecord(record,[targetName,value]) )
   }
@@ -171,6 +172,51 @@ const PackingListForm = () => {
 
   }
 
+  const recordActions = [
+
+    {
+      label: (<>Edit <Pencil /></>),
+      props:{
+        color: 'info',
+        onClick: toggleNavigate,
+        hidden: !auth.isAuthorize('packing_list','update') || record.isNewRecord || !viewState,
+      }
+    },
+    {
+      label: (<>Lihat <Eye /></>),
+      props:{
+        color: 'secondary',
+        onClick: toggleNavigate,
+        hidden: !auth.isAuthorize('packing_list','read') || record.isNewRecord || viewState,
+      }
+    },
+    {
+      label: (<>Print Invoice <Printer /></>),
+      props:{
+        color: 'secondary',
+        onClick: reactToPrintFn,
+        hidden: !auth.isAuthorize('packing_list','print_invoice') || !viewState || record.ship_id == null,
+      }
+    },
+    {
+      label: (<>Tambah <Plus /></>),
+      props:{
+        color: 'primary',
+        variant: 'outline',
+        onClick: () => navigate('/packing_lists/new'),
+        hidden: !auth.isAuthorize('packing_list','create') || record.isNewRecord || !viewState,
+      }
+    },
+    {
+      label: (<>Hapus <Trash /></>),
+      props:{
+        color: 'danger',
+        onClick: ()=> confirmDelete,
+        hidden: !auth.isAuthorize('packing_list','delete') || record.isNewRecord || record.ship_id != null,
+      }
+    },
+  ]
+
   return (
     <>
       <CModal
@@ -194,15 +240,7 @@ const PackingListForm = () => {
 
       <CCard className='mb-3'>
         <CCardHeader>Form Packing List
-        <div className='float-end' hidden={record.isNewRecord}>
-          <CButton hidden={!viewState || record.ship_name == null} color='secondary' type='buttom' className='me-3' onClick={reactToPrintFn}>print Invoice <Printer /></CButton>
-          <CButton color={viewState ? 'secondary' : 'info'} type="button" className='me-3' onClick={toggleNavigate}>
-              {viewState ?  (<>Edit <Pencil /></>): (<>Lihat <Eye /></>) }
-          </CButton>
-          <CButton color="danger" type="button" onClick={()=> setVisibleConfirmationDelete(true)}>
-              Delete
-          </CButton>
-        </div>
+          <RecordActions record={record} className='float-end' actions={recordActions} />
         </CCardHeader>
         <CForm
             className="row g-3 needs-validation"
@@ -226,7 +264,7 @@ const PackingListForm = () => {
               <CustomAsyncSelect readOnly={viewState} cacheOptions path='/customers.json' name='receiver_id' label="Penerima" feedback={error.receiver} onChange={changeSelectRecord} defaultValue={{label: record.receiver_name,value: record.receiver_id}}  />
             </CCol>
             <CCol className='mb-3' md={4}>
-              <CustomAsyncSelect readOnly={viewState} isClearable cacheOptions path='/containers.json' name='container_id' label="Kontainer" feedback={error.container} getOptionLabel={(e)=>e.container_number} onChange={changeSelectRecord} defaultValue={{label: record.container_number,value: record.container_id}}  />
+              <CustomAsyncSelect readOnly={viewState} isClearable cacheOptions path='/containers.json' name='container_id' label="Kontainer" feedback={error.container} getOptionLabel={(e)=>e.container_number} onChange={changeSelectRecord} defaultValue={record.container_id != null ?{label: record.container_number,value: record.container_id} : null}  />
             </CCol>
             <CCol className='mb-3' md={4}>
               <CFormTextarea readOnly={viewState} id="packingList-description" label='Deskripsi' invalid={error.description != null}  feedback={error.description} name='description' onChange={changeRecord} value={record.description} />
@@ -289,7 +327,7 @@ function PackingDetailRowForm(props){
 
 
   function changeNumberRecord(maskedValue,imask,event){
-    const targetName = event.currentTarget.name
+    const targetName = imask.el.input.name
     const value = parseFloat(imask.unmaskedValue)
     props.record[targetName] = value
     setRecord((record)=> changeCloneRecord(record,[targetName,value]) )
@@ -302,16 +340,25 @@ function PackingDetailRowForm(props){
     setRecord((record)=> changeCloneRecord(record,[targetName,value]) )
   }
 
-  function changeSelectRecord(selectValue,metadata){
+  function changeProductSelectRecord(selectValue,metadata){
     props.record[metadata.optionLabel] = selectValue.label
     props.record[metadata.name] = selectValue.value
-    setRecord((record)=> changeCloneRecord(record,[metadata.optionLabel,selectValue.label,metadata.name,selectValue.value]) )
+    setRecord((record)=> changeCloneRecord(record,[
+      metadata.optionLabel,selectValue.label,
+      metadata.name,selectValue.value,
+      'total_dimension_p',selectValue.data.dimension_p,
+      'total_dimension_l',selectValue.data.dimension_l,
+      'total_dimension_t',selectValue.data.dimension_t,
+      'p_uom',selectValue.data.p_uom,
+      'l_uom',selectValue.data.l_uom,
+      't_uom',selectValue.data.t_uom,
+    ]) )
   }
 
   return (
     <CTableRow key={record.id || `newRow${props.rowOrder}`}>
       <CTableHeaderCell scope="row">{props.rowOrder}</CTableHeaderCell>
-      <CTableDataCell><CustomAsyncSelect cacheOptions path='/products.json' name='product_id' feedback={error.product} onChange={changeSelectRecord} defaultValue={{label: record.product_name,value: record.product_id}}  /></CTableDataCell>
+      <CTableDataCell><CustomAsyncSelect cacheOptions path='/products.json' name='product_id' feedback={error.product} onChange={changeProductSelectRecord} defaultValue={{label: record.product_name,value: record.product_id}}  /></CTableDataCell>
       <CTableDataCell><CFormTextarea invalid={error.description != null}  feedback={error.description} name='description' onChange={changeRecord} value={record.description} /></CTableDataCell>
       <CTableDataCell><NumberInput invalid={error.quantity != null}  feedback={error.quantity} name='quantity' onChange={changeNumberRecord} defaultValue={record.quantity} placeholder="Jumlah.."/></CTableDataCell>
       <CTableDataCell><UnitInput groupMeasurement='weight' uom={record.weight_uom} onMeasurementChange={changeRecord} measurementName='weight_uom' invalid={error.total_weight != null}  feedback={error.total_weight} name='total_weight' onChange={changeNumberRecord} defaultValue={record.total_weight} placeholder="Berat.."/></CTableDataCell>
