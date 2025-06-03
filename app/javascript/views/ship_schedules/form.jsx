@@ -1,8 +1,9 @@
 import {CAlert,CFormLabel,CCol,CForm,CButton,CCard,CCardHeader,CCardBody,CCardFooter,CFormInput,CToast, CToastBody, CToaster, CToastHeader, CRow } from '@coreui/react'
 import React  from 'react'
+import {createRoot} from 'react-dom/client'
 import { FormHelper,changeCloneRecord } from '~/lib/form_helper'
 import { useNavigate , useLoaderData, useOutletContext } from 'react-router'
-import { ArrowClockwise, ArrowCounterClockwise, Eye, Pencil, Trash } from '@phosphor-icons/react'
+import { ArrowClockwise, ArrowCounterClockwise,X, Eye, Pencil, Plus, Trash } from '@phosphor-icons/react'
 import  {CustomAsyncSelect}  from '~/components/CustomAsyncSelect'
 import { AuthContext } from '~/lib/context'
 import RecordActions from '~/components/RecordActions'
@@ -13,6 +14,8 @@ import ShipDepartModalForm from './ship_depart_modal_form'
 import ShipArrivedModalForm from './ship_arrived_modal_form'
 import ShipCompletedModalForm from './ship_completed_modal_form'
 import {KDatePicker} from '~/components/KDatePicker'
+import { AsyncReactTabulator } from '~/components/async_react_tabulator'
+
 const ShipScheduleForm = () => {
   const params = useLoaderData()
   const [record,setRecord] = React.useState(params.record)
@@ -33,6 +36,8 @@ const ShipScheduleForm = () => {
   const [auth,setAuth] = React.useContext(AuthContext)
   const formHelper = new FormHelper(auth)
   const confirmModalRef = React.useRef(null)
+  const containerTableRef = React.useRef(0)
+  const [container, setContainer] = React.useState({})
 
   const handleSubmit = (event) => {
     const form = event.currentTarget
@@ -349,6 +354,98 @@ const ShipScheduleForm = () => {
 
   ]
 
+  async function addContainer(){
+    const packingParam ={
+      container: {
+        ship_schedule_id: record.id
+      }
+    }
+
+    const response = await auth.request(`/containers/${container.value}.json`,{method:'PUT',body: JSON.stringify(packingParam)})
+    if(response.status === 200){
+      addToast(
+        (<CToast color='success' key={`add-container-${container.id}`}>
+          <CToastHeader closeButton>
+            <div className="fw-bold me-auto">Sukses Tambah</div>
+          </CToastHeader>
+          <CToastBody>Sukses tambah Packing List</CToastBody>
+        </CToast>))
+      setContainer({})
+      containerTableRef.current.setSort([
+          {column:"updated_at", dir:"desc"},
+      ])
+
+    }else if(response.status === 422){
+      const result = await response.json()
+      addToast(
+        (<CToast color='danger' key={`failed-add-container-${container.value}`}>
+          <CToastHeader closeButton>
+            <div className="fw-bold me-auto">Gagal Tambah</div>
+          </CToastHeader>
+          <CToastBody>{result.message}</CToastBody>
+        </CToast>))
+    }
+  }
+
+  async function removeContainer(row){
+    const packingParam ={
+      container: {
+        ship_schedule_id: null
+      }
+    }
+
+    const response = await auth.request(`/containers/${row.id}.json`,{method:'PUT',body: JSON.stringify(packingParam)})
+    if(response.status === 200){
+      addToast(
+        (<CToast color='success' key={`add-container-${row.id}`}>
+          <CToastHeader closeButton>
+            <div className="fw-bold me-auto">Sukses Lepas</div>
+          </CToastHeader>
+          <CToastBody>Sukses Lepas Packing List dari kontainer</CToastBody>
+        </CToast>))
+      containerTableRef.current.setSort([
+          {column:"updated_at", dir:"desc"},
+      ])
+
+    }else if(response.status === 422){
+      const result = await response.json()
+      addToast(
+        (<CToast color='danger' key={`failed-add-container-${container.id}`}>
+          <CToastHeader closeButton>
+            <div className="fw-bold me-auto">Gagal Tambah</div>
+          </CToastHeader>
+          <CToastBody>{result.message}</CToastBody>
+        </CToast>))
+    }
+  }
+
+  function renderActionButton(cell, formatterParams, onRendered){
+    const row = cell.getData()
+    onRendered(()=>{
+      createRoot(cell.getElement()).render(
+        <div className='action-buttons-container'>
+          <CButton type='button' color='info' onClick={()=> window.open(`/packing_lists/${row.id}`,'_blank')}><Eye /></CButton>
+          <CButton type='button' variant='outline' color='danger' onClick={()=> removeContainer(row)}><X/></CButton>
+        </div>
+      )})
+  }
+
+  function getContainerLabel(data){
+    return data.container_number
+  }
+
+  const containerColumns = [
+    {title:'Nomor Kontainer',field:'container_number',width:170},
+    {title:'Nomor Segel',field:'seal_number',width:170},
+    {title:'Jenis Pengiriman',field:'order_type',fieldType:'enum',enum:[{label:'LCL',value: 'less_container_load'},{label:'FCL',value: 'full_container_load'}],width:170},
+    {title:'Kapal',field:'ship_name',fieldType:'link', linkLabel:'name',sortKey:'ships.name',recordPath: 'ship_path',filterField:'ship_schedules.ship_id',width:170},
+    {title:'Agen Lorry',field:'agent_name',fieldType:'link', linkLabel:'name',sortKey:'agents.name',recordPath: 'agent_path',filterField:'agent_id',width:170},
+    {title:'Tipe Kontainer',field:'container_type_name',fieldType:'link', linkLabel:'name',sortKey:'container_types.name',recordPath: 'container_type_path',filterField:'container_type_id',width:170},
+    {title:'Tanggal Dibuat', field:'created_at', fieldType:'datetime', width:150},
+    {title:'Tanggal Diubah', field:'updated_at', fieldType:'datetime', width:150},
+    {title:'',field:"",fieldType:'action', formatter:renderActionButton,noSort: true,width: 150},
+  ]
+
   return (
     <>
       <ConfirmModal ref={confirmModalRef}></ConfirmModal>
@@ -431,9 +528,37 @@ const ShipScheduleForm = () => {
           </CCardFooter>
         </CForm>
       </CCard>
-
-
-
+      <CCard className='mt-4' hidden={record.isNewRecord}>
+        <CCardHeader>List Kontainer</CCardHeader>
+        <CCardBody>
+          <CRow className='mb-4' hidden={viewState}>
+            <CCol md={4}>
+              <CustomAsyncSelect
+                path='/containers.json'
+                getOptionLabel={getContainerLabel}
+                name='container_id'
+                label="Kontainer"
+                filter={[{field:'ship_schedule_id',type:'not',value:record.id}]}
+                onChange={(selectValue,metadata)=> setContainer(selectValue)}
+                optionLabel='detail'
+                value={container}
+                placeholder="pilih Kontainer..." />
+            </CCol>
+            <CCol md={4} className='pt-4' >
+                <CButton
+                  color='primary'
+                  onClick={addContainer}
+                  variant='outline'
+                  type='button'>Tambah <Plus/></CButton>
+            </CCol>
+          </CRow>
+          <AsyncReactTabulator
+            onRef={(ref) => containerTableRef.current = ref}
+            columns={containerColumns}
+            defaultFilter={[{field: 'ship_schedule_id',type:'=',value: record.id}]}
+            ajaxURL='/containers.json' />
+        </CCardBody>
+      </CCard>
     </>
   )
 }

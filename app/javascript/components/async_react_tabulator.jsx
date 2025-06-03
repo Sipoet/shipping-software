@@ -85,7 +85,7 @@ function _tomSelectEditor(cell, onRendered, success, cancel, editorParams){
   return editor;
 }
 
-function AsyncReactTabulator({columns, ajaxURL,onRef}) {
+function AsyncReactTabulator({columns,defaultFilter=[], ajaxURL,onRef}) {
   let el = React.createRef()
   let navigate = useNavigate()
   const [auth,setAuth] = React.useContext(AuthContext)
@@ -95,7 +95,7 @@ function AsyncReactTabulator({columns, ajaxURL,onRef}) {
       column.headerMenu = _headerMenu()
     }
     column.headerWordWrap = true
-    column.headerFilter = true
+    column.headerFilter = column.headerFilter !== undefined  ? column.headerFilter : true
     column.resizable = 'header'
     if(column.noSort === true){
       column.headerSort = false
@@ -188,11 +188,11 @@ function AsyncReactTabulator({columns, ajaxURL,onRef}) {
       case 'action':
         let listButtonDef = column.rowButtons
         return {
-          formatter: (cell, formatterParams, onRendered)=>{
+          formatter: column.formatter ? column.formatter : (cell, formatterParams, onRendered)=>{
               //cell - the cell component
               //formatterParams - parameters set for the column
               //onRendered - function to call when the formatter has been rendered
-              var row = cell.getData();
+              const row = cell.getData();
               onRendered(()=>{
                 createRoot(cell.getElement()).render(
                   <>{listButtonDef.map((buttonDef)=> {
@@ -352,7 +352,11 @@ function AsyncReactTabulator({columns, ajaxURL,onRef}) {
     }
     if(params.filter.length > 0){
       newParam.filter = _convertToNewFilter(params.filter)
+      newParam.filter = [...defaultFilter,...newParam.filter]
+    }else{
+      newParam.filter = defaultFilter
     }
+
     if(params.sort.length > 0){
       let sort = _convertToNewSort(params.sort)
       newParam = Object.assign(newParam, sort)
@@ -397,6 +401,7 @@ function AsyncReactTabulator({columns, ajaxURL,onRef}) {
       Object.values(root).forEach((rootie)=>{rootie.unmount()})
     })
     if(onRef != null){
+      console.log('onf ref masuk')
       onRef(tabulator)
     }
   }, []);

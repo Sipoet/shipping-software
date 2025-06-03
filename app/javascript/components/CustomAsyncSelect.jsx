@@ -11,7 +11,7 @@ function defaultOptionLabel(line){
 function defaultOptionValue(line){
   return line.id
 }
-function CustomAsyncSelect({path,filter,localTextFilter,onChange,optionLabel,getOptionValue,feedback,limit = 10,getOptionLabel,label,...props}){
+function CustomAsyncSelect({path,filter=[],localTextFilter,onChange,optionLabel,getOptionValue,feedback,limit = 10,getOptionLabel,label,...props}){
 
   const selectRef = React.useRef(null)
   const [auth,setAuth] = React.useContext(AuthContext)
@@ -20,13 +20,13 @@ function CustomAsyncSelect({path,filter,localTextFilter,onChange,optionLabel,get
   getOptionLabel ||= defaultOptionLabel
   getOptionValue ||= defaultOptionValue
   async function selectLoader(searchText,loadedOptions,page) {
-    const params = new URLSearchParams()
-    params.append("term", searchText)
-    params.append("page", page)
-    params.append("length", limit)
-    params.append("filter", filter ||[])
-
-    const response = await auth.request(`${path}?${params}`)
+    const params = JSON.stringify({
+      term: searchText,
+      page: page,
+      length: limit,
+      filter: filter
+    })
+    const response = await auth.request(`${path}?params=${params}`)
     if(response.status == 200){
       const jsonData = await response.json()
       const hasMore = jsonData.total_pages !== null ? jsonData.total_pages > page : false

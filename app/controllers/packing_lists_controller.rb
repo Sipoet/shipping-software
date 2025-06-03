@@ -80,12 +80,13 @@ class PackingListsController < ApplicationController
     @records = PackingList
       .all
       .includes(:container,:sender,:receiver)
+      .left_joins(:container,:sender,:receiver)
       .order(result.order)
     result.filter.each do|query_filter|
       @records = @records.where(query_filter)
     end
     if result.search_text.present?
-      columns = ['products.name', 'containers.container_number', 'suppliers.name','customers.name']
+      columns = ['code', 'containers.container_number', 'clients.name','receivers_packing_lists.name']
       query = columns.map{|column|"#{column} ilike ?"}.join(' OR ')
       @records = @records.where(query,*Array.new(columns.length){"%#{result.search_text}%"})
     end

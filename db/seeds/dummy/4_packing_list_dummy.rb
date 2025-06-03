@@ -27,7 +27,7 @@ container_ids = Container.all.pluck(:id)
         total_dimension_t:7,
       },
       {
-        product_id: Product.where(customer_id: sender_id).pluck(:id).sample,
+        product_id: Product.where(customer_id: sender_id).pluck(:id).sample rescue nil,
         quantity: SecureRandom.random_number(100).round,
         description:'detail 2',
         total_weight: 15,
